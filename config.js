@@ -116,25 +116,25 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Cuestionario de 6 preguntas para estimar velocidad recomendada y plan
+  // Cuestionario calibrado (pesos addMbps más realistas por concurrencia)
   speedQuiz: [
     {
       id: 'people',
       question: '1. ¿Cuántas personas en tu hogar usan el servicio de internet / WiFi a diario?',
       options: [
-        { label: '1-2', addMbps: 35 },
-        { label: '3-4', addMbps: 75 },
-        { label: '5+', addMbps: 125 }
+        { label: '1-2', addMbps: 25 },
+        { label: '3-4', addMbps: 55 },
+        { label: '5+', addMbps: 90 }
       ]
     },
     {
       id: 'devices',
       question: '2. ¿Cuántos dispositivos en tu hogar se conectan a internet (tablets, consolas, smart TV, cámaras)?',
       options: [
-        { label: '1-3', addMbps: 15 },
-        { label: '4-6', addMbps: 35 },
-        { label: '7-9', addMbps: 60 },
-        { label: '10+', addMbps: 95 }
+        { label: '1-3', addMbps: 10 },
+        { label: '4-6', addMbps: 25 },
+        { label: '7-9', addMbps: 45 },
+        { label: '10+', addMbps: 70 }
       ]
     },
     {
@@ -142,9 +142,9 @@ window.VNET_CONFIG = {
       question: '3. ¿Cuántas personas en tu hogar trabajan o estudian desde casa con videollamadas?',
       options: [
         { label: 'Ninguno', addMbps: 0 },
-        { label: '1', addMbps: 35 },
-        { label: '2', addMbps: 70 },
-        { label: '3+', addMbps: 110 }
+        { label: '1', addMbps: 20 },
+        { label: '2', addMbps: 45 },
+        { label: '3+', addMbps: 75 }
       ]
     },
     {
@@ -152,8 +152,8 @@ window.VNET_CONFIG = {
       question: '4. ¿Qué calidad de video utilizas al reproducir TV y películas?',
       options: [
         { label: 'No consumo video', addMbps: 0 },
-        { label: 'HD', addMbps: 35 },
-        { label: '4K', addMbps: 90 }
+        { label: 'HD', addMbps: 20 },
+        { label: '4K', addMbps: 55 }
       ]
     },
     {
@@ -161,9 +161,9 @@ window.VNET_CONFIG = {
       question: '5. ¿Qué tanto juegan en línea en tu hogar?',
       options: [
         { label: 'No se juega en línea', addMbps: 0 },
-        { label: 'Casual / Recreacional', addMbps: 25 },
-        { label: 'Si se juega con mucha frecuencia', addMbps: 60 },
-        { label: 'Nivel profesional', addMbps: 100 }
+        { label: 'Casual / Recreacional', addMbps: 15 },
+        { label: 'Si se juega con mucha frecuencia', addMbps: 35 },
+        { label: 'Nivel profesional', addMbps: 60 }
       ]
     },
     {
@@ -171,8 +171,8 @@ window.VNET_CONFIG = {
       question: '6. ¿En tu hogar se descargan o suben archivos pesados de la nube o internet?',
       options: [
         { label: 'No', addMbps: 0 },
-        { label: 'Si, ocasionalmente', addMbps: 45 },
-        { label: 'Si, frecuentemente', addMbps: 110 }
+        { label: 'Si, ocasionalmente', addMbps: 30 },
+        { label: 'Si, frecuentemente', addMbps: 80 }
       ]
     }
   ],
