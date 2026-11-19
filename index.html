@@ -23,6 +23,7 @@
       --icon-help: #0ea5e9;
       --icon-web: #374151;
       --icon-wa: #16a34a;
+      --icon-fb: #1877f2;
       --icon-ig: #db2777;
     }
 
@@ -44,6 +45,7 @@
       --icon-help: #38bdf8;
       --icon-web: #64748b;
       --icon-wa: #22c55e;
+      --icon-fb: #3b82f6;
       --icon-ig: #f472b6;
     }
 
@@ -72,7 +74,7 @@
 
     header {
       width: 100%;
-      max-width: 860px;
+      max-width: 920px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -159,7 +161,7 @@
 
     main {
       width: 100%;
-      max-width: 860px;
+      max-width: 920px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -277,7 +279,7 @@
       font-weight: 500;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .btn-more:hover {
@@ -289,10 +291,10 @@
       width: 100%;
       display: none;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
       text-align: left;
       border-top: 1px solid var(--border);
-      padding-top: 28px;
+      padding-top: 24px;
       margin-bottom: 20px;
       animation: fadeIn 0.25s ease;
     }
@@ -306,21 +308,15 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .metric-group {
+    .featured-box {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 18px;
     }
 
-    .metric-group-title {
-      font-size: 0.78rem;
+    .section-heading {
+      font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.6px;
@@ -328,9 +324,160 @@
       margin-bottom: 12px;
     }
 
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 14px;
+    }
+
+    .service-card {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .service-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .service-rating {
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .rating-good { color: var(--active-green); }
+    .rating-ok { color: var(--warn); }
+    .rating-poor { color: var(--bad); }
+
+    .service-detail {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .service-meta {
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.78rem;
+      color: var(--text-main);
+    }
+
+    .device-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .device-pill {
+      font-size: 0.73rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .plans-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .plan-chip {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .plan-chip.suggested {
+      border-color: var(--active-green);
+    }
+
+    .plan-chip-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 3px;
+    }
+
+    .plan-chip-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .devices-summary-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .device-box {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .device-box-name {
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .device-box-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sub-accordion {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px 18px;
+      background: var(--surface);
+    }
+
+    .sub-accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.94rem;
+      user-select: none;
+    }
+
+    .sub-accordion-body {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sub-accordion-body.open {
+      display: block;
+    }
+
+    .sub-accordion-body.grid-2 {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .sub-accordion-body.grid-2.open {
+      display: grid;
+    }
+
     .sub-metrics {
       display: flex;
-      gap: 22px;
+      gap: 24px;
       flex-wrap: wrap;
     }
 
@@ -361,7 +508,7 @@
 
     .live-server-pill {
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 10px;
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 0.8rem;
@@ -371,48 +518,10 @@
       color: var(--text-main);
     }
 
-    .services-grid {
+    .meta-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .service-card {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-    }
-
-    .service-name {
-      font-weight: 700;
-      font-size: 0.92rem;
-      margin-bottom: 4px;
-    }
-
-    .service-rating {
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .rating-good { color: var(--active-green); }
-    .rating-ok { color: var(--warn); }
-    .rating-poor { color: var(--bad); }
-
-    .service-detail {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .meta-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 16px;
-      padding: 16px 18px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
       font-size: 0.88rem;
     }
 
@@ -435,35 +544,6 @@
     .meta-value {
       color: var(--text-main);
       word-break: break-word;
-    }
-
-    .config-box {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px;
-      background: var(--surface);
-    }
-
-    .config-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .config-body {
-      display: none;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .config-body.open {
-      display: grid;
     }
 
     .field-group label {
@@ -503,7 +583,7 @@
       grid-column: 1 / -1;
       display: flex;
       gap: 10px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .btn-sm {
@@ -527,20 +607,12 @@
       border-color: var(--btn-primary-bg);
     }
 
-    .history-box {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 18px;
-    }
-
     .history-top {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: flex-end;
       margin-bottom: 12px;
-      flex-wrap: wrap;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     table {
@@ -562,7 +634,26 @@
       text-transform: uppercase;
     }
 
-    /* Iconos circulares de ayuda y enlaces (estilo Fast) */
+    .faq-item {
+      margin-bottom: 16px;
+    }
+
+    .faq-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-q {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .faq-a {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
     .social-bar {
       width: 100%;
       max-width: 720px;
@@ -571,7 +662,7 @@
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
-      margin: 12px 0 36px;
+      margin: 12px 0 16px;
     }
 
     .icon-link {
@@ -595,32 +686,8 @@
     .icon-help { background: var(--icon-help); }
     .icon-web  { background: var(--icon-web); }
     .icon-wa   { background: var(--icon-wa); }
+    .icon-fb   { background: var(--icon-fb); }
     .icon-ig   { background: var(--icon-ig); }
-
-    /* Sección de preguntas y respuestas estilo Fast */
-    .faq-section {
-      width: 100%;
-      max-width: 720px;
-      text-align: left;
-      border-top: 1px solid var(--border);
-      padding-top: 28px;
-    }
-
-    .faq-item {
-      margin-bottom: 20px;
-    }
-
-    .faq-q {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    .faq-a {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-    }
 
     @media (max-width: 600px) {
       .speed-right { align-items: center; }
@@ -671,11 +738,28 @@
 
     <button class="btn-more" id="toggleMoreBtn">Ver más detalles</button>
 
-    <!-- Panel desplegable: oculto por defecto -->
     <section class="details-panel" id="detailsPanel">
-      <div class="metrics-grid">
-        <div class="metric-group">
-          <div class="metric-group-title">Velocidad y Servidor</div>
+
+      <!-- 1. Bloque principal dentro de "Ver más detalles" -->
+      <div class="featured-box">
+        <div class="section-heading">¿Cómo Funciona Tu Conexión Para Cada Uso?</div>
+        <div class="services-grid" id="servicesGrid"></div>
+
+        <div class="section-heading" style="margin-top:16px; margin-bottom:6px;">
+          Dispositivos estimados por tipo (Celular, Desktop, Laptop, SmartTV, PS5/XBOX)
+        </div>
+        <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
+
+        <div class="plans-strip" id="plansStrip"></div>
+      </div>
+
+      <!-- 2. Subdesplegable: Velocidad y Servidor -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accSpeedServer" data-arrow="arrowSpeedServer">
+          <span>📡 Velocidad de bajada, subida y servidor</span>
+          <span id="arrowSpeedServer">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accSpeedServer">
           <div class="sub-metrics">
             <div>
               <div class="sub-item-label">Bajada (descargar)</div>
@@ -689,9 +773,15 @@
           <div class="live-server-pill" id="liveServerBadge">Conectado a: En espera</div>
           <div class="note-text" id="serverLogNote">Servidores usados: ninguno aún</div>
         </div>
+      </div>
 
-        <div class="metric-group">
-          <div class="metric-group-title">Tiempo de Respuesta y Constancia</div>
+      <!-- 3. Subdesplegable: Tiempo de Respuesta y Constancia -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accLatency" data-arrow="arrowLatency">
+          <span>⏱️ Tiempo de respuesta y constancia</span>
+          <span id="arrowLatency">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accLatency">
           <div class="sub-metrics">
             <div>
               <div class="sub-item-label">En reposo</div>
@@ -710,63 +800,47 @@
         </div>
       </div>
 
-      <div class="metric-group">
-        <div class="metric-group-title">¿Cómo Funciona Tu Conexión Para Cada Uso?</div>
-        <div class="services-grid" id="servicesGrid">
-          <div class="service-card">
-            <div class="service-name">Navegar por internet</div>
-            <div class="service-rating" id="svcBrowseRating">Pendiente</div>
-            <div class="service-detail" id="svcBrowseDetail">Esperando resultado...</div>
-          </div>
-          <div class="service-card">
-            <div class="service-name">Ver TV y películas</div>
-            <div class="service-rating" id="svcTvRating">Pendiente</div>
-            <div class="service-detail" id="svcTvDetail">Esperando resultado...</div>
-          </div>
-          <div class="service-card">
-            <div class="service-name">Juegos en línea</div>
-            <div class="service-rating" id="svcGamingRating">Pendiente</div>
-            <div class="service-detail" id="svcGamingDetail">Esperando resultado...</div>
-          </div>
-          <div class="service-card">
-            <div class="service-name">Videollamadas</div>
-            <div class="service-rating" id="svcCallsRating">Pendiente</div>
-            <div class="service-detail" id="svcCallsDetail">Esperando resultado...</div>
-          </div>
+      <!-- 4. Subdesplegable: Empresa de internet, IP y dispositivos -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accNetwork" data-arrow="arrowNetwork">
+          <span>🌐 Empresa de internet, IP y red</span>
+          <span id="arrowNetwork">▼</span>
         </div>
-      </div>
-
-      <div class="meta-row">
-        <div>
-          <div class="meta-item">
-            <div class="meta-label">Empresa de internet (ISP)</div>
-            <div class="meta-value" id="ispInfo">Buscando empresa...</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Tu dirección en internet (IP) y ciudad</div>
-            <div class="meta-value" id="ipGeoInfo">Buscando dirección...</div>
-          </div>
-        </div>
-        <div>
-          <div class="meta-item">
-            <div class="meta-label">Dispositivos conectados a tu Wi-Fi o router</div>
-            <div class="meta-value" id="devicesInfo">
-              Por seguridad, el navegador no puede ver qué celulares, televisores o PCs están conectados a tu red. Entra a tu router para ver la lista.
+        <div class="sub-accordion-body" id="accNetwork">
+          <div class="meta-grid">
+            <div>
+              <div class="meta-item">
+                <div class="meta-label">Empresa de internet (ISP)</div>
+                <div class="meta-value" id="ispInfo">Buscando empresa...</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Tu dirección en internet (IP) y ciudad</div>
+                <div class="meta-value" id="ipGeoInfo">Buscando dirección...</div>
+              </div>
+            </div>
+            <div>
+              <div class="meta-item">
+                <div class="meta-label">Dispositivos conectados a tu Wi-Fi o router</div>
+                <div class="meta-value" id="devicesInfo">
+                  Por seguridad, el navegador no puede listar los equipos conectados a tu router; arriba verás el estimado según el uso, tipo de equipo y plan.
+                </div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Tipo de conexión y esfuerzo de prueba</div>
+                <div class="meta-value" id="netInterfaceInfo">Revisando conexión...</div>
+              </div>
             </div>
           </div>
-          <div class="meta-item">
-            <div class="meta-label">Tipo de conexión y esfuerzo de prueba</div>
-            <div class="meta-value" id="netInterfaceInfo">Revisando conexión...</div>
-          </div>
         </div>
       </div>
 
-      <div class="config-box">
-        <div class="config-header" id="toggleConfigBtn">
+      <!-- 5. Subdesplegable: Ajustes de la prueba -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
-          <span id="configArrow">▼</span>
+          <span id="arrowConfig">▼</span>
         </div>
-        <div class="config-body" id="configBody">
+        <div class="sub-accordion-body grid-2" id="accConfig">
           <div class="field-group">
             <label>Canales de medición (Mín. / Máx.)</label>
             <div class="field-row">
@@ -800,34 +874,48 @@
         </div>
       </div>
 
-      <div class="history-box">
-        <div class="history-top">
-          <span class="metric-group-title" style="margin:0;">Tus pruebas anteriores</span>
-          <div style="display:flex; gap:8px;">
+      <!-- 6. Subdesplegable: Historial guardado -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
+          <span>🕒 Tus pruebas anteriores</span>
+          <span id="arrowHistory">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accHistory">
+          <div class="history-top">
             <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
             <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
           </div>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Bajada</th>
-                <th>Subida</th>
-                <th>Respuesta (Reposo / Uso)</th>
-                <th>Constancia</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody"></tbody>
-          </table>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Bajada</th>
+                  <th>Subida</th>
+                  <th>Respuesta (Reposo / Uso)</th>
+                  <th>Constancia</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
+
+      <!-- 7. Subdesplegable: Preguntas y respuestas (oculto por defecto) -->
+      <div class="sub-accordion" id="faqAccordionBox">
+        <div class="sub-accordion-header" data-target="accFaq" data-arrow="arrowFaq">
+          <span>❓ Preguntas y respuestas sobre VNET</span>
+          <span id="arrowFaq">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accFaq"></div>
+      </div>
+
     </section>
 
-    <!-- Botones circulares: Preguntas, Web Oficial, WhatsApp, Instagram -->
+    <!-- Botones circulares: Preguntas, Web Oficial, WhatsApp, Facebook e Instagram -->
     <nav class="social-bar" aria-label="Ayuda y canales oficiales">
-      <a href="#faqSection" class="icon-link icon-help" title="Preguntas y respuestas" aria-label="Ir a preguntas y respuestas">?</a>
+      <a href="#faqAccordionBox" id="openFaqBtn" class="icon-link icon-help" title="Preguntas y respuestas" aria-label="Abrir preguntas y respuestas">?</a>
 
       <a id="linkWebsite" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-web" title="Web oficial" aria-label="Visitar web oficial">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -843,6 +931,12 @@
         </svg>
       </a>
 
+      <a id="linkFacebook" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-fb" title="Facebook" aria-label="Visitar Facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+        </svg>
+      </a>
+
       <a id="linkInstagram" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-ig" title="Instagram" aria-label="Visitar Instagram">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -851,9 +945,6 @@
         </svg>
       </a>
     </nav>
-
-    <!-- Sección de preguntas y respuestas cargada desde config.js -->
-    <section class="faq-section" id="faqSection" aria-label="Preguntas frecuentes"></section>
   </main>
 
   <script src="config.js"></script>
@@ -862,6 +953,9 @@
     const BACKEND_URL = VNET_CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
     const CDN_NODES = VNET_CFG.cdnNodes || [];
     const PING_ENDPOINTS = VNET_CFG.pingEndpoints || [];
+    const PLANS = Array.isArray(VNET_CFG.plans) ? VNET_CFG.plans : [];
+    const USE_CASES = Array.isArray(VNET_CFG.useCases) ? VNET_CFG.useCases : [];
+    const DEVICE_TYPES = Array.isArray(VNET_CFG.deviceTypes) ? VNET_CFG.deviceTypes : [];
     const DEFAULT_CFG = Object.assign({
       minThreads: 2,
       maxThreads: 4,
@@ -887,6 +981,34 @@
     const elThemeIcon = document.getElementById('themeIcon');
     const elThemeText = document.getElementById('themeText');
 
+    function setMainDetailsOpen(open) {
+      elDetailsPanel.classList.toggle('open', open);
+      elToggleMoreBtn.textContent = open ? 'Ocultar detalles' : 'Ver más detalles';
+    }
+
+    function setSubAccordionOpen(bodyId, arrowId, open) {
+      const body = document.getElementById(bodyId);
+      const arrow = document.getElementById(arrowId);
+      if (!body || !arrow) return;
+      body.classList.toggle('open', open);
+      arrow.textContent = open ? '▲' : '▼';
+    }
+
+    document.querySelectorAll('.sub-accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const bodyId = header.getAttribute('data-target');
+        const arrowId = header.getAttribute('data-arrow');
+        const body = document.getElementById(bodyId);
+        const willOpen = !body.classList.contains('open');
+        setSubAccordionOpen(bodyId, arrowId, willOpen);
+      });
+    });
+
+    document.getElementById('openFaqBtn').addEventListener('click', () => {
+      setMainDetailsOpen(true);
+      setSubAccordionOpen('accFaq', 'arrowFaq', true);
+    });
+
     function applyBrandAndLinks() {
       if (VNET_CFG.brandName) {
         document.getElementById('brandTitle').textContent = VNET_CFG.brandName;
@@ -895,9 +1017,10 @@
       const links = VNET_CFG.links || {};
       if (links.website) document.getElementById('linkWebsite').href = links.website;
       if (links.whatsapp) document.getElementById('linkWhatsapp').href = links.whatsapp;
+      if (links.facebook) document.getElementById('linkFacebook').href = links.facebook;
       if (links.instagram) document.getElementById('linkInstagram').href = links.instagram;
 
-      const faqContainer = document.getElementById('faqSection');
+      const faqContainer = document.getElementById('accFaq');
       const items = Array.isArray(VNET_CFG.faq) ? VNET_CFG.faq : [];
       faqContainer.innerHTML = items.map(item => `
         <div class="faq-item">
@@ -905,6 +1028,110 @@
           <p class="faq-a">${item.a}</p>
         </div>
       `).join('');
+
+      renderUseCasesPlaceholder();
+    }
+
+    function renderUseCasesPlaceholder() {
+      const grid = document.getElementById('servicesGrid');
+      grid.innerHTML = USE_CASES.map(uc => {
+        const tags = (uc.featuredDevices || [])
+          .map(d => `<span class="device-pill">${d}</span>`)
+          .join('');
+        return `
+          <div class="service-card">
+            <div class="service-name">${uc.title}</div>
+            <div class="service-rating">Evaluando...</div>
+            <div class="service-detail">Esperando medición de velocidad...</div>
+            <div class="device-tags">${tags}</div>
+            <div class="service-meta">Plan ref.: <strong>${uc.planRef}</strong> • Hasta ~${uc.planDevices} equipos en plan</div>
+          </div>
+        `;
+      }).join('');
+
+      const devStrip = document.getElementById('devicesSummaryStrip');
+      devStrip.innerHTML = DEVICE_TYPES.map(dt => `
+        <div class="device-box">
+          <div class="device-box-name">${dt.label}</div>
+          <div class="device-box-count">~${dt.loadMbps} Mbps por equipo • Calculando...</div>
+        </div>
+      `).join('');
+
+      const strip = document.getElementById('plansStrip');
+      strip.innerHTML = PLANS.map(p => `
+        <div class="plan-chip" data-plan-id="${p.id}">
+          <div class="plan-chip-title">${p.name} (${p.label})</div>
+          <div class="plan-chip-sub">${p.summary} • Ref.: ~${p.recommendedDevices} equipos</div>
+        </div>
+      `).join('');
+    }
+
+    function evaluateUseCasesAndPlans({ dlMbps, stability }) {
+      let suggestedPlan = PLANS[0] || { id: 'VNET400', recommendedDevices: 16, mbps: 400 };
+      if (dlMbps > 600 && PLANS[2]) suggestedPlan = PLANS[2];
+      else if (dlMbps > 400 && PLANS[1]) suggestedPlan = PLANS[1];
+
+      const grid = document.getElementById('servicesGrid');
+      grid.innerHTML = USE_CASES.map(uc => {
+        const stableEnough = stability >= 45;
+        let cls = 'rating-poor';
+        let verdict = 'No alcanza bien ahora';
+        let explanation = uc.lowText;
+
+        if (dlMbps >= uc.idealMbps && stableEnough) {
+          cls = 'rating-good';
+          verdict = 'Sí, alcanza sobrado para este uso';
+          explanation = uc.okText;
+        } else if (dlMbps >= uc.minMbps) {
+          cls = 'rating-ok';
+          verdict = 'Sí alcanza, con uso moderado';
+          explanation = uc.lowText;
+        }
+
+        const currentEstDevices = Math.max(
+          1,
+          Math.min(uc.planDevices, Math.floor(dlMbps / Math.max(1, uc.deviceLoadMbps)))
+        );
+
+        const tags = (uc.featuredDevices || [])
+          .map(d => `<span class="device-pill">${d}</span>`)
+          .join('');
+
+        return `
+          <div class="service-card">
+            <div class="service-name">${uc.title}</div>
+            <div class="service-rating ${cls}">${verdict}</div>
+            <div class="service-detail">${explanation}</div>
+            <div class="device-tags">${tags}</div>
+            <div class="service-meta">
+              Equipos estimados ahora: <strong>~${currentEstDevices}</strong> (hasta <strong>~${uc.planDevices}</strong> con <strong>${uc.planRef}</strong>)
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const devStrip = document.getElementById('devicesSummaryStrip');
+      devStrip.innerHTML = DEVICE_TYPES.map(dt => {
+        const nowCount = Math.max(
+          1,
+          Math.min(suggestedPlan.recommendedDevices, Math.floor(dlMbps / Math.max(1, dt.loadMbps)))
+        );
+        const planCount = Math.max(
+          1,
+          Math.min(suggestedPlan.recommendedDevices, Math.floor(suggestedPlan.mbps / Math.max(1, dt.loadMbps)))
+        );
+        return `
+          <div class="device-box">
+            <div class="device-box-name">${dt.label}</div>
+            <div class="device-box-count">Ahora: <strong>~${nowCount}</strong> • En ${suggestedPlan.name}: <strong>~${planCount}</strong></div>
+          </div>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.plan-chip').forEach(el => {
+        const isSug = el.getAttribute('data-plan-id') === suggestedPlan.id;
+        el.classList.toggle('suggested', isSug);
+      });
     }
 
     function setActiveServer(name) {
@@ -966,13 +1193,7 @@
       document.getElementById('cfgAutoStart').checked = cfg.autoStart;
       document.getElementById('cfgAlwaysShowDetails').checked = cfg.alwaysShowDetails;
 
-      if (cfg.alwaysShowDetails) {
-        elDetailsPanel.classList.add('open');
-        elToggleMoreBtn.textContent = 'Ocultar detalles';
-      } else {
-        elDetailsPanel.classList.remove('open');
-        elToggleMoreBtn.textContent = 'Ver más detalles';
-      }
+      setMainDetailsOpen(Boolean(cfg.alwaysShowDetails));
     }
 
     function formatSpeed(mbps) {
@@ -1005,52 +1226,6 @@
           document.getElementById('ipGeoInfo').textContent = 'No disponible';
         }
       }
-    }
-
-    function evaluateServices({ dlMbps, ulMbps, idlePing, loadedPing, jitter, stability }) {
-      const worstPing = Math.max(idlePing, loadedPing || idlePing);
-      const jVal = parseFloat(jitter) || 0;
-
-      let browse = { cls: 'rating-good', label: 'Muy fluido', desc: 'Las páginas y redes sociales abren rápido.' };
-      if (dlMbps < 5 || idlePing > 180) {
-        browse = { cls: 'rating-poor', label: 'Lento a veces', desc: 'Algunas páginas pueden tardar en abrir.' };
-      } else if (dlMbps < 15 || idlePing > 100) {
-        browse = { cls: 'rating-ok', label: 'Normal', desc: 'Bien para navegar sin archivos pesados.' };
-      }
-
-      let tv = { cls: 'rating-good', label: 'Ideal en 4K y HD', desc: 'Sirve para ver series y películas sin cortes.' };
-      if (dlMbps < 8 || stability < 45) {
-        tv = { cls: 'rating-poor', label: 'Puede trabarse', desc: 'Conviene bajar la calidad del video.' };
-      } else if (dlMbps < 25 || stability < 65) {
-        tv = { cls: 'rating-ok', label: 'Bien en HD (1080p)', desc: 'Funciona bien en una o dos pantallas.' };
-      }
-
-      let gaming = { cls: 'rating-good', label: 'Muy buena respuesta', desc: 'Ideal para partidas rápidas con poco retraso.' };
-      if (worstPing > 120 || jVal > 30 || stability < 50) {
-        gaming = { cls: 'rating-poor', label: 'Puede dar retraso (lag)', desc: 'Notarás pausas o saltos en momentos clave.' };
-      } else if (worstPing > 65 || jVal > 15 || stability < 75) {
-        gaming = { cls: 'rating-ok', label: 'Aceptable', desc: 'Sirve para juegos tranquilos o casuales.' };
-      }
-
-      const ulOk = ulMbps === null ? true : ulMbps >= 2.5;
-      let calls = { cls: 'rating-good', label: 'Clara y estable', desc: 'Buen audio y video para clases o reuniones.' };
-      if (!ulOk || dlMbps < 4 || jVal > 35 || stability < 45) {
-        calls = { cls: 'rating-poor', label: 'Riesgo de cortes', desc: 'Si se entrecorta, prueba apagar la cámara.' };
-      } else if (dlMbps < 10 || jVal > 18 || stability < 70) {
-        calls = { cls: 'rating-ok', label: 'Buena con pausas leves', desc: 'Adecuada para videollamadas cotidianas.' };
-      }
-
-      const setCard = (rId, dId, item) => {
-        const rEl = document.getElementById(rId);
-        rEl.className = `service-rating ${item.cls}`;
-        rEl.textContent = item.label;
-        document.getElementById(dId).textContent = item.desc;
-      };
-
-      setCard('svcBrowseRating', 'svcBrowseDetail', browse);
-      setCard('svcTvRating', 'svcTvDetail', tv);
-      setCard('svcGamingRating', 'svcGamingDetail', gaming);
-      setCard('svcCallsRating', 'svcCallsDetail', calls);
     }
 
     async function measurePingSamples(count, signal) {
@@ -1280,12 +1455,8 @@
           document.getElementById('uploadSpeed').innerHTML = `No disponible<span>ahora</span>`;
         }
 
-        evaluateServices({
+        evaluateUseCasesAndPlans({
           dlMbps: dlResult.mbps,
-          ulMbps,
-          idlePing: idlePing.avg,
-          loadedPing: loadedMs,
-          jitter: idlePing.jitter,
           stability: dlResult.stability
         });
 
@@ -1346,14 +1517,8 @@
     elRestartBtn.addEventListener('click', startTest);
 
     elToggleMoreBtn.addEventListener('click', () => {
-      const isOpen = elDetailsPanel.classList.toggle('open');
-      elToggleMoreBtn.textContent = isOpen ? 'Ocultar detalles' : 'Ver más detalles';
-    });
-
-    document.getElementById('toggleConfigBtn').addEventListener('click', () => {
-      const body = document.getElementById('configBody');
-      const open = body.classList.toggle('open');
-      document.getElementById('configArrow').textContent = open ? '▲' : '▼';
+      const willOpen = !elDetailsPanel.classList.contains('open');
+      setMainDetailsOpen(willOpen);
     });
 
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
