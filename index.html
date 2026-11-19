@@ -320,13 +320,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .featured-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px;
-    }
-
     .section-heading {
       font-size: 0.8rem;
       font-weight: 700;
@@ -451,7 +444,6 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
-      margin-top: 12px;
     }
 
     .device-box {
@@ -472,7 +464,6 @@
       margin-top: 2px;
     }
 
-    /* Cuestionario interactivo de plan */
     .quiz-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -904,21 +895,36 @@
 
     <section class="details-panel" id="detailsPanel">
 
-      <!-- 1. Bloque principal: Experiencia por uso + Cuestionario de plan -->
-      <div class="featured-box">
-        <div class="section-heading">¿Cómo Funciona Tu Conexión Para Cada Uso?</div>
-        <div class="services-grid" id="servicesGrid"></div>
-
-        <div class="section-heading" style="margin-top:16px; margin-bottom:6px;">
-          Dispositivos estimados por tipo (Celular, Desktop, Laptop, SmartTV, PS5/XBOX)
+      <!-- 1. Desplegable: ¿Cómo Funciona Tu Conexión Para Cada Uso? -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accUseCases" data-arrow="arrowUseCases">
+          <span>🎯 ¿Cómo Funciona Tu Conexión Para Cada Uso?</span>
+          <span id="arrowUseCases">▼</span>
         </div>
-        <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
+        <div class="sub-accordion-body" id="accUseCases">
+          <div class="services-grid" id="servicesGrid"></div>
+          <div class="plans-strip" id="plansStrip"></div>
+        </div>
+      </div>
 
-        <div class="plans-strip" id="plansStrip"></div>
+      <!-- 2. Desplegable: Dispositivos estimados por tipo -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accDevices" data-arrow="arrowDevices">
+          <span>📱 Dispositivos estimados por tipo (Celular, Desktop, Laptop, SmartTV, PS5/XBOX)</span>
+          <span id="arrowDevices">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accDevices">
+          <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
+        </div>
+      </div>
 
-        <!-- Cuestionario de 6 preguntas -->
-        <div id="quizSectionBox" style="margin-top:20px; padding-top:18px; border-top:1px solid var(--border);">
-          <div class="section-heading">Cuestionario: ¿Qué Velocidad y Plan Necesitas?</div>
+      <!-- 3. Desplegable: Cuestionario ¿Qué Velocidad y Plan Necesitas? -->
+      <div class="sub-accordion" id="quizAccordionBox">
+        <div class="sub-accordion-header" data-target="accQuiz" data-arrow="arrowQuiz">
+          <span>🧮 Cuestionario: ¿Qué Velocidad y Plan Necesitas?</span>
+          <span id="arrowQuiz">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accQuiz">
           <div class="quiz-grid" id="quizGrid"></div>
           <div class="quiz-result-box">
             <div>
@@ -930,7 +936,7 @@
         </div>
       </div>
 
-      <!-- 2. Tabla de referencia Mínimo vs. Recomendado por actividad -->
+      <!-- 4. Tabla de referencia Mínimo vs. Recomendado por actividad -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
           <span>📊 Tabla de referencia: Mínimo vs. Recomendado por actividad</span>
@@ -955,7 +961,7 @@
         </div>
       </div>
 
-      <!-- 3. Subdesplegable: Velocidad y Servidor -->
+      <!-- 5. Subdesplegable: Velocidad y Servidor -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accSpeedServer" data-arrow="arrowSpeedServer">
           <span>📡 Velocidad de bajada, subida y servidor</span>
@@ -977,7 +983,7 @@
         </div>
       </div>
 
-      <!-- 4. Subdesplegable: Tiempo de Respuesta y Constancia -->
+      <!-- 6. Subdesplegable: Tiempo de Respuesta y Constancia -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accLatency" data-arrow="arrowLatency">
           <span>⏱️ Tiempo de respuesta y constancia</span>
@@ -1002,7 +1008,7 @@
         </div>
       </div>
 
-      <!-- 5. Subdesplegable: Empresa de internet, IP y red -->
+      <!-- 7. Subdesplegable: Empresa de internet, IP y red -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accNetwork" data-arrow="arrowNetwork">
           <span>🌐 Empresa de internet, IP y red</span>
@@ -1030,7 +1036,7 @@
         </div>
       </div>
 
-      <!-- 6. Subdesplegable: Ajustes de la prueba -->
+      <!-- 8. Subdesplegable: Ajustes de la prueba -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
@@ -1070,7 +1076,7 @@
         </div>
       </div>
 
-      <!-- 7. Subdesplegable: Historial guardado -->
+      <!-- 9. Subdesplegable: Historial guardado -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
           <span>🕒 Tus pruebas anteriores</span>
@@ -1098,7 +1104,7 @@
         </div>
       </div>
 
-      <!-- 8. Subdesplegable: Preguntas y respuestas -->
+      <!-- 10. Subdesplegable: Preguntas y respuestas -->
       <div class="sub-accordion" id="faqAccordionBox">
         <div class="sub-accordion-header" data-target="accFaq" data-arrow="arrowFaq">
           <span>❓ Preguntas y respuestas sobre VTEST</span>
@@ -1231,7 +1237,8 @@
 
     document.getElementById('openQuizBtn').addEventListener('click', () => {
       setMainDetailsOpen(true, false);
-      document.getElementById('quizSectionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setSubAccordionOpen('accQuiz', 'arrowQuiz', true);
+      document.getElementById('quizAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     function initQuizDefaults() {
@@ -1254,8 +1261,8 @@
       });
 
       let suggestedPlan = PLANS[0] || { name: 'VNET400', label: '400 Mbps', mbps: 400 };
-      if (totalMbps > 400 && PLANS[2]) suggestedPlan = PLANS[2];
-      else if (totalMbps > 200 && PLANS[1]) suggestedPlan = PLANS[1];
+      if (totalMbps > 260 && PLANS[2]) suggestedPlan = PLANS[2];
+      else if (totalMbps > 130 && PLANS[1]) suggestedPlan = PLANS[1];
       else if (PLANS[0]) suggestedPlan = PLANS[0];
 
       document.getElementById('quizRecommendedTitle').textContent =
