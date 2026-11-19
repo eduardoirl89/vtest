@@ -270,6 +270,14 @@
       font-weight: 500;
     }
 
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
     .btn-more {
       background: var(--btn-bg);
       border: 1px solid var(--border);
@@ -280,7 +288,6 @@
       font-weight: 500;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s;
-      margin-bottom: 24px;
     }
 
     .btn-more:hover {
@@ -426,6 +433,7 @@
 
     .plan-chip.suggested {
       border-color: var(--active-green);
+      box-shadow: 0 0 0 1px var(--active-green);
     }
 
     .plan-chip-title {
@@ -460,6 +468,80 @@
 
     .device-box-count {
       font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Cuestionario interactivo de plan */
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .quiz-q-card {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .quiz-q-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .quiz-opt-btn {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .quiz-opt-btn:hover {
+      border-color: var(--border-hover);
+    }
+
+    .quiz-opt-btn.selected {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+    }
+
+    .quiz-result-box {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-result-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .quiz-result-sub {
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -815,11 +897,14 @@
 
     <div class="status-banner" id="statusBanner">Midiendo tu conexión ahora mismo...</div>
 
-    <button class="btn-more" id="toggleMoreBtn">Ver más detalles</button>
+    <div class="actions-row">
+      <button class="btn-more" id="toggleMoreBtn">Ver más detalles</button>
+      <button class="btn-more" id="openQuizBtn">Cuestionario de plan</button>
+    </div>
 
     <section class="details-panel" id="detailsPanel">
 
-      <!-- 1. Bloque principal dentro de "Ver más detalles" -->
+      <!-- 1. Bloque principal: Experiencia por uso + Cuestionario de plan -->
       <div class="featured-box">
         <div class="section-heading">¿Cómo Funciona Tu Conexión Para Cada Uso?</div>
         <div class="services-grid" id="servicesGrid"></div>
@@ -830,9 +915,47 @@
         <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
 
         <div class="plans-strip" id="plansStrip"></div>
+
+        <!-- Cuestionario de 6 preguntas -->
+        <div id="quizSectionBox" style="margin-top:20px; padding-top:18px; border-top:1px solid var(--border);">
+          <div class="section-heading">Cuestionario: ¿Qué Velocidad y Plan Necesitas?</div>
+          <div class="quiz-grid" id="quizGrid"></div>
+          <div class="quiz-result-box">
+            <div>
+              <div class="quiz-result-title" id="quizRecommendedTitle">Velocidad recomendada: -- Mbps • Plan sugerido: --</div>
+              <div class="quiz-result-sub" id="quizComparisonSub">Completa la prueba de velocidad para comparar tu bajada actual con tu necesidad estimada.</div>
+            </div>
+            <button type="button" class="btn-sm" id="resetQuizBtn">Reiniciar respuestas</button>
+          </div>
+        </div>
       </div>
 
-      <!-- 2. Subdesplegable: Velocidad y Servidor -->
+      <!-- 2. Tabla de referencia Mínimo vs. Recomendado por actividad -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
+          <span>📊 Tabla de referencia: Mínimo vs. Recomendado por actividad</span>
+          <span id="arrowReferenceTable">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accReferenceTable">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Actividad</th>
+                  <th>Mínimo</th>
+                  <th>Recomendado</th>
+                </tr>
+              </thead>
+              <tbody id="referenceTableBody"></tbody>
+            </table>
+          </div>
+          <div class="note-text">
+            Consejos si notas lentitud: reinicia el equipo, acerca o centra el router, usa cable Ethernet si es posible y evita descargas pesadas simultáneas.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Subdesplegable: Velocidad y Servidor -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accSpeedServer" data-arrow="arrowSpeedServer">
           <span>📡 Velocidad de bajada, subida y servidor</span>
@@ -854,7 +977,7 @@
         </div>
       </div>
 
-      <!-- 3. Subdesplegable: Tiempo de Respuesta y Constancia -->
+      <!-- 4. Subdesplegable: Tiempo de Respuesta y Constancia -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accLatency" data-arrow="arrowLatency">
           <span>⏱️ Tiempo de respuesta y constancia</span>
@@ -879,7 +1002,7 @@
         </div>
       </div>
 
-      <!-- 4. Subdesplegable: Empresa de internet, IP y red -->
+      <!-- 5. Subdesplegable: Empresa de internet, IP y red -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accNetwork" data-arrow="arrowNetwork">
           <span>🌐 Empresa de internet, IP y red</span>
@@ -907,7 +1030,7 @@
         </div>
       </div>
 
-      <!-- 5. Subdesplegable: Ajustes de la prueba -->
+      <!-- 6. Subdesplegable: Ajustes de la prueba -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
@@ -947,7 +1070,7 @@
         </div>
       </div>
 
-      <!-- 6. Subdesplegable: Historial guardado -->
+      <!-- 7. Subdesplegable: Historial guardado -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
           <span>🕒 Tus pruebas anteriores</span>
@@ -975,7 +1098,7 @@
         </div>
       </div>
 
-      <!-- 7. Subdesplegable: Preguntas y respuestas -->
+      <!-- 8. Subdesplegable: Preguntas y respuestas -->
       <div class="sub-accordion" id="faqAccordionBox">
         <div class="sub-accordion-header" data-target="accFaq" data-arrow="arrowFaq">
           <span>❓ Preguntas y respuestas sobre VTEST</span>
@@ -1037,6 +1160,8 @@
     const PLANS = Array.isArray(VNET_CFG.plans) ? VNET_CFG.plans : [];
     const USE_CASES = Array.isArray(VNET_CFG.useCases) ? VNET_CFG.useCases : [];
     const DEVICE_TYPES = Array.isArray(VNET_CFG.deviceTypes) ? VNET_CFG.deviceTypes : [];
+    const SPEED_QUIZ = Array.isArray(VNET_CFG.speedQuiz) ? VNET_CFG.speedQuiz : [];
+    const ACTIVITY_REF_TABLE = Array.isArray(VNET_CFG.activityReferenceTable) ? VNET_CFG.activityReferenceTable : [];
     const DEFAULT_CFG = Object.assign({
       minThreads: 2,
       maxThreads: 4,
@@ -1049,6 +1174,8 @@
     let isRunning = false;
     let abortController = null;
     let usedServers = [];
+    let lastMeasuredDownloadMbps = null;
+    let quizAnswers = {};
 
     const elMainSpeed = document.getElementById('mainSpeed');
     const elRestartBtn = document.getElementById('restartBtn');
@@ -1102,6 +1229,97 @@
       }
     });
 
+    document.getElementById('openQuizBtn').addEventListener('click', () => {
+      setMainDetailsOpen(true, false);
+      document.getElementById('quizSectionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    function initQuizDefaults() {
+      quizAnswers = {};
+      SPEED_QUIZ.forEach((q, idx) => {
+        if (q.options && q.options.length) {
+          const defaultIdx = Math.min(1, q.options.length - 1);
+          quizAnswers[q.id || `q_${idx}`] = defaultIdx;
+        }
+      });
+    }
+
+    function computeQuizRecommendation() {
+      let totalMbps = 0;
+      SPEED_QUIZ.forEach((q, idx) => {
+        const key = q.id || `q_${idx}`;
+        const optIdx = quizAnswers[key] ?? 0;
+        const opt = (q.options && q.options[optIdx]) || { addMbps: 0 };
+        totalMbps += Number(opt.addMbps || 0);
+      });
+
+      let suggestedPlan = PLANS[0] || { name: 'VNET400', label: '400 Mbps', mbps: 400 };
+      if (totalMbps > 400 && PLANS[2]) suggestedPlan = PLANS[2];
+      else if (totalMbps > 200 && PLANS[1]) suggestedPlan = PLANS[1];
+      else if (PLANS[0]) suggestedPlan = PLANS[0];
+
+      document.getElementById('quizRecommendedTitle').textContent =
+        `Velocidad sugerida: ~${totalMbps} Mbps • Plan de referencia: ${suggestedPlan.name} (${suggestedPlan.label})`;
+
+      const subEl = document.getElementById('quizComparisonSub');
+      if (lastMeasuredDownloadMbps !== null) {
+        const diff = Math.round(lastMeasuredDownloadMbps - totalMbps);
+        if (diff >= 0) {
+          subEl.textContent = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) supera en ~${diff} Mbps la velocidad sugerida para tu hogar.`;
+        } else {
+          subEl.textContent = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) está ~${Math.abs(diff)} Mbps por debajo de lo sugerido para este perfil.`;
+        }
+      } else {
+        subEl.textContent = 'Responde las 6 preguntas y revisa tu prueba de velocidad para comparar tu bajada actual.';
+      }
+    }
+
+    function renderQuiz() {
+      const grid = document.getElementById('quizGrid');
+      grid.innerHTML = SPEED_QUIZ.map((q, qIdx) => {
+        const key = q.id || `q_${qIdx}`;
+        const selectedIdx = quizAnswers[key] ?? 0;
+        const btns = (q.options || []).map((opt, optIdx) => {
+          const activeClass = optIdx === selectedIdx ? 'selected' : '';
+          return `<button type="button" class="quiz-opt-btn ${activeClass}" data-qkey="${key}" data-oidx="${optIdx}">${opt.label}</button>`;
+        }).join('');
+        return `
+          <div class="quiz-q-card">
+            <div class="quiz-q-title">${q.question}</div>
+            <div class="quiz-options">${btns}</div>
+          </div>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qkey = btn.getAttribute('data-qkey');
+          const oidx = parseInt(btn.getAttribute('data-oidx'), 10);
+          quizAnswers[qkey] = oidx;
+          renderQuiz();
+          computeQuizRecommendation();
+        });
+      });
+
+      computeQuizRecommendation();
+    }
+
+    function renderActivityReferenceTable() {
+      const tbody = document.getElementById('referenceTableBody');
+      tbody.innerHTML = ACTIVITY_REF_TABLE.map(row => `
+        <tr>
+          <td><strong>${row.activity}</strong></td>
+          <td>${row.min}</td>
+          <td>${row.recommended}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('resetQuizBtn').addEventListener('click', () => {
+      initQuizDefaults();
+      renderQuiz();
+    });
+
     function renderPoweredByLogo() {
       const poweredName = VNET_CFG.poweredByName || 'VNET';
       document.getElementById('poweredByText').textContent = poweredName;
@@ -1152,6 +1370,9 @@
       `).join('');
 
       renderUseCasesPlaceholder();
+      renderActivityReferenceTable();
+      initQuizDefaults();
+      renderQuiz();
     }
 
     function renderUseCasesPlaceholder() {
@@ -1217,6 +1438,8 @@
     }
 
     function evaluateUseCasesAndPlans({ dlMbps, ulMbps, idlePing, loadedPing, stability }) {
+      lastMeasuredDownloadMbps = dlMbps;
+
       let suggestedPlan = PLANS[0] || { id: 'VNET400', recommendedDevices: 16, mbps: 400 };
       if (dlMbps > 600 && PLANS[2]) suggestedPlan = PLANS[2];
       else if (dlMbps > 400 && PLANS[1]) suggestedPlan = PLANS[1];
@@ -1287,6 +1510,8 @@
         const isSug = el.getAttribute('data-plan-id') === suggestedPlan.id;
         el.classList.toggle('suggested', isSug);
       });
+
+      computeQuizRecommendation();
     }
 
     function setActiveServer(name) {
