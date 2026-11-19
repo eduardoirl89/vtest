@@ -2,12 +2,9 @@
 window.VNET_CONFIG = {
   brandName: 'VTEST',
   poweredByName: 'VNET',
-  // Ruta local (ej. 'logo-vnet.png' o 'assets/logo-vnet.svg') o URL del logo de VNET.
-  // Si se deja vacío '', se muestra un emblema de respaldo con la inicial V.
   brandLogoUrl: '',
   backendUrl: 'https://vtest-backend-d4nr.onrender.com',
 
-  // Enlaces oficiales y redes sociales de VNET
   links: {
     website: 'https://vnet.com.ve',
     whatsapp: 'https://wa.me/584122593059?text=Hola%20VNET%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20planes%20y%20mi%20conexi%C3%B3n',
@@ -15,7 +12,6 @@ window.VNET_CONFIG = {
     instagram: 'https://www.instagram.com/vnet_ve/'
   },
 
-  // Tipos de dispositivos más usados (consumo promedio estimado por equipo en Mbps)
   deviceTypes: [
     { id: 'celular', label: 'Celular', loadMbps: 8 },
     { id: 'laptop', label: 'Laptop', loadMbps: 15 },
@@ -24,7 +20,6 @@ window.VNET_CONFIG = {
     { id: 'console', label: 'PS5/XBOX', loadMbps: 35 }
   ],
 
-  // Planes comerciales de referencia VNET
   plans: [
     {
       id: 'VNET400',
@@ -52,7 +47,6 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // 4 categorías basadas en Speedtest Experience Ratings + métricas reales
   useCases: [
     {
       id: 'web_browsing',
@@ -116,7 +110,6 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Cuestionario de 6 pasos con pesos calibrados
   speedQuiz: [
     {
       id: 'people',
@@ -177,7 +170,6 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Tabla de referencia corregida
   activityReferenceTable: [
     {
       activity: 'Enviar e-mails, navegar por internet, streaming de radio, llamadas (VoIP)',
@@ -206,7 +198,6 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Servidores de medición
   cdnNodes: [
     { name: 'Servidor rápido Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=15000000' },
     { name: 'Servidor de archivos jsDelivr', url: 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js' }
@@ -217,7 +208,6 @@ window.VNET_CONFIG = {
     { name: 'Servidor de subida VTEST', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
   ],
 
-  // Valores por defecto de la prueba
   defaults: {
     minThreads: 2,
     maxThreads: 4,
@@ -226,15 +216,14 @@ window.VNET_CONFIG = {
     alwaysShowDetails: false
   },
 
-  // Preguntas y respuestas adaptadas a VTEST y VNET
   faq: [
     {
       q: '¿Qué mide VTEST?',
       a: 'VTEST calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar como para subir, junto con la latencia y la constancia, para puntuar de 1 a 5 cómo rinde cada actividad.'
     },
     {
-      q: '¿Cómo funciona el benchmarking propio, local y nacional?',
-      a: 'Separa tu comparación personal (tu prueba actual frente a tu mejor marca histórica y promedio) de la comparativa por proveedor/región y media nacional registrada en el servidor.'
+      q: '¿Cómo funciona el benchmarking de VTEST?',
+      a: 'Separa tu benchmarking propio (tu prueba actual frente a tu mejor marca histórica y promedio) de la comparación entre tu test y los tests de otros usuarios de VTEST en tu zona, país y proveedores.'
     },
     {
       q: '¿Por qué una buena velocidad de bajada no siempre garantiza buen juego o videollamada?',
