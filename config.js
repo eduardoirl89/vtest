@@ -1,6 +1,10 @@
-// Configuración central de VNET Speedtest
+// Configuración central de VTEST Speedtest (Powered by VNET)
 window.VNET_CONFIG = {
-  brandName: 'VNET',
+  brandName: 'VTEST',
+  poweredByName: 'VNET',
+  // Ruta local (ej. 'logo-vnet.png' o 'assets/logo-vnet.svg') o URL del logo de VNET.
+  // Si se deja vacío '', se muestra un emblema de respaldo con la inicial V.
+  brandLogoUrl: '',
   backendUrl: 'https://vtest-backend-d4nr.onrender.com',
 
   // Enlaces oficiales y redes sociales de VNET
@@ -96,7 +100,7 @@ window.VNET_CONFIG = {
 
   pingEndpoints: [
     { name: 'Servidor rápido Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
-    { name: 'Servidor de subida VNET', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+    { name: 'Servidor de subida VTEST', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
   ],
 
   // Valores por defecto de la prueba
@@ -108,23 +112,19 @@ window.VNET_CONFIG = {
     alwaysShowDetails: false
   },
 
-  // Preguntas y respuestas adaptadas a VNET (lenguaje simple)
+  // Preguntas y respuestas adaptadas a VTEST y VNET
   faq: [
     {
-      q: '¿Qué mide VNET?',
-      a: 'VNET calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar cosas como para subirlas, y te orienta qué uso y plan VNET se adapta mejor a tu ritmo.'
+      q: '¿Qué mide VTEST?',
+      a: 'VTEST calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar cosas como para subirlas, y te orienta qué uso y plan VNET se adapta mejor a tu ritmo.'
     },
     {
-      q: '¿Cómo calcula VNET los equipos como Celular, Desktop, Laptop, SmartTV y PS5/XBOX?',
+      q: '¿Cómo calcula VTEST los equipos como Celular, Desktop, Laptop, SmartTV y PS5/XBOX?',
       a: 'Cada dispositivo consume un promedio distinto según lo que haga (navegar en Celular o Laptop, trabajar en Desktop, ver series en SmartTV o jugar/descargar en PS5/XBOX). Con tu velocidad actual y el plan de referencia calculamos una estimación práctica.'
     },
     {
       q: '¿Cuáles son los planes VNET400, VNET600 y VNET1GIGA?',
       a: 'VNET400 (400 Mbps) está pensado para redes sociales, series y streaming HD; VNET600 (600 Mbps) para videojuegos, conferencias y varias apps a la vez; y VNET1GIGA (1 Gbps) para streaming 4K/8K, descargas rápidas y hogares con varios jugadores.'
-    },
-    {
-      q: '¿Por qué el cálculo de dispositivos conectados es orientativo?',
-      a: 'Por seguridad, el navegador no puede listar los equipos conectados a tu router; por eso estimamos cuántos dispositivos simultáneos caben según tu velocidad medida, el consumo de cada uso y la capacidad de referencia de cada plan.'
     },
     {
       q: '¿Qué significan el tiempo de respuesta y el retraso extra?',
