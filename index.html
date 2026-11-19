@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VNET — Prueba de velocidad de Internet</title>
+  <title>VTEST — Prueba de velocidad de Internet</title>
   <style>
     :root {
       --bg: #ffffff;
@@ -67,7 +67,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 16px 56px;
+      padding: 24px 16px 40px;
       line-height: 1.5;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
@@ -166,6 +166,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
+      flex: 1;
     }
 
     .subtitle {
@@ -301,6 +302,11 @@
 
     .details-panel.open {
       display: flex;
+    }
+
+    /* Cuando se abre desde el botón de ayuda (?) solo se muestra Preguntas y respuestas */
+    .details-panel.faq-only > :not(#faqAccordionBox) {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -662,7 +668,7 @@
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
-      margin: 12px 0 16px;
+      margin: 12px 0 24px;
     }
 
     .icon-link {
@@ -689,6 +695,59 @@
     .icon-fb   { background: var(--icon-fb); }
     .icon-ig   { background: var(--icon-ig); }
 
+    /* Firma al pie estilo Fast: Powered by VNET + Logo */
+    footer.powered-footer {
+      width: 100%;
+      max-width: 920px;
+      margin-top: 28px;
+      padding-top: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .powered-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .powered-link:hover {
+      color: var(--text-main);
+    }
+
+    .powered-brand-strong {
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      color: var(--text-main);
+    }
+
+    .powered-logo-img {
+      height: 20px;
+      width: auto;
+      max-width: 72px;
+      object-fit: contain;
+      display: inline-block;
+    }
+
+    .powered-logo-fallback {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     @media (max-width: 600px) {
       .speed-right { align-items: center; }
       .hero-readout { flex-direction: column; align-items: center; gap: 6px; }
@@ -699,7 +758,7 @@
 
   <header>
     <div class="brand">
-      <span id="brandTitle">VNET</span>
+      <span id="brandTitle">VTEST</span>
       <span class="brand-badge">Velocidad</span>
     </div>
     <div class="header-controls">
@@ -800,7 +859,7 @@
         </div>
       </div>
 
-      <!-- 4. Subdesplegable: Empresa de internet, IP y dispositivos -->
+      <!-- 4. Subdesplegable: Empresa de internet, IP y red -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accNetwork" data-arrow="arrowNetwork">
           <span>🌐 Empresa de internet, IP y red</span>
@@ -819,12 +878,6 @@
               </div>
             </div>
             <div>
-              <div class="meta-item">
-                <div class="meta-label">Dispositivos conectados a tu Wi-Fi o router</div>
-                <div class="meta-value" id="devicesInfo">
-                  Por seguridad, el navegador no puede listar los equipos conectados a tu router; arriba verás el estimado según el uso, tipo de equipo y plan.
-                </div>
-              </div>
               <div class="meta-item">
                 <div class="meta-label">Tipo de conexión y esfuerzo de prueba</div>
                 <div class="meta-value" id="netInterfaceInfo">Revisando conexión...</div>
@@ -902,10 +955,10 @@
         </div>
       </div>
 
-      <!-- 7. Subdesplegable: Preguntas y respuestas (oculto por defecto) -->
+      <!-- 7. Subdesplegable: Preguntas y respuestas -->
       <div class="sub-accordion" id="faqAccordionBox">
         <div class="sub-accordion-header" data-target="accFaq" data-arrow="arrowFaq">
-          <span>❓ Preguntas y respuestas sobre VNET</span>
+          <span>❓ Preguntas y respuestas sobre VTEST</span>
           <span id="arrowFaq">▼</span>
         </div>
         <div class="sub-accordion-body" id="accFaq"></div>
@@ -915,7 +968,7 @@
 
     <!-- Botones circulares: Preguntas, Web Oficial, WhatsApp, Facebook e Instagram -->
     <nav class="social-bar" aria-label="Ayuda y canales oficiales">
-      <a href="#faqAccordionBox" id="openFaqBtn" class="icon-link icon-help" title="Preguntas y respuestas" aria-label="Abrir preguntas y respuestas">?</a>
+      <button type="button" id="openFaqBtn" class="icon-link icon-help" title="Preguntas y respuestas" aria-label="Abrir preguntas y respuestas">?</button>
 
       <a id="linkWebsite" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-web" title="Web oficial" aria-label="Visitar web oficial">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -946,6 +999,14 @@
       </a>
     </nav>
   </main>
+
+  <footer class="powered-footer">
+    <a id="poweredByLink" href="#" target="_blank" rel="noopener noreferrer" class="powered-link">
+      <span>Powered by</span>
+      <span id="poweredByText" class="powered-brand-strong">VNET</span>
+      <span id="poweredLogoSlot"></span>
+    </a>
+  </footer>
 
   <script src="config.js"></script>
   <script>
@@ -981,8 +1042,9 @@
     const elThemeIcon = document.getElementById('themeIcon');
     const elThemeText = document.getElementById('themeText');
 
-    function setMainDetailsOpen(open) {
+    function setMainDetailsOpen(open, faqOnly = false) {
       elDetailsPanel.classList.toggle('open', open);
+      elDetailsPanel.classList.toggle('faq-only', Boolean(open && faqOnly));
       elToggleMoreBtn.textContent = open ? 'Ocultar detalles' : 'Ver más detalles';
     }
 
@@ -1004,21 +1066,62 @@
       });
     });
 
+    // Al hacer clic en Ayuda (?) solo se muestra Preguntas y respuestas
     document.getElementById('openFaqBtn').addEventListener('click', () => {
-      setMainDetailsOpen(true);
-      setSubAccordionOpen('accFaq', 'arrowFaq', true);
+      const isAlreadyFaqOpen =
+        elDetailsPanel.classList.contains('open') &&
+        elDetailsPanel.classList.contains('faq-only') &&
+        document.getElementById('accFaq').classList.contains('open');
+
+      if (isAlreadyFaqOpen) {
+        setMainDetailsOpen(false, false);
+        setSubAccordionOpen('accFaq', 'arrowFaq', false);
+      } else {
+        setMainDetailsOpen(true, true);
+        setSubAccordionOpen('accFaq', 'arrowFaq', true);
+        document.getElementById('faqAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     });
 
-    function applyBrandAndLinks() {
-      if (VNET_CFG.brandName) {
-        document.getElementById('brandTitle').textContent = VNET_CFG.brandName;
-        document.title = `${VNET_CFG.brandName} — Prueba de velocidad de Internet`;
+    function renderPoweredByLogo() {
+      const poweredName = VNET_CFG.poweredByName || 'VNET';
+      document.getElementById('poweredByText').textContent = poweredName;
+
+      const links = VNET_CFG.links || {};
+      const poweredLink = document.getElementById('poweredByLink');
+      if (links.website) poweredLink.href = links.website;
+
+      const slot = document.getElementById('poweredLogoSlot');
+      const logoUrl = (VNET_CFG.brandLogoUrl || '').trim();
+
+      if (!logoUrl) {
+        slot.innerHTML = `<span class="powered-logo-fallback" aria-hidden="true">${poweredName.charAt(0).toUpperCase()}</span>`;
+        return;
       }
+
+      const img = document.createElement('img');
+      img.src = logoUrl;
+      img.alt = `Logo ${poweredName}`;
+      img.className = 'powered-logo-img';
+      img.addEventListener('error', () => {
+        slot.innerHTML = `<span class="powered-logo-fallback" aria-hidden="true">${poweredName.charAt(0).toUpperCase()}</span>`;
+      });
+      slot.innerHTML = '';
+      slot.appendChild(img);
+    }
+
+    function applyBrandAndLinks() {
+      const brand = VNET_CFG.brandName || 'VTEST';
+      document.getElementById('brandTitle').textContent = brand;
+      document.title = `${brand} — Prueba de velocidad de Internet`;
+
       const links = VNET_CFG.links || {};
       if (links.website) document.getElementById('linkWebsite').href = links.website;
       if (links.whatsapp) document.getElementById('linkWhatsapp').href = links.whatsapp;
       if (links.facebook) document.getElementById('linkFacebook').href = links.facebook;
       if (links.instagram) document.getElementById('linkInstagram').href = links.instagram;
+
+      renderPoweredByLogo();
 
       const faqContainer = document.getElementById('accFaq');
       const items = Array.isArray(VNET_CFG.faq) ? VNET_CFG.faq : [];
@@ -1193,7 +1296,7 @@
       document.getElementById('cfgAutoStart').checked = cfg.autoStart;
       document.getElementById('cfgAlwaysShowDetails').checked = cfg.alwaysShowDetails;
 
-      setMainDetailsOpen(Boolean(cfg.alwaysShowDetails));
+      setMainDetailsOpen(Boolean(cfg.alwaysShowDetails), false);
     }
 
     function formatSpeed(mbps) {
@@ -1359,7 +1462,7 @@
       let failedAll = true;
       const threads = Math.min(3, cfg.maxThreads);
       updateInterfaceInfo(threads);
-      setActiveServer('Servidor de subida VNET');
+      setActiveServer('Servidor de subida VTEST');
 
       async function uploadWorker() {
         while (!signal.aborted && performance.now() - startTime < durationMs) {
@@ -1373,7 +1476,7 @@
             if (res.ok) {
               failedAll = false;
               uploadedBytes += payload.byteLength;
-              setActiveServer('Servidor de subida VNET');
+              setActiveServer('Servidor de subida VTEST');
             } else {
               break;
             }
@@ -1518,7 +1621,7 @@
 
     elToggleMoreBtn.addEventListener('click', () => {
       const willOpen = !elDetailsPanel.classList.contains('open');
-      setMainDetailsOpen(willOpen);
+      setMainDetailsOpen(willOpen, false);
     });
 
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
@@ -1554,7 +1657,7 @@
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'vnet_pruebas_velocidad.csv';
+      a.download = 'vtest_pruebas_velocidad.csv';
       a.click();
     });
 
