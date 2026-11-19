@@ -20,6 +20,12 @@
       --btn-bg: #ffffff;
       --btn-primary-bg: #111827;
       --btn-primary-text: #ffffff;
+      --quiz-surface: #0b1633;
+      --quiz-text: #ffffff;
+      --quiz-muted: #cbd5e1;
+      --quiz-accent: #3b82f6;
+      --quiz-card-bg: #ffffff;
+      --quiz-card-text: #0f172a;
       --icon-help: #0ea5e9;
       --icon-web: #374151;
       --icon-wa: #16a34a;
@@ -42,6 +48,12 @@
       --btn-bg: #131a26;
       --btn-primary-bg: #f3f4f6;
       --btn-primary-text: #0b0f17;
+      --quiz-surface: #081024;
+      --quiz-text: #ffffff;
+      --quiz-muted: #cbd5e1;
+      --quiz-accent: #60a5fa;
+      --quiz-card-bg: #ffffff;
+      --quiz-card-text: #0f172a;
       --icon-help: #38bdf8;
       --icon-web: #64748b;
       --icon-wa: #22c55e;
@@ -320,15 +332,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .section-heading {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
     .services-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
@@ -464,77 +467,165 @@
       margin-top: 2px;
     }
 
-    .quiz-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-      margin-bottom: 16px;
+    /* Cuestionario paso a paso inspirado en la referencia */
+    .quiz-stage {
+      background: var(--quiz-surface);
+      color: var(--quiz-text);
+      border-radius: 10px;
+      padding: 22px 18px;
+      text-align: center;
     }
 
-    .quiz-q-card {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-    }
-
-    .quiz-q-title {
-      font-size: 0.84rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--text-main);
-    }
-
-    .quiz-options {
+    .quiz-top-meta {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .quiz-opt-btn {
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text-main);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .quiz-opt-btn:hover {
-      border-color: var(--border-hover);
-    }
-
-    .quiz-opt-btn.selected {
-      background: var(--btn-primary-bg);
-      color: var(--btn-primary-text);
-      border-color: var(--btn-primary-bg);
-    }
-
-    .quiz-result-box {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--quiz-muted);
+      margin-bottom: 14px;
     }
 
-    .quiz-result-title {
-      font-size: 0.95rem;
+    .quiz-back-link {
+      background: transparent;
+      border: none;
+      color: var(--quiz-text);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .quiz-back-link:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .quiz-req-highlight {
+      color: var(--quiz-accent);
       font-weight: 800;
-      color: var(--text-main);
     }
 
-    .quiz-result-sub {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 2px;
+    .quiz-question-heading {
+      font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      color: var(--quiz-text);
+      max-width: 720px;
+      margin: 0 auto 22px;
+      line-height: 1.3;
+    }
+
+    .quiz-step-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      max-width: 760px;
+      margin: 0 auto 18px;
+    }
+
+    .quiz-option-card {
+      background: var(--quiz-card-bg);
+      color: var(--quiz-card-text);
+      border: 3px solid transparent;
+      border-radius: 8px;
+      padding: 20px 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      min-height: 128px;
+    }
+
+    .quiz-option-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--quiz-accent);
+    }
+
+    .quiz-option-card.selected {
+      border-color: var(--quiz-accent);
+      box-shadow: 0 0 0 2px var(--quiz-accent);
+    }
+
+    .quiz-card-badge {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #2563eb;
+      line-height: 1.1;
+    }
+
+    .quiz-card-label {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--quiz-card-text);
+      line-height: 1.25;
+    }
+
+    .quiz-nav-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .quiz-final-box {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 10px 8px;
+    }
+
+    .quiz-final-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--quiz-text);
+      margin-bottom: 14px;
+    }
+
+    .quiz-speed-frame {
+      display: inline-block;
+      border: 4px solid var(--quiz-accent);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      padding: 14px 28px 16px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .quiz-speed-number {
+      font-size: clamp(2.1rem, 5vw, 3.1rem);
+      font-weight: 800;
+      color: var(--quiz-text);
+      line-height: 1.1;
+    }
+
+    .quiz-plan-pill {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--quiz-accent);
+      margin-top: 4px;
+    }
+
+    .quiz-final-desc {
+      font-size: 0.9rem;
+      color: var(--quiz-muted);
+      max-width: 540px;
+      margin: 10px auto 16px;
+    }
+
+    .quiz-reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--quiz-text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: underline;
     }
 
     .sub-accordion {
@@ -918,28 +1009,21 @@
         </div>
       </div>
 
-      <!-- 3. Desplegable: Cuestionario ¿Qué Velocidad y Plan Necesitas? -->
+      <!-- 3. Desplegable: Cuestionario paso a paso ¿Qué Velocidad y Plan Necesitas? -->
       <div class="sub-accordion" id="quizAccordionBox">
         <div class="sub-accordion-header" data-target="accQuiz" data-arrow="arrowQuiz">
           <span>🧮 Cuestionario: ¿Qué Velocidad y Plan Necesitas?</span>
           <span id="arrowQuiz">▼</span>
         </div>
         <div class="sub-accordion-body" id="accQuiz">
-          <div class="quiz-grid" id="quizGrid"></div>
-          <div class="quiz-result-box">
-            <div>
-              <div class="quiz-result-title" id="quizRecommendedTitle">Velocidad recomendada: -- Mbps • Plan sugerido: --</div>
-              <div class="quiz-result-sub" id="quizComparisonSub">Completa la prueba de velocidad para comparar tu bajada actual con tu necesidad estimada.</div>
-            </div>
-            <button type="button" class="btn-sm" id="resetQuizBtn">Reiniciar respuestas</button>
-          </div>
+          <div class="quiz-stage" id="quizStage"></div>
         </div>
       </div>
 
-      <!-- 4. Tabla de referencia Mínimo vs. Recomendado por actividad -->
+      <!-- 4. Tabla de referencia corregida -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
-          <span>📊 Tabla de referencia: Mínimo vs. Recomendado por actividad</span>
+          <span>📊 Tabla de referencia: Velocidad recomendada por actividad</span>
           <span id="arrowReferenceTable">▼</span>
         </div>
         <div class="sub-accordion-body" id="accReferenceTable">
@@ -948,15 +1032,15 @@
               <thead>
                 <tr>
                   <th>Actividad</th>
-                  <th>Mínimo</th>
-                  <th>Recomendado</th>
+                  <th>Dispositivos</th>
+                  <th>Velocidad de descarga recomendada</th>
                 </tr>
               </thead>
               <tbody id="referenceTableBody"></tbody>
             </table>
           </div>
           <div class="note-text">
-            Consejos si notas lentitud: reinicia el equipo, acerca o centra el router, usa cable Ethernet si es posible y evita descargas pesadas simultáneas.
+            <strong>Observación:</strong> Una mayor velocidad de descarga ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia, buena subida y estabilidad.
           </div>
         </div>
       </div>
@@ -1182,6 +1266,7 @@
     let usedServers = [];
     let lastMeasuredDownloadMbps = null;
     let quizAnswers = {};
+    let quizStepIndex = 0;
 
     const elMainSpeed = document.getElementById('mainSpeed');
     const elRestartBtn = document.getElementById('restartBtn');
@@ -1241,74 +1326,142 @@
       document.getElementById('quizAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    function initQuizDefaults() {
+    function resetQuizState() {
       quizAnswers = {};
-      SPEED_QUIZ.forEach((q, idx) => {
-        if (q.options && q.options.length) {
-          const defaultIdx = Math.min(1, q.options.length - 1);
-          quizAnswers[q.id || `q_${idx}`] = defaultIdx;
-        }
-      });
+      quizStepIndex = 0;
     }
 
-    function computeQuizRecommendation() {
+    function getQuizAccumulatedMbps() {
       let totalMbps = 0;
       SPEED_QUIZ.forEach((q, idx) => {
         const key = q.id || `q_${idx}`;
-        const optIdx = quizAnswers[key] ?? 0;
-        const opt = (q.options && q.options[optIdx]) || { addMbps: 0 };
-        totalMbps += Number(opt.addMbps || 0);
-      });
-
-      let suggestedPlan = PLANS[0] || { name: 'VNET400', label: '400 Mbps', mbps: 400 };
-      if (totalMbps > 260 && PLANS[2]) suggestedPlan = PLANS[2];
-      else if (totalMbps > 130 && PLANS[1]) suggestedPlan = PLANS[1];
-      else if (PLANS[0]) suggestedPlan = PLANS[0];
-
-      document.getElementById('quizRecommendedTitle').textContent =
-        `Velocidad sugerida: ~${totalMbps} Mbps • Plan de referencia: ${suggestedPlan.name} (${suggestedPlan.label})`;
-
-      const subEl = document.getElementById('quizComparisonSub');
-      if (lastMeasuredDownloadMbps !== null) {
-        const diff = Math.round(lastMeasuredDownloadMbps - totalMbps);
-        if (diff >= 0) {
-          subEl.textContent = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) supera en ~${diff} Mbps la velocidad sugerida para tu hogar.`;
-        } else {
-          subEl.textContent = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) está ~${Math.abs(diff)} Mbps por debajo de lo sugerido para este perfil.`;
+        const optIdx = quizAnswers[key];
+        if (typeof optIdx === 'number' && q.options && q.options[optIdx]) {
+          totalMbps += Number(q.options[optIdx].addMbps || 0);
         }
-      } else {
-        subEl.textContent = 'Responde las 6 preguntas y revisa tu prueba de velocidad para comparar tu bajada actual.';
-      }
+      });
+      return totalMbps;
     }
 
-    function renderQuiz() {
-      const grid = document.getElementById('quizGrid');
-      grid.innerHTML = SPEED_QUIZ.map((q, qIdx) => {
-        const key = q.id || `q_${qIdx}`;
-        const selectedIdx = quizAnswers[key] ?? 0;
-        const btns = (q.options || []).map((opt, optIdx) => {
-          const activeClass = optIdx === selectedIdx ? 'selected' : '';
-          return `<button type="button" class="quiz-opt-btn ${activeClass}" data-qkey="${key}" data-oidx="${optIdx}">${opt.label}</button>`;
-        }).join('');
-        return `
-          <div class="quiz-q-card">
-            <div class="quiz-q-title">${q.question}</div>
-            <div class="quiz-options">${btns}</div>
+    function getSuggestedPlanForMbps(mbps) {
+      if (mbps > 260 && PLANS[2]) return PLANS[2];
+      if (mbps > 130 && PLANS[1]) return PLANS[1];
+      return PLANS[0] || { name: 'VNET400', label: '400 Mbps', mbps: 400 };
+    }
+
+    function renderQuizStage() {
+      const stage = document.getElementById('quizStage');
+      if (!stage || !SPEED_QUIZ.length) return;
+
+      const totalSteps = SPEED_QUIZ.length;
+      const accMbps = getQuizAccumulatedMbps();
+
+      if (quizStepIndex >= totalSteps) {
+        const suggestedPlan = getSuggestedPlanForMbps(accMbps);
+        const waHref = (VNET_CFG.links && VNET_CFG.links.whatsapp) || '#';
+        let comparisonText = 'Realiza o revisa tu prueba de velocidad para comparar tu bajada actual con esta estimación.';
+
+        if (lastMeasuredDownloadMbps !== null) {
+          const diff = Math.round(lastMeasuredDownloadMbps - accMbps);
+          if (diff >= 0) {
+            comparisonText = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) supera en ~${diff} Mbps la velocidad estimada para tu hogar.`;
+          } else {
+            comparisonText = `Tu bajada actual (${formatSpeed(lastMeasuredDownloadMbps)} Mbps) está ~${Math.abs(diff)} Mbps por debajo de lo estimado para tu hogar.`;
+          }
+        }
+
+        stage.innerHTML = `
+          <div class="quiz-final-box">
+            <div class="quiz-final-title">Nuestra recomendación de velocidad para ti es:</div>
+            <div class="quiz-speed-frame">
+              <div class="quiz-speed-number">${accMbps} Mbps</div>
+              <div class="quiz-plan-pill">Plan de referencia: ${suggestedPlan.name} (${suggestedPlan.label})</div>
+            </div>
+            <p class="quiz-final-desc">${comparisonText}</p>
+            <div class="quiz-nav-footer">
+              <a href="${waHref}" target="_blank" rel="noopener noreferrer" class="btn-sm primary" style="text-decoration:none;">Consultar plan por WhatsApp</a>
+              <button type="button" class="btn-sm" id="quizGoBackBtn">‹ Ver última pregunta</button>
+            </div>
+            <div style="margin-top:14px;">
+              <button type="button" class="quiz-reset-btn" id="quizRestartBtn">Reiniciar cuestionario ↻</button>
+            </div>
           </div>
+        `;
+
+        document.getElementById('quizGoBackBtn').addEventListener('click', () => {
+          quizStepIndex = Math.max(0, totalSteps - 1);
+          renderQuizStage();
+        });
+        document.getElementById('quizRestartBtn').addEventListener('click', () => {
+          resetQuizState();
+          renderQuizStage();
+        });
+        return;
+      }
+
+      const q = SPEED_QUIZ[quizStepIndex];
+      const key = q.id || `q_${quizStepIndex}`;
+      const selectedIdx = quizAnswers[key];
+
+      const cardsHtml = (q.options || []).map((opt, idx) => {
+        const isSel = selectedIdx === idx ? 'selected' : '';
+        return `
+          <button type="button" class="quiz-option-card ${isSel}" data-oidx="${idx}">
+            <span class="quiz-card-badge">${opt.badge || '•'}</span>
+            <span class="quiz-card-label">${opt.label}</span>
+          </button>
         `;
       }).join('');
 
-      grid.querySelectorAll('.quiz-opt-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const qkey = btn.getAttribute('data-qkey');
-          const oidx = parseInt(btn.getAttribute('data-oidx'), 10);
-          quizAnswers[qkey] = oidx;
-          renderQuiz();
-          computeQuizRecommendation();
+      stage.innerHTML = `
+        <div class="quiz-top-meta">
+          <button type="button" class="quiz-back-link" id="quizPrevBtn" ${quizStepIndex === 0 ? 'disabled' : ''}>‹</button>
+          <span>Pregunta ${quizStepIndex + 1}/${totalSteps}</span>
+          <span>|</span>
+          <span>Requisito estimado: <span class="quiz-req-highlight">${accMbps} Mbps</span></span>
+        </div>
+        <div class="quiz-question-heading">${q.question}</div>
+        <div class="quiz-step-cards">${cardsHtml}</div>
+        <div class="quiz-nav-footer">
+          ${typeof selectedIdx === 'number' ? `<button type="button" class="btn-sm primary" id="quizNextBtn">${quizStepIndex === totalSteps - 1 ? 'Ver recomendación' : 'Siguiente ›'}</button>` : ''}
+          ${Object.keys(quizAnswers).length ? `<button type="button" class="btn-sm" id="quizResetSmallBtn">Reiniciar</button>` : ''}
+        </div>
+      `;
+
+      const prevBtn = document.getElementById('quizPrevBtn');
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (quizStepIndex > 0) {
+            quizStepIndex--;
+            renderQuizStage();
+          }
+        });
+      }
+
+      stage.querySelectorAll('.quiz-option-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const oidx = parseInt(card.getAttribute('data-oidx'), 10);
+          quizAnswers[key] = oidx;
+          quizStepIndex++;
+          renderQuizStage();
         });
       });
 
-      computeQuizRecommendation();
+      const nextBtn = document.getElementById('quizNextBtn');
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          quizStepIndex++;
+          renderQuizStage();
+        });
+      }
+
+      const resetSmall = document.getElementById('quizResetSmallBtn');
+      if (resetSmall) {
+        resetSmall.addEventListener('click', () => {
+          resetQuizState();
+          renderQuizStage();
+        });
+      }
     }
 
     function renderActivityReferenceTable() {
@@ -1316,16 +1469,11 @@
       tbody.innerHTML = ACTIVITY_REF_TABLE.map(row => `
         <tr>
           <td><strong>${row.activity}</strong></td>
-          <td>${row.min}</td>
+          <td>${row.devices}</td>
           <td>${row.recommended}</td>
         </tr>
       `).join('');
     }
-
-    document.getElementById('resetQuizBtn').addEventListener('click', () => {
-      initQuizDefaults();
-      renderQuiz();
-    });
 
     function renderPoweredByLogo() {
       const poweredName = VNET_CFG.poweredByName || 'VNET';
@@ -1378,8 +1526,8 @@
 
       renderUseCasesPlaceholder();
       renderActivityReferenceTable();
-      initQuizDefaults();
-      renderQuiz();
+      resetQuizState();
+      renderQuizStage();
     }
 
     function renderUseCasesPlaceholder() {
@@ -1518,7 +1666,7 @@
         el.classList.toggle('suggested', isSug);
       });
 
-      computeQuizRecommendation();
+      renderQuizStage();
     }
 
     function setActiveServer(name) {
