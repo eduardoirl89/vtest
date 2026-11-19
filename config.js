@@ -199,19 +199,21 @@ window.VNET_CONFIG = {
   ],
 
   cdnNodes: [
-    { name: 'Servidor rápido Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=15000000' },
-    { name: 'Servidor de archivos jsDelivr', url: 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js' }
+    { id: 'cloudflare', name: 'Cloudflare CDN (Recomendado)', url: 'https://speed.cloudflare.com/__down?bytes=15000000' },
+    { id: 'jsdelivr', name: 'jsDelivr CDN (Respaldo)', url: 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js' },
+    { id: 'render', name: 'Servidor VTEST Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
   ],
 
   pingEndpoints: [
-    { name: 'Servidor rápido Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
-    { name: 'Servidor de subida VTEST', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+    { id: 'cloudflare', name: 'Cloudflare CDN (Recomendado)', url: 'https://speed.cloudflare.com/__down?bytes=100' },
+    { id: 'render', name: 'Servidor VTEST Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
   ],
 
   defaults: {
     minThreads: 2,
     maxThreads: 4,
     durationSec: 8,
+    serverId: 'cloudflare',
     autoStart: true,
     alwaysShowDetails: false
   },
