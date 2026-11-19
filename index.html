@@ -806,14 +806,23 @@
       align-items: center;
     }
 
-    .field-row input[type="number"] {
-      width: 74px;
+    .field-row input[type="number"],
+    .field-row select {
       padding: 6px 8px;
       border: 1px solid var(--border);
       border-radius: 5px;
       font-size: 0.9rem;
       background: var(--btn-bg);
       color: var(--text-main);
+    }
+
+    .field-row input[type="number"] {
+      width: 74px;
+    }
+
+    .field-row select {
+      width: 100%;
+      max-width: 260px;
     }
 
     .checkbox-label {
@@ -1036,7 +1045,7 @@
     <div class="status-banner" id="statusBanner">Midiendo tu conexión ahora mismo...</div>
 
     <div class="inline-metrics-strip" id="inlineMetricsStrip">
-      Bajada: <strong>-- Mbps</strong> • Subida: <strong>-- Mbps</strong> • Ping: <strong>-- ms</strong> • Constancia: <strong>--%</strong> • Red: <strong>Detectando...</strong>
+      Bajada: <strong>-- Mbps</strong> • Subida: <strong>-- Mbps</strong> • Ping: <strong>-- ms</strong> • Constancia: <strong>--%</strong>
     </div>
 
     <div class="actions-row">
@@ -1162,13 +1171,19 @@
         </div>
       </div>
 
-      <!-- 6. Ajustes de la prueba -->
+      <!-- 6. Ajustes de la prueba (incluye selector de servidor) -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
           <span id="arrowConfig">▼</span>
         </div>
         <div class="sub-accordion-body grid-2" id="accConfig">
+          <div class="field-group">
+            <label for="cfgServerSelect">Servidor de prueba</label>
+            <div class="field-row">
+              <select id="cfgServerSelect"></select>
+            </div>
+          </div>
           <div class="field-group">
             <label>Canales de medición (Mín. / Máx.)</label>
             <div class="field-row">
@@ -1202,7 +1217,7 @@
         </div>
       </div>
 
-      <!-- 7. Historial guardado (con columna ISP) -->
+      <!-- 7. Historial guardado -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
           <span>🕒 Tus pruebas anteriores</span>
@@ -1210,7 +1225,7 @@
         </div>
         <div class="sub-accordion-body" id="accHistory">
           <div class="history-top">
-            <span class="service-hint" id="historyClientSummary">ISP: Detectando... • Red: Detectando...</span>
+            <span class="service-hint" id="historyClientSummary">ISP: Detectando...</span>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
               <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
@@ -1301,6 +1316,7 @@
       minThreads: 2,
       maxThreads: 4,
       durationSec: 8,
+      serverId: 'cloudflare',
       autoStart: true,
       alwaysShowDetails: false
     }, VNET_CFG.defaults || {});
@@ -1339,26 +1355,27 @@
     const elThemeToggleBtn = document.getElementById('themeToggleBtn');
     const elThemeIcon = document.getElementById('themeIcon');
 
-    function getFriendlyConnectionType() {
-      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      const eff = conn && conn.effectiveType ? String(conn.effectiveType).toLowerCase() : '';
-      const rawType = conn && conn.type ? String(conn.type).toLowerCase() : '';
+    function getSelectedDownloadNode() {
+      return CDN_NODES.find(n => n.id === cfg.serverId) || CDN_NODES[0] || {
+        id: 'cloudflare',
+        name: 'Cloudflare CDN (Recomendado)',
+        url: 'https://speed.cloudflare.com/__down?bytes=15000000'
+      };
+    }
 
-      if (rawType === 'wifi') return 'Wi-Fi';
-      if (rawType === 'ethernet') return 'Cable (Ethernet)';
-      if (eff === 'slow-2g' || eff === '2g') return '2G (Móvil)';
-      if (eff === '3g') return '3G (Móvil)';
-      if (eff === '4g' && (rawType === 'cellular' || rawType === 'wimax')) return '4G (Datos móviles)';
-      if (eff === '4g') return 'Red rápida (no se distingue Wi-Fi/Fibra de 4G en el navegador)';
-      return 'No especificado por el navegador';
+    function getSelectedPingEndpoint() {
+      return PING_ENDPOINTS.find(p => p.id === cfg.serverId) || PING_ENDPOINTS[0] || {
+        id: 'cloudflare',
+        name: 'Cloudflare CDN (Recomendado)',
+        url: 'https://speed.cloudflare.com/__down?bytes=100'
+      };
     }
 
     function updateInlineMetricsStrip({ dlText = '--', ulText = '--', pingText = '--', stabText = '--' } = {}) {
-      const netLabel = getFriendlyConnectionType();
       elInlineMetricsStrip.innerHTML =
-        `Bajada: <strong>${dlText} Mbps</strong> • Subida: <strong>${ulText} Mbps</strong> • Ping: <strong>${pingText} ms</strong> • Constancia: <strong>${stabText}%</strong> • Red: <strong>${netLabel}</strong>`;
+        `Bajada: <strong>${dlText} Mbps</strong> • Subida: <strong>${ulText} Mbps</strong> • Ping: <strong>${pingText} ms</strong> • Constancia: <strong>${stabText}%</strong>`;
       document.getElementById('historyClientSummary').textContent =
-        `ISP: ${detectedClientGeo.isp} • Red: ${netLabel}`;
+        `ISP: ${detectedClientGeo.isp}`;
     }
 
     function setMainDetailsOpen(open, faqOnly = false) {
@@ -1740,6 +1757,15 @@
       slot.appendChild(img);
     }
 
+    function populateServerSelect() {
+      const select = document.getElementById('cfgServerSelect');
+      if (!select) return;
+      select.innerHTML = CDN_NODES.map(node =>
+        `<option value="${node.id}">${node.name}</option>`
+      ).join('');
+      select.value = cfg.serverId || 'cloudflare';
+    }
+
     function applyBrandAndLinks() {
       const brand = VNET_CFG.brandName || 'VTEST';
       document.getElementById('brandTitle').textContent = brand;
@@ -1752,6 +1778,7 @@
       if (links.instagram) document.getElementById('linkInstagram').href = links.instagram;
 
       renderPoweredByLogo();
+      populateServerSelect();
 
       const faqContainer = document.getElementById('accFaq');
       const items = Array.isArray(VNET_CFG.faq) ? VNET_CFG.faq : [];
@@ -1937,6 +1964,7 @@
     }
 
     function applyConfigToUI() {
+      populateServerSelect();
       document.getElementById('cfgMinThreads').value = cfg.minThreads;
       document.getElementById('cfgMaxThreads').value = cfg.maxThreads;
       document.getElementById('cfgDuration').value = cfg.durationSec;
@@ -1985,23 +2013,24 @@
       renderBenchmarkSection();
       await fetchInitialBenchmark();
 
-      // Si ya terminó una prueba antes de que llegara el ISP, sincroniza el benchmark ahora
       if (latestTestMetrics.downloadMbps !== null) {
         await postBenchmarkResult({
           downloadMbps: latestTestMetrics.downloadMbps,
           uploadMbps: latestTestMetrics.uploadMbps,
           pingMs: latestTestMetrics.pingMs,
-          stabilityPct: latestTestMetrics.stabilityPct,
-          networkType: getFriendlyConnectionType()
+          stabilityPct: latestTestMetrics.stabilityPct
         });
       }
     }
 
     async function measurePingSamples(count, signal) {
       const rtts = [];
+      const primaryTarget = getSelectedPingEndpoint();
+      const fallbackTarget = PING_ENDPOINTS.find(p => p.id !== primaryTarget.id) || primaryTarget;
+
       for (let i = 0; i < count; i++) {
         if (signal.aborted) break;
-        const target = PING_ENDPOINTS[i % PING_ENDPOINTS.length];
+        const target = i < count - 1 ? primaryTarget : fallbackTarget;
         const t0 = performance.now();
         try {
           await fetch(`${target.url}${target.url.includes('?') ? '&' : '?'}t=${Date.now()}_${i}`, {
@@ -2027,12 +2056,14 @@
       const loadedRtts = [];
       const startTime = performance.now();
       let activeThreads = cfg.minThreads;
+      const selectedNode = getSelectedDownloadNode();
+      const pingNode = getSelectedPingEndpoint();
 
       const loadedPingTask = (async () => {
         while (!signal.aborted && performance.now() - startTime < durationMs) {
           const t0 = performance.now();
           try {
-            await fetch(`https://speed.cloudflare.com/__down?bytes=100&lp=${Date.now()}`, {
+            await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}lp=${Date.now()}`, {
               cache: 'no-store',
               signal
             });
@@ -2042,11 +2073,10 @@
         }
       })();
 
-      async function downloadWorker(workerId) {
+      async function downloadWorker() {
         while (!signal.aborted && performance.now() - startTime < durationMs) {
-          const node = CDN_NODES[workerId % CDN_NODES.length];
           try {
-            const resp = await fetch(`${node.url}${node.url.includes('?') ? '&' : '?'}r=${Math.random()}`, {
+            const resp = await fetch(`${selectedNode.url}${selectedNode.url.includes('?') ? '&' : '?'}r=${Math.random()}`, {
               cache: 'no-store',
               signal
             });
@@ -2067,7 +2097,7 @@
 
       const workers = [];
       for (let i = 0; i < activeThreads; i++) {
-        workers.push(downloadWorker(i));
+        workers.push(downloadWorker());
       }
 
       await new Promise((resolve) => {
@@ -2249,8 +2279,7 @@
           downloadMbps: latestTestMetrics.downloadMbps,
           uploadMbps: latestTestMetrics.uploadMbps,
           pingMs: latestTestMetrics.pingMs,
-          stabilityPct: dlResult.stability,
-          networkType: getFriendlyConnectionType()
+          stabilityPct: dlResult.stability
         });
 
         elProgress.style.width = '100%';
@@ -2310,11 +2339,13 @@
       const minT = Math.max(1, Math.min(8, parseInt(document.getElementById('cfgMinThreads').value, 10) || 2));
       const maxT = Math.max(minT, Math.min(8, parseInt(document.getElementById('cfgMaxThreads').value, 10) || 4));
       const dur = Math.max(4, Math.min(25, parseInt(document.getElementById('cfgDuration').value, 10) || 8));
+      const srvId = document.getElementById('cfgServerSelect').value || 'cloudflare';
 
       cfg = {
         minThreads: minT,
         maxThreads: maxT,
         durationSec: dur,
+        serverId: srvId,
         autoStart: document.getElementById('cfgAutoStart').checked,
         alwaysShowDetails: document.getElementById('cfgAlwaysShowDetails').checked
       };
