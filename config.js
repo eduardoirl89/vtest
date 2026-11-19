@@ -65,7 +65,7 @@ window.VNET_CONFIG = {
       planRef: 'VNET400 (400 Mbps)',
       planDevices: 16,
       featuredDevices: ['Celular', 'Laptop', 'Desktop'],
-      usageHint: 'Ref.: 1–5+ Mbps • ~60 MB/h en navegación/redes',
+      usageHint: 'Ref.: 0.5–5+ Mbps • ~60 MB/h en navegación/redes',
       okText: 'Fluida para navegar, revisar correos y redes sociales sin esperas.',
       lowText: 'Puede haber pausas al cargar páginas o fotos si la constancia baja.'
     },
@@ -95,7 +95,7 @@ window.VNET_CONFIG = {
       planRef: 'VNET400 (400 Mbps)',
       planDevices: 16,
       featuredDevices: ['SmartTV', 'Celular', 'Laptop'],
-      usageHint: 'HD: 5–10 Mbps (~1.5–3 GB/h) • 4K: 25+ Mbps (~7–10 GB/h)',
+      usageHint: 'HD: 4–10 Mbps (~1.5–3 GB/h) • 4K: 25+ Mbps (~7–10 GB/h)',
       okText: 'Soporta reproducción fluida en HD y 4K sin cortes frecuentes.',
       lowText: 'Si la velocidad cae o sube el retraso, la calidad puede bajar a HD o SD.'
     },
@@ -116,79 +116,94 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Cuestionario calibrado (pesos addMbps más realistas por concurrencia)
+  // Cuestionario de 6 pasos con pesos calibrados
   speedQuiz: [
     {
       id: 'people',
-      question: '1. ¿Cuántas personas en tu hogar usan el servicio de internet / WiFi a diario?',
+      question: '¿Cuántas personas en tu hogar usan el servicio de internet / WiFi a diario?',
       options: [
-        { label: '1-2', addMbps: 25 },
-        { label: '3-4', addMbps: 55 },
-        { label: '5+', addMbps: 90 }
+        { label: '1-2', badge: '👤', addMbps: 25 },
+        { label: '3-4', badge: '👥', addMbps: 55 },
+        { label: '5+', badge: '👨‍👩‍👧‍👦', addMbps: 90 }
       ]
     },
     {
       id: 'devices',
-      question: '2. ¿Cuántos dispositivos en tu hogar se conectan a internet (tablets, consolas, smart TV, cámaras)?',
+      question: '¿Cuántos dispositivos en tu hogar se conectan a internet, incluyendo tablets, consolas de video juegos y dispositivos inteligentes?',
       options: [
-        { label: '1-3', addMbps: 10 },
-        { label: '4-6', addMbps: 25 },
-        { label: '7-9', addMbps: 45 },
-        { label: '10+', addMbps: 70 }
+        { label: '1-3', badge: '💻', addMbps: 10 },
+        { label: '4-6', badge: '💻📱', addMbps: 25 },
+        { label: '7-9', badge: '📱⌚', addMbps: 45 },
+        { label: '10+', badge: '🎮📱', addMbps: 70 }
       ]
     },
     {
       id: 'wfh',
-      question: '3. ¿Cuántas personas en tu hogar trabajan o estudian desde casa con videollamadas?',
+      question: '¿Cuántas personas en tu hogar trabajan desde casa?',
       options: [
-        { label: 'Ninguno', addMbps: 0 },
-        { label: '1', addMbps: 20 },
-        { label: '2', addMbps: 45 },
-        { label: '3+', addMbps: 75 }
+        { label: 'Ninguno', badge: 'N/A', addMbps: 0 },
+        { label: '1', badge: '👤', addMbps: 20 },
+        { label: '2', badge: '👥', addMbps: 45 },
+        { label: '3+', badge: '👨‍👩‍👧‍👦', addMbps: 75 }
       ]
     },
     {
       id: 'videoQuality',
-      question: '4. ¿Qué calidad de video utilizas al reproducir TV y películas?',
+      question: '¿Qué calidad de video utilizas al reproducir TV y películas?',
       options: [
-        { label: 'No consumo video', addMbps: 0 },
-        { label: 'HD', addMbps: 20 },
-        { label: '4K', addMbps: 55 }
+        { label: 'No consumo video', badge: '📺', addMbps: 0 },
+        { label: 'HD', badge: 'HD', addMbps: 20 },
+        { label: '4K', badge: '4K', addMbps: 55 }
       ]
     },
     {
       id: 'gaming',
-      question: '5. ¿Qué tanto juegan en línea en tu hogar?',
+      question: '¿Qué tanto juegan en línea en tu hogar?',
       options: [
-        { label: 'No se juega en línea', addMbps: 0 },
-        { label: 'Casual / Recreacional', addMbps: 15 },
-        { label: 'Si se juega con mucha frecuencia', addMbps: 35 },
-        { label: 'Nivel profesional', addMbps: 60 }
+        { label: 'No se juega en línea', badge: 'N/A', addMbps: 0 },
+        { label: 'Casual / Recreacional', badge: '🕹️', addMbps: 15 },
+        { label: 'Si se juega con mucha frecuencia', badge: '🎮', addMbps: 35 },
+        { label: 'Nivel profesional', badge: '🎧', addMbps: 60 }
       ]
     },
     {
       id: 'heavyDownloads',
-      question: '6. ¿En tu hogar se descargan o suben archivos pesados de la nube o internet?',
+      question: '¿En tu hogar se descargan pesados archivos de alguna nube o del internet?',
       options: [
-        { label: 'No', addMbps: 0 },
-        { label: 'Si, ocasionalmente', addMbps: 30 },
-        { label: 'Si, frecuentemente', addMbps: 80 }
+        { label: 'No', badge: '☁️', addMbps: 0 },
+        { label: 'Si, ocasionalmente', badge: '📥', addMbps: 30 },
+        { label: 'Si, frecuentemente', badge: '⚡', addMbps: 80 }
       ]
     }
   ],
 
-  // Tabla de referencia Mínimo vs. Recomendado por actividad
+  // Tabla de referencia corregida
   activityReferenceTable: [
-    { activity: 'Email', min: '1 Mbps', recommended: '1 Mbps' },
-    { activity: 'Navegación', min: '3 Mbps', recommended: '5 Mbps' },
-    { activity: 'Redes sociales', min: '3 Mbps', recommended: '10 Mbps' },
-    { activity: 'Reproducción de video SD', min: '3 Mbps', recommended: '10 Mbps' },
-    { activity: 'Reproducción de video HD', min: '5 Mbps', recommended: '25 Mbps' },
-    { activity: 'Reproducción de video 4K', min: '25 Mbps', recommended: '100 Mbps' },
-    { activity: 'Juegos en línea', min: '5 Mbps', recommended: '100 Mbps' },
-    { activity: 'Reproducción de música', min: '1 Mbps', recommended: '5 Mbps' },
-    { activity: 'Video llamadas uno a uno', min: '1 Mbps', recommended: '25 Mbps' },
-    { activity: 'Videoconferencias', min: '2 Mbps', recommended: '50 Mbps' }
+    {
+      activity: 'Enviar e-mails, navegar por internet, streaming de radio, llamadas (VoIP)',
+      devices: '1',
+      recommended: '0.5–4 Mbps'
+    },
+    {
+      activity: 'Streaming de películas y videos en formato estándar y HD',
+      devices: '1',
+      recommended: '4–7 Mbps'
+    },
+    {
+      activity: 'Videoconferencias, juego casual (multijugador ligero)',
+      devices: '1',
+      recommended: '7–12 Mbps'
+    },
+    {
+      activity: 'Juegos en línea, streaming de contenido HD en varios dispositivos',
+      devices: '2',
+      recommended: '12–15 Mbps'
+    },
+    {
+      activity: 'Juegos en línea competitivos (FPS) y uso simultáneo en múltiples equipos',
+      devices: '2+',
+      recommended: '16+ Mbps (y baja latencia)'
+    }
   ],
 
   // Servidores de medición
@@ -219,7 +234,7 @@ window.VNET_CONFIG = {
     },
     {
       q: '¿Cómo funciona el cuestionario de recomendación de plan?',
-      a: 'Con tus respuestas sobre personas, equipos, trabajo remoto, video, juegos y descargas pesadas, VTEST estima una velocidad sugerida y la compara con tu medición actual y los planes VNET400, VNET600 y VNET1GIGA.'
+      a: 'Avanzas paso a paso por las 6 preguntas sobre tu hogar y hábitos de uso; al completarlas, VTEST muestra la velocidad estimada, el plan de referencia VNET y la comparación contra tu velocidad medida.'
     },
     {
       q: '¿Por qué una buena velocidad de bajada no siempre garantiza buen juego o videollamada?',
