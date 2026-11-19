@@ -233,8 +233,8 @@ window.VNET_CONFIG = {
       a: 'VTEST calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar como para subir, junto con la latencia y la constancia, para puntuar de 1 a 5 cómo rinde cada actividad.'
     },
     {
-      q: '¿Cómo funciona el cuestionario de recomendación de plan?',
-      a: 'Avanzas paso a paso por las 6 preguntas sobre tu hogar y hábitos de uso; al completarlas, VTEST muestra la velocidad estimada, el plan de referencia VNET y la comparación contra tu velocidad medida.'
+      q: '¿Cómo funciona el benchmarking propio, local y nacional?',
+      a: 'Separa tu comparación personal (tu prueba actual frente a tu mejor marca histórica y promedio) de la comparativa por proveedor/región y media nacional registrada en el servidor.'
     },
     {
       q: '¿Por qué una buena velocidad de bajada no siempre garantiza buen juego o videollamada?',
