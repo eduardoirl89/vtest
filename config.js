@@ -24,7 +24,7 @@ window.VNET_CONFIG = {
     { id: 'console', label: 'PS5/XBOX', loadMbps: 35 }
   ],
 
-  // Planes comerciales de referencia según imágenes VNET
+  // Planes comerciales de referencia VNET
   plans: [
     {
       id: 'VNET400',
@@ -52,7 +52,7 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // 4 categorías basadas en Speedtest Experience Ratings (Ookla) + métricas reales
+  // 4 categorías basadas en Speedtest Experience Ratings + métricas reales
   useCases: [
     {
       id: 'web_browsing',
@@ -65,7 +65,7 @@ window.VNET_CONFIG = {
       planRef: 'VNET400 (400 Mbps)',
       planDevices: 16,
       featuredDevices: ['Celular', 'Laptop', 'Desktop'],
-      usageHint: 'Ref. Ookla: 1–5+ Mbps • ~60 MB/h en navegación/redes',
+      usageHint: 'Ref.: 1–5+ Mbps • ~60 MB/h en navegación/redes',
       okText: 'Fluida para navegar, revisar correos y redes sociales sin esperas.',
       lowText: 'Puede haber pausas al cargar páginas o fotos si la constancia baja.'
     },
@@ -116,6 +116,81 @@ window.VNET_CONFIG = {
     }
   ],
 
+  // Cuestionario de 6 preguntas para estimar velocidad recomendada y plan
+  speedQuiz: [
+    {
+      id: 'people',
+      question: '1. ¿Cuántas personas en tu hogar usan el servicio de internet / WiFi a diario?',
+      options: [
+        { label: '1-2', addMbps: 35 },
+        { label: '3-4', addMbps: 75 },
+        { label: '5+', addMbps: 125 }
+      ]
+    },
+    {
+      id: 'devices',
+      question: '2. ¿Cuántos dispositivos en tu hogar se conectan a internet (tablets, consolas, smart TV, cámaras)?',
+      options: [
+        { label: '1-3', addMbps: 15 },
+        { label: '4-6', addMbps: 35 },
+        { label: '7-9', addMbps: 60 },
+        { label: '10+', addMbps: 95 }
+      ]
+    },
+    {
+      id: 'wfh',
+      question: '3. ¿Cuántas personas en tu hogar trabajan o estudian desde casa con videollamadas?',
+      options: [
+        { label: 'Ninguno', addMbps: 0 },
+        { label: '1', addMbps: 35 },
+        { label: '2', addMbps: 70 },
+        { label: '3+', addMbps: 110 }
+      ]
+    },
+    {
+      id: 'videoQuality',
+      question: '4. ¿Qué calidad de video utilizas al reproducir TV y películas?',
+      options: [
+        { label: 'No consumo video', addMbps: 0 },
+        { label: 'HD', addMbps: 35 },
+        { label: '4K', addMbps: 90 }
+      ]
+    },
+    {
+      id: 'gaming',
+      question: '5. ¿Qué tanto juegan en línea en tu hogar?',
+      options: [
+        { label: 'No se juega en línea', addMbps: 0 },
+        { label: 'Casual / Recreacional', addMbps: 25 },
+        { label: 'Si se juega con mucha frecuencia', addMbps: 60 },
+        { label: 'Nivel profesional', addMbps: 100 }
+      ]
+    },
+    {
+      id: 'heavyDownloads',
+      question: '6. ¿En tu hogar se descargan o suben archivos pesados de la nube o internet?',
+      options: [
+        { label: 'No', addMbps: 0 },
+        { label: 'Si, ocasionalmente', addMbps: 45 },
+        { label: 'Si, frecuentemente', addMbps: 110 }
+      ]
+    }
+  ],
+
+  // Tabla de referencia Mínimo vs. Recomendado por actividad
+  activityReferenceTable: [
+    { activity: 'Email', min: '1 Mbps', recommended: '1 Mbps' },
+    { activity: 'Navegación', min: '3 Mbps', recommended: '5 Mbps' },
+    { activity: 'Redes sociales', min: '3 Mbps', recommended: '10 Mbps' },
+    { activity: 'Reproducción de video SD', min: '3 Mbps', recommended: '10 Mbps' },
+    { activity: 'Reproducción de video HD', min: '5 Mbps', recommended: '25 Mbps' },
+    { activity: 'Reproducción de video 4K', min: '25 Mbps', recommended: '100 Mbps' },
+    { activity: 'Juegos en línea', min: '5 Mbps', recommended: '100 Mbps' },
+    { activity: 'Reproducción de música', min: '1 Mbps', recommended: '5 Mbps' },
+    { activity: 'Video llamadas uno a uno', min: '1 Mbps', recommended: '25 Mbps' },
+    { activity: 'Videoconferencias', min: '2 Mbps', recommended: '50 Mbps' }
+  ],
+
   // Servidores de medición
   cdnNodes: [
     { name: 'Servidor rápido Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=15000000' },
@@ -143,16 +218,16 @@ window.VNET_CONFIG = {
       a: 'VTEST calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar como para subir, junto con la latencia y la constancia, para puntuar de 1 a 5 cómo rinde cada actividad.'
     },
     {
+      q: '¿Cómo funciona el cuestionario de recomendación de plan?',
+      a: 'Con tus respuestas sobre personas, equipos, trabajo remoto, video, juegos y descargas pesadas, VTEST estima una velocidad sugerida y la compara con tu medición actual y los planes VNET400, VNET600 y VNET1GIGA.'
+    },
+    {
       q: '¿Por qué una buena velocidad de bajada no siempre garantiza buen juego o videollamada?',
       a: 'En juegos en línea y videollamadas también influyen el ping en reposo, el retraso extra al usar internet, la velocidad de subida y la constancia de la conexión.'
     },
     {
-      q: '¿Cómo calcula VTEST los equipos como Celular, Desktop, Laptop, SmartTV y PS5/XBOX?',
-      a: 'Cada dispositivo consume un promedio distinto según lo que haga (navegar en Celular o Laptop, trabajar en Desktop, ver series en SmartTV o jugar/descargar en PS5/XBOX). Con tu velocidad actual y el plan de referencia calculamos una estimación práctica.'
-    },
-    {
-      q: '¿Cuáles son los planes VNET400, VNET600 y VNET1GIGA?',
-      a: 'VNET400 (400 Mbps) está pensado para navegación, redes sociales y streaming HD/4K; VNET600 (600 Mbps) para juegos en línea, videollamadas y hogares con varios equipos; y VNET1GIGA (1 Gbps) para 4K/8K simultáneo, descargas grandes y uso exigente.'
+      q: '¿Cómo puedo mejorar mi conexión si va lenta?',
+      a: 'Reinicia el router/ONU, ubícalo en un punto central lejos de obstáculos, usa cable Ethernet cuando sea posible o verifica si hay descargas y actualizaciones activas en otros equipos.'
     },
     {
       q: '¿Qué puedo hacer si quiero contratar o consultar un plan?',
