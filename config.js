@@ -11,13 +11,13 @@ window.VNET_CONFIG = {
     instagram: 'https://www.instagram.com/vnet_ve/'
   },
 
-  // Tipos de dispositivos más usados
+  // Tipos de dispositivos más usados (consumo promedio estimado por equipo en Mbps)
   deviceTypes: [
-    { id: 'celular', label: 'Celular', loadMbps: 10 },
-    { id: 'laptop', label: 'Laptop', loadMbps: 18 },
-    { id: 'desktop', label: 'Desktop', loadMbps: 22 },
+    { id: 'celular', label: 'Celular', loadMbps: 8 },
+    { id: 'laptop', label: 'Laptop', loadMbps: 15 },
+    { id: 'desktop', label: 'Desktop', loadMbps: 20 },
     { id: 'smarttv', label: 'SmartTV', loadMbps: 25 },
-    { id: 'console', label: 'PS5/XBOX', loadMbps: 30 }
+    { id: 'console', label: 'PS5/XBOX', loadMbps: 35 }
   ],
 
   // Planes comerciales de referencia según imágenes VNET
@@ -28,7 +28,7 @@ window.VNET_CONFIG = {
       label: '400 Mbps',
       mbps: 400,
       summary: 'Redes sociales, streaming en HD y series a tu ritmo',
-      recommendedDevices: 12
+      recommendedDevices: 16
     },
     {
       id: 'VNET600',
@@ -36,7 +36,7 @@ window.VNET_CONFIG = {
       label: '600 Mbps',
       mbps: 600,
       summary: 'Videojuegos, conferencias y varias apps al mismo tiempo',
-      recommendedDevices: 20
+      recommendedDevices: 28
     },
     {
       id: 'VNET1GIGA',
@@ -44,7 +44,7 @@ window.VNET_CONFIG = {
       label: '1 Gbps',
       mbps: 1000,
       summary: 'Streaming 4K/8K, descargas rápidas y familia gamer',
-      recommendedDevices: 35
+      recommendedDevices: 45
     }
   ],
 
@@ -55,9 +55,9 @@ window.VNET_CONFIG = {
       title: 'Redes sociales y series en HD',
       minMbps: 10,
       idealMbps: 40,
-      deviceLoadMbps: 10,
+      deviceLoadMbps: 8,
       planRef: 'VNET400 (400 Mbps)',
-      planDevices: 12,
+      planDevices: 16,
       featuredDevices: ['Celular', 'SmartTV', 'Laptop'],
       okText: 'Sí alcanza para redes sociales y series en HD.',
       lowText: 'Velocidad baja: puede haber esperas al cargar videos o fotos.'
@@ -67,9 +67,9 @@ window.VNET_CONFIG = {
       title: 'Videojuegos, conferencias y varias apps',
       minMbps: 30,
       idealMbps: 100,
-      deviceLoadMbps: 20,
+      deviceLoadMbps: 18,
       planRef: 'VNET600 (600 Mbps)',
-      planDevices: 20,
+      planDevices: 28,
       featuredDevices: ['Laptop', 'Desktop', 'Celular', 'PS5/XBOX'],
       okText: 'Sí rinde para juegos, videollamadas y varias apps a la vez.',
       lowText: 'Ajustado para multitarea o juegos: conviene evitar descargas pesadas a la vez.'
@@ -79,9 +79,9 @@ window.VNET_CONFIG = {
       title: 'Streaming 4K/8K, descargas y familia gamer',
       minMbps: 80,
       idealMbps: 250,
-      deviceLoadMbps: 35,
+      deviceLoadMbps: 30,
       planRef: 'VNET1GIGA (1 Gbps)',
-      planDevices: 35,
+      planDevices: 45,
       featuredDevices: ['SmartTV', 'PS5/XBOX', 'Desktop', 'Laptop', 'Celular'],
       okText: 'Sí soporta 4K/8K, descargas rápidas y uso familiar exigente.',
       lowText: 'Para 4K/8K simultáneo o familia gamer, se queda corto en picos altos.'
