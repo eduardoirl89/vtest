@@ -11,6 +11,15 @@ window.VNET_CONFIG = {
     instagram: 'https://www.instagram.com/vnet_ve/'
   },
 
+  // Tipos de dispositivos más usados
+  deviceTypes: [
+    { id: 'celular', label: 'Celular', loadMbps: 10 },
+    { id: 'laptop', label: 'Laptop', loadMbps: 18 },
+    { id: 'desktop', label: 'Desktop', loadMbps: 22 },
+    { id: 'smarttv', label: 'SmartTV', loadMbps: 25 },
+    { id: 'console', label: 'PS5/XBOX', loadMbps: 30 }
+  ],
+
   // Planes comerciales de referencia según imágenes VNET
   plans: [
     {
@@ -39,38 +48,41 @@ window.VNET_CONFIG = {
     }
   ],
 
-  // Perfiles de uso (consumo estimado en Mbps por dispositivo y plan de referencia)
+  // Perfiles de uso calibrados con los planes VNET
   useCases: [
     {
       id: 'social_hd',
       title: 'Redes sociales y series en HD',
-      minMbps: 15,
-      idealMbps: 50,
-      deviceLoadMbps: 12,
+      minMbps: 10,
+      idealMbps: 40,
+      deviceLoadMbps: 10,
       planRef: 'VNET400 (400 Mbps)',
       planDevices: 12,
+      featuredDevices: ['Celular', 'SmartTV', 'Laptop'],
       okText: 'Sí alcanza para redes sociales y series en HD.',
       lowText: 'Velocidad baja: puede haber esperas al cargar videos o fotos.'
     },
     {
       id: 'gaming_confs',
       title: 'Videojuegos, conferencias y varias apps',
-      minMbps: 40,
-      idealMbps: 120,
-      deviceLoadMbps: 25,
+      minMbps: 30,
+      idealMbps: 100,
+      deviceLoadMbps: 20,
       planRef: 'VNET600 (600 Mbps)',
       planDevices: 20,
+      featuredDevices: ['Laptop', 'Desktop', 'Celular', 'PS5/XBOX'],
       okText: 'Sí rinde para juegos, videollamadas y varias apps a la vez.',
       lowText: 'Ajustado para multitarea o juegos: conviene evitar descargas pesadas a la vez.'
     },
     {
       id: 'ultra_4k_gamer',
       title: 'Streaming 4K/8K, descargas y familia gamer',
-      minMbps: 100,
-      idealMbps: 300,
-      deviceLoadMbps: 45,
+      minMbps: 80,
+      idealMbps: 250,
+      deviceLoadMbps: 35,
       planRef: 'VNET1GIGA (1 Gbps)',
       planDevices: 35,
+      featuredDevices: ['SmartTV', 'PS5/XBOX', 'Desktop', 'Laptop', 'Celular'],
       okText: 'Sí soporta 4K/8K, descargas rápidas y uso familiar exigente.',
       lowText: 'Para 4K/8K simultáneo o familia gamer, se queda corto en picos altos.'
     }
@@ -103,8 +115,8 @@ window.VNET_CONFIG = {
       a: 'VNET calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar cosas como para subirlas, y te orienta qué uso y plan VNET se adapta mejor a tu ritmo.'
     },
     {
-      q: '¿Cómo sé si mi velocidad alcanza para lo que uso en casa?',
-      a: 'Al abrir "Ver más detalles", VNET evalúa tu velocidad actual para redes sociales/HD, juegos/conferencias y streaming 4K/familia gamer, indicando si alcanza y cuántos equipos aproximados soporta según el uso y el plan.'
+      q: '¿Cómo calcula VNET los equipos como Celular, Desktop, Laptop, SmartTV y PS5/XBOX?',
+      a: 'Cada dispositivo consume un promedio distinto según lo que haga (navegar en Celular o Laptop, trabajar en Desktop, ver series en SmartTV o jugar/descargar en PS5/XBOX). Con tu velocidad actual y el plan de referencia calculamos una estimación práctica.'
     },
     {
       q: '¿Cuáles son los planes VNET400, VNET600 y VNET1GIGA?',
