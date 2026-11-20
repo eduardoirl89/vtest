@@ -1093,6 +1093,51 @@
       .sub-accordion-header {
         font-size: 0.88rem;
       }
+      #accHistory table,
+      #accHistory thead,
+      #accHistory tbody,
+      #accHistory th,
+      #accHistory td,
+      #accHistory tr {
+        display: block;
+        width: 100%;
+      }
+      #accHistory thead {
+        display: none;
+      }
+      #accHistory tr {
+        background: var(--btn-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+      }
+      #accHistory tr:last-child {
+        margin-bottom: 0;
+      }
+      #accHistory td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        padding: 5px 0;
+        border-bottom: 1px dashed var(--border);
+        text-align: right;
+        font-size: 0.82rem;
+      }
+      #accHistory td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      #accHistory td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: left;
+        flex-shrink: 0;
+      }
     }
   </style>
 </head>
@@ -2644,15 +2689,15 @@
       tbody.innerHTML = list.length
         ? list.map(r => `
             <tr>
-              <td>${r.date}</td>
-              <td>${r.device || '--'}</td>
-              <td>${r.isp || detectedClientGeo.isp || 'No identificada'}</td>
-              <td><strong>${r.download}</strong></td>
-              <td>${r.upload}</td>
-              <td>${r.ping}</td>
-              <td>${r.jitter || '--'}</td>
-              <td>${r.stability}</td>
-              <td>${r.dataUsed || '--'}</td>
+              <td data-label="Fecha">${r.date}</td>
+              <td data-label="Equipo">${r.device || '--'}</td>
+              <td data-label="Red / ISP">${r.isp || detectedClientGeo.isp || 'No identificada'}</td>
+              <td data-label="Bajada"><strong>${r.download}</strong></td>
+              <td data-label="Subida">${r.upload}</td>
+              <td data-label="Latencia">${r.ping}</td>
+              <td data-label="Variación">${r.jitter || '--'}</td>
+              <td data-label="Constancia">${r.stability}</td>
+              <td data-label="Datos">${r.dataUsed || '--'}</td>
             </tr>
           `).join('')
         : '<tr><td colspan="9" style="color:var(--text-muted);">Todavía no hay pruebas guardadas.</td></tr>';
