@@ -152,8 +152,8 @@ window.VNET_CONFIG = {
 
   faq: [
     {
-      q: '¿Por qué el cuestionario pregunta por personas que usan el servicio en presente?',
-      a: 'Porque el ancho de banda real se reparte entre quienes usan la conexión a diario y coinciden en horas pico, no depende de un solo equipo aislado.'
+      q: '¿Por qué la primera pregunta evalúa el escenario de uso antes de contar equipos?',
+      a: 'Porque un hogar, un puesto de teletrabajo, un comercio o un entorno de juegos/descargas exigen distintos márgenes de velocidad, subida y estabilidad.'
     },
     {
       q: '¿Por qué mi prueba en Wi-Fi o celular puede marcar menos que el plan?',
