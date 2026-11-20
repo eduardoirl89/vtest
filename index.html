@@ -86,6 +86,26 @@
       cursor: help;
     }
 
+    .vtest-tooltip-bubble {
+      position: fixed;
+      z-index: 9999;
+      max-width: min(300px, calc(100vw - 24px));
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: var(--text-main);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: left;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      display: none;
+    }
+
+    .vtest-tooltip-bubble.visible {
+      display: block;
+    }
+
     header {
       width: 100%;
       max-width: 920px;
@@ -286,6 +306,11 @@
     }
 
     .inline-metrics-strip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
       font-size: 0.85rem;
       color: var(--text-muted);
       background: var(--surface);
@@ -294,8 +319,6 @@
       padding: 6px 16px;
       margin-bottom: 8px;
       max-width: 100%;
-      white-space: nowrap;
-      overflow-x: auto;
       font-variant-numeric: tabular-nums;
     }
 
@@ -340,10 +363,10 @@
       width: 100%;
       display: none;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       text-align: left;
       border-top: 1px solid var(--border);
-      padding-top: 24px;
+      padding-top: 22px;
       margin-bottom: 20px;
       animation: fadeIn 0.25s ease;
     }
@@ -763,7 +786,7 @@
     .sub-accordion {
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 15px 18px;
+      padding: 14px 16px;
       background: var(--surface);
     }
 
@@ -771,6 +794,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.94rem;
@@ -1010,8 +1034,65 @@
     }
 
     @media (max-width: 600px) {
-      .speed-right { align-items: center; }
-      .hero-readout { flex-direction: column; align-items: center; gap: 6px; }
+      body {
+        padding: 18px 12px 32px;
+      }
+      header {
+        margin-bottom: 24px;
+      }
+      .speed-right {
+        align-items: center;
+      }
+      .hero-readout {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .inline-metrics-strip {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 10px;
+        width: 100%;
+        border-radius: 12px;
+        padding: 10px 12px;
+        text-align: left;
+        font-size: 0.8rem;
+      }
+      .inline-metrics-strip .metric-sep {
+        display: none;
+      }
+      .inline-metrics-strip .metric-item:last-child {
+        grid-column: 1 / -1;
+      }
+      .quiz-stage {
+        padding: 16px 12px;
+      }
+      .quiz-question-heading {
+        font-size: 1.08rem;
+        margin-bottom: 16px;
+      }
+      .quiz-step-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .quiz-option-card {
+        min-height: 98px;
+        padding: 14px 8px;
+        gap: 6px;
+      }
+      .quiz-card-badge {
+        font-size: 1.15rem;
+      }
+      .quiz-card-label {
+        font-size: 0.84rem;
+      }
+      .sub-accordion {
+        padding: 12px 14px;
+      }
+      .sub-accordion-header {
+        font-size: 0.88rem;
+      }
     }
   </style>
 </head>
@@ -1056,15 +1137,15 @@
     <div class="status-banner" id="statusBanner">Midiendo tu conexión ahora mismo...</div>
 
     <div class="inline-metrics-strip" id="inlineMetricsStrip">
-      <span data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>-- Mbps</strong></span>
-      •
-      <span data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>-- Mbps</strong></span>
-      •
-      <span data-tip="Latencia: tiempo de respuesta en reposo y con uso.">Latencia: <strong>-- ms</strong></span>
-      •
-      <span data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>-- ms</strong></span>
-      •
-      <span data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>--%</strong></span>
+      <span class="metric-item" data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>-- Mbps</strong></span>
+      <span class="metric-sep">•</span>
+      <span class="metric-item" data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>-- Mbps</strong></span>
+      <span class="metric-sep">•</span>
+      <span class="metric-item" data-tip="Latencia: tiempo de respuesta en reposo y con uso.">Latencia: <strong>-- ms</strong></span>
+      <span class="metric-sep">•</span>
+      <span class="metric-item" data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>-- ms</strong></span>
+      <span class="metric-sep">•</span>
+      <span class="metric-item" data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>--%</strong></span>
     </div>
 
     <div class="data-usage-note" id="dataUsageNote">
@@ -1337,6 +1418,8 @@
     </a>
   </footer>
 
+  <div id="vtestTooltipBubble" class="vtest-tooltip-bubble" role="tooltip"></div>
+
   <script src="config.js"></script>
   <script>
     const VNET_CFG = window.VNET_CONFIG || {};
@@ -1395,12 +1478,11 @@
     const elThemeToggleBtn = document.getElementById('themeToggleBtn');
     const elThemeIcon = document.getElementById('themeIcon');
 
-    // 1. Perfil realista del dispositivo (Móvil vs Escritorio, núcleos CPU, saveData)
     function detectDeviceProfile() {
       const ua = navigator.userAgent || '';
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
         || (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
-      const cores = navigator.hardwareConcurrency || (isMobile ? 4 : 4);
+      const cores = navigator.hardwareConcurrency || 4;
       const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       const saveData = Boolean(conn && conn.saveData);
       const eff = conn && conn.effectiveType ? String(conn.effectiveType).toLowerCase() : '';
@@ -1454,7 +1536,6 @@
       };
     }
 
-    // 2. Contador real de MB transferidos (en lugar de estimación fija)
     function formatTransferredMb() {
       const mb = actualBytesTransferred / (1024 * 1024);
       return mb >= 100 ? mb.toFixed(0) : mb.toFixed(1);
@@ -1479,11 +1560,15 @@
     } = {}) {
       const profile = detectDeviceProfile();
       elInlineMetricsStrip.innerHTML =
-        `<span data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>${dlText} Mbps</strong></span> • ` +
-        `<span data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>${ulText} Mbps</strong></span> • ` +
-        `<span data-tip="Latencia: tiempo de respuesta en reposo / con uso.">Latencia: <strong>${pingText} ms</strong></span> • ` +
-        `<span data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>${jitterText} ms</strong></span> • ` +
-        `<span data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>${stabText}%</strong></span>`;
+        `<span class="metric-item" data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>${dlText} Mbps</strong></span>` +
+        `<span class="metric-sep">•</span>` +
+        `<span class="metric-item" data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>${ulText} Mbps</strong></span>` +
+        `<span class="metric-sep">•</span>` +
+        `<span class="metric-item" data-tip="Latencia: tiempo de respuesta en reposo y con uso.">Latencia: <strong>${pingText} ms</strong></span>` +
+        `<span class="metric-sep">•</span>` +
+        `<span class="metric-item" data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>${jitterText} ms</strong></span>` +
+        `<span class="metric-sep">•</span>` +
+        `<span class="metric-item" data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>${stabText}%</strong></span>`;
       document.getElementById('historyClientSummary').textContent =
         `Red / ISP: ${detectedClientGeo.isp} • Equipo actual: ${profile.label}`;
       updateDataUsageNote();
@@ -1503,12 +1588,25 @@
       arrow.textContent = open ? '▲' : '▼';
     }
 
+    function closeOtherAccordions(exceptBodyId) {
+      document.querySelectorAll('.sub-accordion-header').forEach(hdr => {
+        const targetId = hdr.getAttribute('data-target');
+        const arrowId = hdr.getAttribute('data-arrow');
+        if (targetId && targetId !== exceptBodyId) {
+          setSubAccordionOpen(targetId, arrowId, false);
+        }
+      });
+    }
+
     document.querySelectorAll('.sub-accordion-header').forEach(header => {
       header.addEventListener('click', () => {
         const bodyId = header.getAttribute('data-target');
         const arrowId = header.getAttribute('data-arrow');
         const body = document.getElementById(bodyId);
         const willOpen = !body.classList.contains('open');
+        if (willOpen) {
+          closeOtherAccordions(bodyId);
+        }
         setSubAccordionOpen(bodyId, arrowId, willOpen);
       });
     });
@@ -1524,6 +1622,7 @@
         setSubAccordionOpen('accFaq', 'arrowFaq', false);
       } else {
         setMainDetailsOpen(true, true);
+        closeOtherAccordions('accFaq');
         setSubAccordionOpen('accFaq', 'arrowFaq', true);
         document.getElementById('faqAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -1531,6 +1630,7 @@
 
     document.getElementById('openQuizBtn').addEventListener('click', () => {
       setMainDetailsOpen(true, false);
+      closeOtherAccordions('accQuiz');
       setSubAccordionOpen('accQuiz', 'arrowQuiz', true);
       document.getElementById('quizAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -1971,7 +2071,6 @@
       return Math.max(1, Math.min(5, score));
     }
 
-    // 6. Cálculo realista de capacidad simultánea con factor de eficiencia de red/Wi-Fi
     function evaluateUseCasesAndPlans({ dlMbps, ulMbps, idlePing, loadedPing, jitter, stability }) {
       lastMeasuredDownloadMbps = dlMbps;
 
@@ -2117,7 +2216,6 @@
       fetch(`${BACKEND_URL}/ping?wake=${Date.now()}`, { cache: 'no-store' }).catch(() => {});
     }
 
-    // 3. Detección de red/ISP con timeout y múltiples proveedores de respaldo
     async function fetchWithTimeout(url, ms = 3500) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), ms);
@@ -2349,7 +2447,6 @@
       return { mbps: finalMbps, loadedPing: loadedAvg, loadedJitter, stability };
     }
 
-    // 4. Subida ajustada al perfil del dispositivo (bloque menor en móvil, calentamiento previo)
     async function runUploadPhase(durationMs, signal) {
       let uploadedBytes = 0;
       const profile = detectDeviceProfile();
@@ -2487,7 +2584,6 @@
           stability: dlResult.stability
         });
 
-        // 5. Guarda equipo (Móvil vs PC/Laptop) y MB reales en historial y benchmark
         saveHistory({
           date: new Date().toLocaleString(),
           device: profile.shortLabel,
@@ -2615,6 +2711,108 @@
       renderHistory();
       renderBenchmarkSection();
     });
+
+    (function initTouchAndMouseTooltips() {
+      const bubble = document.getElementById('vtestTooltipBubble');
+      if (!bubble) return;
+
+      let activeTarget = null;
+
+      function syncTipAttributes(root = document) {
+        root.querySelectorAll('[title]').forEach(el => {
+          if (!el.hasAttribute('data-tip')) {
+            const t = el.getAttribute('title');
+            if (t) el.setAttribute('data-tip', t);
+          }
+          el.removeAttribute('title');
+        });
+      }
+
+      function positionBubble(targetEl) {
+        const rect = targetEl.getBoundingClientRect();
+        bubble.classList.add('visible');
+        const bRect = bubble.getBoundingClientRect();
+        const pad = 12;
+
+        let left = rect.left + (rect.width / 2) - (bRect.width / 2);
+        left = Math.max(pad, Math.min(window.innerWidth - bRect.width - pad, left));
+
+        let top = rect.top - bRect.height - 8;
+        if (top < pad) {
+          top = Math.min(window.innerHeight - bRect.height - pad, rect.bottom + 8);
+        }
+
+        bubble.style.left = `${Math.round(left)}px`;
+        bubble.style.top = `${Math.round(top)}px`;
+      }
+
+      function showTip(targetEl) {
+        const text = targetEl.getAttribute('data-tip');
+        if (!text) return;
+        activeTarget = targetEl;
+        bubble.textContent = text;
+        positionBubble(targetEl);
+      }
+
+      function hideTip() {
+        activeTarget = null;
+        bubble.classList.remove('visible');
+      }
+
+      syncTipAttributes(document);
+
+      const observer = new MutationObserver(mutations => {
+        for (const m of mutations) {
+          m.addedNodes.forEach(node => {
+            if (node.nodeType === 1) syncTipAttributes(node);
+          });
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      document.addEventListener('click', (e) => {
+        const tipEl = e.target.closest('[data-tip]');
+        if (tipEl) {
+          if (activeTarget === tipEl && bubble.classList.contains('visible')) {
+            hideTip();
+          } else {
+            showTip(tipEl);
+          }
+          return;
+        }
+        if (!e.target.closest('#vtestTooltipBubble')) {
+          hideTip();
+        }
+      });
+
+      document.addEventListener('mouseover', (e) => {
+        if (window.matchMedia('(hover: hover)').matches) {
+          const tipEl = e.target.closest('[data-tip]');
+          if (tipEl && tipEl !== activeTarget) {
+            showTip(tipEl);
+          }
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        if (window.matchMedia('(hover: hover)').matches && activeTarget) {
+          const related = e.relatedTarget;
+          if (!related || (!activeTarget.contains(related) && !bubble.contains(related))) {
+            hideTip();
+          }
+        }
+      });
+
+      window.addEventListener('scroll', hideTip, { passive: true });
+      window.addEventListener('resize', () => {
+        if (activeTarget && bubble.classList.contains('visible')) {
+          positionBubble(activeTarget);
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideTip();
+      });
+    })();
 
     applyBrandAndLinks();
     applyTheme(getPreferredTheme());
