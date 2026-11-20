@@ -82,6 +82,10 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    [data-tip] {
+      cursor: help;
+    }
+
     header {
       width: 100%;
       max-width: 920px;
@@ -259,7 +263,7 @@
       background: var(--border);
       border-radius: 99px;
       overflow: hidden;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .progress-fill {
@@ -282,13 +286,13 @@
     }
 
     .inline-metrics-strip {
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 6px 16px;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
       max-width: 100%;
       white-space: nowrap;
       overflow-x: auto;
@@ -298,6 +302,13 @@
     .inline-metrics-strip strong {
       color: var(--text-main);
       font-weight: 700;
+    }
+
+    .data-usage-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      font-variant-numeric: tabular-nums;
     }
 
     .actions-row {
@@ -1045,7 +1056,19 @@
     <div class="status-banner" id="statusBanner">Midiendo tu conexión ahora mismo...</div>
 
     <div class="inline-metrics-strip" id="inlineMetricsStrip">
-      Bajada: <strong>-- Mbps</strong> • Subida: <strong>-- Mbps</strong> • Ping: <strong>-- ms</strong> • Constancia: <strong>--%</strong>
+      <span data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>-- Mbps</strong></span>
+      •
+      <span data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>-- Mbps</strong></span>
+      •
+      <span data-tip="Latencia: tiempo de respuesta en reposo y con uso.">Latencia: <strong>-- ms</strong></span>
+      •
+      <span data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>-- ms</strong></span>
+      •
+      <span data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>--%</strong></span>
+    </div>
+
+    <div class="data-usage-note" id="dataUsageNote">
+      Equipo: <strong>Detectando...</strong> • Datos transferidos: <strong>0.0 MB</strong>
     </div>
 
     <div class="actions-row">
@@ -1055,10 +1078,10 @@
 
     <section class="details-panel" id="detailsPanel">
 
-      <!-- 1. ¿Cómo Funciona Tu Conexión Para Cada Uso? -->
+      <!-- 1. Calidad de conexión por actividad -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accUseCases" data-arrow="arrowUseCases">
-          <span>🎯 ¿Cómo Funciona Tu Conexión Para Cada Uso?</span>
+          <span data-tip="Puntuación práctica de 1 a 5 según velocidad de bajada, subida, latencia y constancia.">🎯 Calidad de conexión por actividad</span>
           <span id="arrowUseCases">▼</span>
         </div>
         <div class="sub-accordion-body" id="accUseCases">
@@ -1070,11 +1093,14 @@
       <!-- 2. Dispositivos estimados por tipo -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accDevices" data-arrow="arrowDevices">
-          <span>📱 Dispositivos estimados por tipo (Celular, Desktop, Laptop, SmartTV, PS5/XBOX)</span>
+          <span>📱 Dispositivos simultáneos estimados (con factor real de red)</span>
           <span id="arrowDevices">▼</span>
         </div>
         <div class="sub-accordion-body" id="accDevices">
           <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
+          <div class="note-text">
+            Cálculo ajustado con un factor efectivo de ~75% por consumo simultáneo, latencia y sobrecarga de Wi-Fi.
+          </div>
         </div>
       </div>
 
@@ -1098,17 +1124,17 @@
         <div class="sub-accordion-body" id="accBenchmark">
           <div class="bench-toolbar">
             <div class="bench-tabs" role="tablist" aria-label="Métrica de comparación">
-              <button type="button" class="bench-tab-btn active" data-metric="download">Bajada</button>
-              <button type="button" class="bench-tab-btn" data-metric="upload">Subida</button>
-              <button type="button" class="bench-tab-btn" data-metric="ping">Latencia</button>
+              <button type="button" class="bench-tab-btn active" data-metric="download" title="Velocidad de bajada: qué tan rápido descargan las cosas.">Bajada</button>
+              <button type="button" class="bench-tab-btn" data-metric="upload" title="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida</button>
+              <button type="button" class="bench-tab-btn" data-metric="ping" title="Latencia: tiempo de respuesta de la conexión.">Latencia</button>
             </div>
-            <div class="bench-scope-pill" id="benchScopeLabel">ISP: Detectando... • Zona: --</div>
+            <div class="bench-scope-pill" id="benchScopeLabel">Red: Detectando... • Equipo: --</div>
           </div>
 
           <div class="bench-split-grid">
             <div class="bench-box">
               <div class="bench-box-title">
-                <span>👤 Tu conexión (Actual vs. Tu historial)</span>
+                <span>👤 Tu conexión (Actual vs. Tu historial en este equipo)</span>
                 <span class="score-badge" id="personalBestBadge">Mejor: --</span>
               </div>
               <div id="personalBenchmarkBars"></div>
@@ -1117,7 +1143,7 @@
             <div class="bench-box">
               <div class="bench-box-title">
                 <span>👥 Tu test vs. Otros usuarios de VTEST</span>
-                <span class="score-badge" id="serverSyncBadge">Render: En espera</span>
+                <span class="score-badge" id="serverSyncBadge">Otros usuarios: --</span>
               </div>
               <div id="regionalBenchmarkBars"></div>
             </div>
@@ -1125,18 +1151,18 @@
 
           <div class="bench-box">
             <div class="bench-box-title">
-              <span>🏢 Otros usuarios por proveedor (ISP) en tu zona / país</span>
+              <span>🏢 Otros usuarios por red / proveedor en tu zona / país</span>
               <span class="service-hint" id="monthlyRecordText">Récord registrado: --</span>
             </div>
             <div style="overflow-x:auto;">
               <table>
                 <thead>
                   <tr>
-                    <th>Proveedor (ISP)</th>
+                    <th>Red / Proveedor</th>
                     <th>Pruebas</th>
-                    <th>Bajada media</th>
-                    <th>Subida media</th>
-                    <th>Ping medio</th>
+                    <th title="Velocidad de bajada: qué tan rápido descargan las cosas.">Bajada media</th>
+                    <th title="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida media</th>
+                    <th title="Latencia: tiempo de respuesta de la conexión.">Latencia media</th>
                   </tr>
                 </thead>
                 <tbody id="peerProvidersBody"></tbody>
@@ -1166,12 +1192,12 @@
             </table>
           </div>
           <div class="note-text">
-            <strong>Observación:</strong> Una mayor velocidad de descarga ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia, buena subida y estabilidad.
+            <strong>Observación:</strong> Una mayor velocidad de bajada ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia, baja variación y buena constancia.
           </div>
         </div>
       </div>
 
-      <!-- 6. Ajustes de la prueba (incluye selector de servidor) -->
+      <!-- 6. Ajustes de la prueba -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
@@ -1179,9 +1205,12 @@
         </div>
         <div class="sub-accordion-body grid-2" id="accConfig">
           <div class="field-group">
-            <label for="cfgServerSelect">Servidor de prueba</label>
+            <label for="cfgServerSelect">Servidor de bajada y latencia</label>
             <div class="field-row">
               <select id="cfgServerSelect"></select>
+            </div>
+            <div class="service-hint" style="margin-top:6px;">
+              La subida se mide contra el servidor dedicado de VTEST para aceptar cargas reales.
             </div>
           </div>
           <div class="field-group">
@@ -1191,6 +1220,10 @@
               <span>a</span>
               <input type="number" id="cfgMaxThreads" min="1" max="8" value="4" />
             </div>
+            <label class="checkbox-label">
+              <input type="checkbox" id="cfgAdaptiveThreads" checked />
+              Ajustar canales automáticamente según equipo (Móvil / PC)
+            </label>
           </div>
           <div class="field-group">
             <label>Duración de cada etapa (segundos)</label>
@@ -1225,7 +1258,7 @@
         </div>
         <div class="sub-accordion-body" id="accHistory">
           <div class="history-top">
-            <span class="service-hint" id="historyClientSummary">ISP: Detectando...</span>
+            <span class="service-hint" id="historyClientSummary">Red: Detectando...</span>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
               <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
@@ -1236,11 +1269,14 @@
               <thead>
                 <tr>
                   <th>Fecha</th>
-                  <th>ISP</th>
-                  <th>Bajada</th>
-                  <th>Subida</th>
-                  <th>Respuesta (Reposo / Uso)</th>
-                  <th>Constancia</th>
+                  <th>Equipo</th>
+                  <th>Red / ISP</th>
+                  <th title="Velocidad de bajada: qué tan rápido descargan las cosas.">Bajada</th>
+                  <th title="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida</th>
+                  <th title="Latencia: tiempo de respuesta en reposo / con uso.">Latencia</th>
+                  <th title="Variación (Jitter): cambio entre respuestas sucesivas.">Variación</th>
+                  <th title="Constancia: qué tan parejo se mantuvo el rendimiento.">Constancia</th>
+                  <th>Datos</th>
                 </tr>
               </thead>
               <tbody id="historyTableBody"></tbody>
@@ -1313,6 +1349,7 @@
     const SPEED_QUIZ = Array.isArray(VNET_CFG.speedQuiz) ? VNET_CFG.speedQuiz : [];
     const ACTIVITY_REF_TABLE = Array.isArray(VNET_CFG.activityReferenceTable) ? VNET_CFG.activityReferenceTable : [];
     const DEFAULT_CFG = Object.assign({
+      adaptiveThreads: true,
       minThreads: 2,
       maxThreads: 4,
       durationSec: 8,
@@ -1327,9 +1364,10 @@
     let lastMeasuredDownloadMbps = null;
     let quizAnswers = {};
     let quizStepIndex = 0;
+    let actualBytesTransferred = 0;
 
     let detectedClientGeo = {
-      isp: 'ISP no identificado',
+      isp: 'Red no identificada',
       region: 'No especificada',
       city: 'No especificada',
       countryCode: 'VE'
@@ -1338,6 +1376,7 @@
       downloadMbps: null,
       uploadMbps: null,
       pingMs: null,
+      jitterMs: null,
       stabilityPct: null
     };
     let latestServerComparison = null;
@@ -1348,12 +1387,56 @@
     const elProgress = document.getElementById('progressBar');
     const elStatusBanner = document.getElementById('statusBanner');
     const elInlineMetricsStrip = document.getElementById('inlineMetricsStrip');
+    const elDataUsageNote = document.getElementById('dataUsageNote');
     const elPhaseLabel = document.getElementById('phaseLabel');
     const elStatusDot = document.getElementById('statusDot');
     const elDetailsPanel = document.getElementById('detailsPanel');
     const elToggleMoreBtn = document.getElementById('toggleMoreBtn');
     const elThemeToggleBtn = document.getElementById('themeToggleBtn');
     const elThemeIcon = document.getElementById('themeIcon');
+
+    // 1. Perfil realista del dispositivo (Móvil vs Escritorio, núcleos CPU, saveData)
+    function detectDeviceProfile() {
+      const ua = navigator.userAgent || '';
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+        || (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
+      const cores = navigator.hardwareConcurrency || (isMobile ? 4 : 4);
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const saveData = Boolean(conn && conn.saveData);
+      const eff = conn && conn.effectiveType ? String(conn.effectiveType).toLowerCase() : '';
+      const isSlowRadio = saveData || eff === '2g' || eff === 'slow-2g' || eff === '3g';
+
+      let recMin = isMobile ? 1 : 2;
+      let recMax = isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3);
+      if (isSlowRadio) {
+        recMin = 1;
+        recMax = 2;
+      }
+
+      return {
+        isMobile,
+        label: isMobile ? 'Móvil / Tablet' : 'Escritorio / Laptop',
+        shortLabel: isMobile ? 'Móvil' : 'PC/Laptop',
+        recMinThreads: recMin,
+        recMaxThreads: recMax,
+        uploadChunkBytes: isMobile ? (1024 * 1024) : (3 * 1024 * 1024),
+        uploadThreads: isMobile ? 2 : 3
+      };
+    }
+
+    function getEffectiveThreadBounds() {
+      const profile = detectDeviceProfile();
+      if (cfg.adaptiveThreads) {
+        return {
+          min: profile.recMinThreads,
+          max: profile.recMaxThreads
+        };
+      }
+      return {
+        min: cfg.minThreads,
+        max: cfg.maxThreads
+      };
+    }
 
     function getSelectedDownloadNode() {
       return CDN_NODES.find(n => n.id === cfg.serverId) || CDN_NODES[0] || {
@@ -1371,11 +1454,39 @@
       };
     }
 
-    function updateInlineMetricsStrip({ dlText = '--', ulText = '--', pingText = '--', stabText = '--' } = {}) {
+    // 2. Contador real de MB transferidos (en lugar de estimación fija)
+    function formatTransferredMb() {
+      const mb = actualBytesTransferred / (1024 * 1024);
+      return mb >= 100 ? mb.toFixed(0) : mb.toFixed(1);
+    }
+
+    function updateDataUsageNote() {
+      const srv = getSelectedDownloadNode();
+      const profile = detectDeviceProfile();
+      const bounds = getEffectiveThreadBounds();
+      elDataUsageNote.innerHTML =
+        `Equipo: <strong>${profile.label}</strong> (${bounds.min}–${bounds.max} canales) • ` +
+        `Servidor: <strong>${srv.name}</strong> • ` +
+        `Datos reales usados: <strong>${formatTransferredMb()} MB</strong>`;
+    }
+
+    function updateInlineMetricsStrip({
+      dlText = '--',
+      ulText = '--',
+      pingText = '--',
+      jitterText = '--',
+      stabText = '--'
+    } = {}) {
+      const profile = detectDeviceProfile();
       elInlineMetricsStrip.innerHTML =
-        `Bajada: <strong>${dlText} Mbps</strong> • Subida: <strong>${ulText} Mbps</strong> • Ping: <strong>${pingText} ms</strong> • Constancia: <strong>${stabText}%</strong>`;
+        `<span data-tip="Velocidad de bajada: qué tan rápido descargan las cosas hacia tu equipo.">Bajada: <strong>${dlText} Mbps</strong></span> • ` +
+        `<span data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida: <strong>${ulText} Mbps</strong></span> • ` +
+        `<span data-tip="Latencia: tiempo de respuesta en reposo / con uso.">Latencia: <strong>${pingText} ms</strong></span> • ` +
+        `<span data-tip="Variación (Jitter): cambio entre respuestas sucesivas.">Variación: <strong>${jitterText} ms</strong></span> • ` +
+        `<span data-tip="Constancia: qué tan parejo se mantuvo el rendimiento durante la prueba.">Constancia: <strong>${stabText}%</strong></span>`;
       document.getElementById('historyClientSummary').textContent =
-        `ISP: ${detectedClientGeo.isp}`;
+        `Red / ISP: ${detectedClientGeo.isp} • Equipo actual: ${profile.label}`;
+      updateDataUsageNote();
     }
 
     function setMainDetailsOpen(open, faqOnly = false) {
@@ -1475,9 +1586,10 @@
       const metric = activeBenchMetric;
       const unit = metric === 'ping' ? 'ms' : 'Mbps';
       const personal = getPersonalStats()[metric];
+      const profile = detectDeviceProfile();
 
       document.getElementById('benchScopeLabel').textContent =
-        `ISP: ${detectedClientGeo.isp} • Zona: ${detectedClientGeo.region} (${detectedClientGeo.countryCode})`;
+        `Red: ${detectedClientGeo.isp} • Equipo: ${profile.shortLabel}`;
 
       document.getElementById('personalBestBadge').textContent =
         personal.best !== null ? `Mejor: ${personal.best} ${unit}` : 'Mejor: --';
@@ -1485,7 +1597,7 @@
       const pMax = Math.max(10, personal.current || 0, personal.best || 0, personal.avg || 0);
 
       document.getElementById('personalBenchmarkBars').innerHTML = [
-        renderBarItem('Mi prueba actual', personal.current, pMax, unit, ''),
+        renderBarItem(`Mi prueba actual (${profile.shortLabel})`, personal.current, pMax, unit, ''),
         renderBarItem('Mi mejor histórica', personal.best, pMax, unit, 'secondary'),
         renderBarItem('Mi promedio histórico', personal.avg, pMax, unit, 'muted')
       ].join('');
@@ -1520,7 +1632,7 @@
       if (comp.monthlyRecord) {
         const dStr = new Date(comp.monthlyRecord.date).toLocaleDateString();
         document.getElementById('monthlyRecordText').textContent =
-          `Récord: ${comp.monthlyRecord.downloadMbps} Mbps (${comp.monthlyRecord.isp}, ${dStr})`;
+          `Récord: ${comp.monthlyRecord.downloadMbps} Mbps (${comp.monthlyRecord.isp} • ${comp.monthlyRecord.deviceType || 'Equipo'}, ${dStr})`;
       } else {
         document.getElementById('monthlyRecordText').textContent = 'Récord registrado: --';
       }
@@ -1809,7 +1921,7 @@
               <span class="score-badge">-- / 5</span>
             </div>
             <div class="service-rating">Evaluando...</div>
-            <div class="service-detail">Esperando medición de velocidad y latencia...</div>
+            <div class="service-detail">Esperando medición de bajada, subida, latencia y variación...</div>
             <div class="service-hint">${uc.usageHint || ''}</div>
             <div class="device-tags">${tags}</div>
             <div class="service-meta">Plan ref.: <strong>${uc.planRef}</strong> • Hasta ~${uc.planDevices} equipos en plan</div>
@@ -1834,7 +1946,7 @@
       `).join('');
     }
 
-    function computeActivityScore(uc, { dlMbps, ulMbps, idlePing, loadedPing, stability }) {
+    function computeActivityScore(uc, { dlMbps, ulMbps, idlePing, loadedPing, jitter, stability }) {
       let score = 1;
       if (dlMbps >= uc.idealMbps) score = 5;
       else if (dlMbps >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
@@ -1842,13 +1954,14 @@
       else if (dlMbps >= uc.minMbps * 0.5) score = 2;
 
       const extraDelay = Math.max(0, (loadedPing || idlePing || 0) - (idlePing || 0));
+      const jit = parseFloat(jitter) || 0;
 
       if (uc.id === 'online_gaming') {
-        if ((idlePing || 0) > 100 || extraDelay > 90) score -= 2;
-        else if ((idlePing || 0) > 65 || extraDelay > 45) score -= 1;
+        if ((idlePing || 0) > 110 || extraDelay > 95 || jit > 35) score -= 2;
+        else if ((idlePing || 0) > 70 || extraDelay > 50 || jit > 18) score -= 1;
       } else if (uc.id === 'video_conferencing') {
         if (ulMbps !== null && ulMbps < (uc.minUploadMbps || 2)) score -= 1;
-        if (extraDelay > 75 || stability < 55) score -= 1;
+        if (extraDelay > 75 || stability < 55 || jit > 25) score -= 1;
       } else if (uc.id === 'video_streaming') {
         if (stability < 50 || extraDelay > 90) score -= 1;
       } else if (uc.id === 'web_browsing') {
@@ -1858,24 +1971,29 @@
       return Math.max(1, Math.min(5, score));
     }
 
-    function evaluateUseCasesAndPlans({ dlMbps, ulMbps, idlePing, loadedPing, stability }) {
+    // 6. Cálculo realista de capacidad simultánea con factor de eficiencia de red/Wi-Fi
+    function evaluateUseCasesAndPlans({ dlMbps, ulMbps, idlePing, loadedPing, jitter, stability }) {
       lastMeasuredDownloadMbps = dlMbps;
 
       let suggestedPlan = PLANS[0] || { id: 'VNET400', recommendedDevices: 16, mbps: 400 };
       if (dlMbps > 600 && PLANS[2]) suggestedPlan = PLANS[2];
       else if (dlMbps > 400 && PLANS[1]) suggestedPlan = PLANS[1];
 
+      const stabilityFactor = Math.max(0.55, Math.min(1, (stability || 85) / 100));
+      const effectiveShareFactor = 0.75 * stabilityFactor;
+      const effectiveMbps = dlMbps * effectiveShareFactor;
+
       const grid = document.getElementById('servicesGrid');
       grid.innerHTML = USE_CASES.map(uc => {
-        const score = computeActivityScore(uc, { dlMbps, ulMbps, idlePing, loadedPing, stability });
+        const score = computeActivityScore(uc, { dlMbps, ulMbps, idlePing, loadedPing, jitter, stability });
 
         let cls = 'rating-poor';
-        let verdict = 'Baja en este momento';
+        let verdict = 'Limitado en este momento';
         let explanation = uc.lowText;
 
         if (score >= 4) {
           cls = 'rating-good';
-          verdict = score === 5 ? 'Excelente para este uso' : 'Buena para este uso';
+          verdict = score === 5 ? 'Óptimo para este uso' : 'Bueno para este uso';
           explanation = uc.okText;
         } else if (score === 3) {
           cls = 'rating-ok';
@@ -1885,7 +2003,7 @@
 
         const currentEstDevices = Math.max(
           1,
-          Math.min(uc.planDevices, Math.floor(dlMbps / Math.max(1, uc.deviceLoadMbps)))
+          Math.min(uc.planDevices, Math.floor(effectiveMbps / Math.max(1, uc.deviceLoadMbps)))
         );
 
         const tags = (uc.featuredDevices || [])
@@ -1903,7 +2021,7 @@
             <div class="service-hint">${uc.usageHint || ''}</div>
             <div class="device-tags">${tags}</div>
             <div class="service-meta">
-              Equipos estimados ahora: <strong>~${currentEstDevices}</strong> (hasta <strong>~${uc.planDevices}</strong> con <strong>${uc.planRef}</strong>)
+              Equipos simultáneos estimados: <strong>~${currentEstDevices}</strong> (hasta <strong>~${uc.planDevices}</strong> con <strong>${uc.planRef}</strong>)
             </div>
           </div>
         `;
@@ -1913,11 +2031,11 @@
       devStrip.innerHTML = DEVICE_TYPES.map(dt => {
         const nowCount = Math.max(
           1,
-          Math.min(suggestedPlan.recommendedDevices, Math.floor(dlMbps / Math.max(1, dt.loadMbps)))
+          Math.min(suggestedPlan.recommendedDevices, Math.floor(effectiveMbps / Math.max(1, dt.loadMbps)))
         );
         const planCount = Math.max(
           1,
-          Math.min(suggestedPlan.recommendedDevices, Math.floor(suggestedPlan.mbps / Math.max(1, dt.loadMbps)))
+          Math.min(suggestedPlan.recommendedDevices, Math.floor((suggestedPlan.mbps * 0.75) / Math.max(1, dt.loadMbps)))
         );
         return `
           <div class="device-box">
@@ -1965,13 +2083,29 @@
 
     function applyConfigToUI() {
       populateServerSelect();
-      document.getElementById('cfgMinThreads').value = cfg.minThreads;
-      document.getElementById('cfgMaxThreads').value = cfg.maxThreads;
+      const bounds = getEffectiveThreadBounds();
+      document.getElementById('cfgAdaptiveThreads').checked = Boolean(cfg.adaptiveThreads);
+      document.getElementById('cfgMinThreads').value = bounds.min;
+      document.getElementById('cfgMaxThreads').value = bounds.max;
+      document.getElementById('cfgMinThreads').disabled = Boolean(cfg.adaptiveThreads);
+      document.getElementById('cfgMaxThreads').disabled = Boolean(cfg.adaptiveThreads);
       document.getElementById('cfgDuration').value = cfg.durationSec;
       document.getElementById('cfgAutoStart').checked = cfg.autoStart;
       document.getElementById('cfgAlwaysShowDetails').checked = cfg.alwaysShowDetails;
       setMainDetailsOpen(Boolean(cfg.alwaysShowDetails), false);
+      updateDataUsageNote();
     }
+
+    document.getElementById('cfgAdaptiveThreads').addEventListener('change', (e) => {
+      const checked = e.target.checked;
+      document.getElementById('cfgMinThreads').disabled = checked;
+      document.getElementById('cfgMaxThreads').disabled = checked;
+      if (checked) {
+        const profile = detectDeviceProfile();
+        document.getElementById('cfgMinThreads').value = profile.recMinThreads;
+        document.getElementById('cfgMaxThreads').value = profile.recMaxThreads;
+      }
+    });
 
     function formatSpeed(mbps) {
       if (mbps >= 100) return Math.round(mbps).toString();
@@ -1983,30 +2117,72 @@
       fetch(`${BACKEND_URL}/ping?wake=${Date.now()}`, { cache: 'no-store' }).catch(() => {});
     }
 
-    async function fetchClientInfo() {
+    // 3. Detección de red/ISP con timeout y múltiples proveedores de respaldo
+    async function fetchWithTimeout(url, ms = 3500) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), ms);
       try {
-        const res = await fetch('https://ipapi.co/json/');
-        if (!res.ok) throw new Error('ipapi error');
-        const data = await res.json();
-        detectedClientGeo = {
-          isp: (data.org || data.asn || 'ISP no identificado').trim(),
-          region: (data.region || data.city || 'No especificada').trim(),
-          city: (data.city || 'No especificada').trim(),
-          countryCode: (data.country_code || 'VE').trim().toUpperCase()
-        };
-      } catch {
-        detectedClientGeo = {
-          isp: 'ISP no identificado',
-          region: 'No especificada',
-          city: 'No especificada',
-          countryCode: 'VE'
-        };
+        const res = await fetch(url, { signal: ctrl.signal });
+        if (!res.ok) throw new Error('HTTP error');
+        return await res.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function fetchClientInfo() {
+      let resolved = false;
+
+      try {
+        const data = await fetchWithTimeout('https://ipapi.co/json/', 3500);
+        if (data && (data.org || data.asn)) {
+          detectedClientGeo = {
+            isp: (data.org || data.asn).trim(),
+            region: (data.region || data.city || 'No especificada').trim(),
+            city: (data.city || 'No especificada').trim(),
+            countryCode: (data.country_code || 'VE').trim().toUpperCase()
+          };
+          resolved = true;
+        }
+      } catch {}
+
+      if (!resolved) {
+        try {
+          const data = await fetchWithTimeout('https://ipwho.is/', 3500);
+          if (data && data.success !== false && data.connection) {
+            const ispName = data.connection.isp || data.connection.org || 'Red no identificada';
+            const asnPart = data.connection.asn ? ` (AS${data.connection.asn})` : '';
+            detectedClientGeo = {
+              isp: `${ispName}${asnPart}`.trim(),
+              region: (data.region || data.city || 'No especificada').trim(),
+              city: (data.city || 'No especificada').trim(),
+              countryCode: (data.country_code || 'VE').trim().toUpperCase()
+            };
+            resolved = true;
+          }
+        } catch {}
+      }
+
+      if (!resolved) {
+        try {
+          const data = await fetchWithTimeout('https://ipinfo.io/json', 3500);
+          if (data && data.org) {
+            detectedClientGeo = {
+              isp: String(data.org).trim(),
+              region: (data.region || data.city || 'No especificada').trim(),
+              city: (data.city || 'No especificada').trim(),
+              countryCode: (data.country || 'VE').trim().toUpperCase()
+            };
+            resolved = true;
+          }
+        } catch {}
       }
 
       updateInlineMetricsStrip({
         dlText: latestTestMetrics.downloadMbps !== null ? formatSpeed(latestTestMetrics.downloadMbps) : '--',
         ulText: latestTestMetrics.uploadMbps !== null ? formatSpeed(latestTestMetrics.uploadMbps) : '--',
         pingText: latestTestMetrics.pingMs !== null ? String(latestTestMetrics.pingMs) : '--',
+        jitterText: latestTestMetrics.jitterMs !== null ? String(latestTestMetrics.jitterMs) : '--',
         stabText: latestTestMetrics.stabilityPct !== null ? String(latestTestMetrics.stabilityPct) : '--'
       });
       renderHistory();
@@ -2014,7 +2190,13 @@
       await fetchInitialBenchmark();
 
       if (latestTestMetrics.downloadMbps !== null) {
+        const profile = detectDeviceProfile();
         await postBenchmarkResult({
+          isp: detectedClientGeo.isp,
+          region: detectedClientGeo.region,
+          city: detectedClientGeo.city,
+          countryCode: detectedClientGeo.countryCode,
+          deviceType: profile.shortLabel,
           downloadMbps: latestTestMetrics.downloadMbps,
           uploadMbps: latestTestMetrics.uploadMbps,
           pingMs: latestTestMetrics.pingMs,
@@ -2025,22 +2207,30 @@
 
     async function measurePingSamples(count, signal) {
       const rtts = [];
-      const primaryTarget = getSelectedPingEndpoint();
-      const fallbackTarget = PING_ENDPOINTS.find(p => p.id !== primaryTarget.id) || primaryTarget;
+      const target = getSelectedPingEndpoint();
+
+      try {
+        await fetch(`${target.url}${target.url.includes('?') ? '&' : '?'}warm=${Date.now()}`, {
+          cache: 'no-store',
+          signal
+        });
+      } catch {}
 
       for (let i = 0; i < count; i++) {
         if (signal.aborted) break;
-        const target = i < count - 1 ? primaryTarget : fallbackTarget;
         const t0 = performance.now();
         try {
           await fetch(`${target.url}${target.url.includes('?') ? '&' : '?'}t=${Date.now()}_${i}`, {
             cache: 'no-store',
             signal
           });
-          rtts.push(performance.now() - t0);
+          const elapsed = performance.now() - t0;
+          if (elapsed > 0 && elapsed < 2500) {
+            rtts.push(elapsed);
+          }
         } catch {}
       }
-      if (!rtts.length) return { avg: 0, jitter: 0 };
+      if (!rtts.length) return { avg: 0, jitter: '0.0' };
       const avg = rtts.reduce((a, b) => a + b, 0) / rtts.length;
       let jitterSum = 0;
       for (let i = 1; i < rtts.length; i++) {
@@ -2055,7 +2245,8 @@
       const samples = [];
       const loadedRtts = [];
       const startTime = performance.now();
-      let activeThreads = cfg.minThreads;
+      const bounds = getEffectiveThreadBounds();
+      let activeThreads = bounds.min;
       const selectedNode = getSelectedDownloadNode();
       const pingNode = getSelectedPingEndpoint();
 
@@ -2067,7 +2258,8 @@
               cache: 'no-store',
               signal
             });
-            loadedRtts.push(performance.now() - t0);
+            const ms = performance.now() - t0;
+            if (ms > 0 && ms < 2500) loadedRtts.push(ms);
           } catch {}
           await new Promise(r => setTimeout(r, 450));
         }
@@ -2088,6 +2280,7 @@
                 break;
               }
               totalBytes += value.byteLength;
+              actualBytesTransferred += value.byteLength;
             }
           } catch {
             await new Promise(r => setTimeout(r, 150));
@@ -2116,8 +2309,8 @@
             elMainSpeed.textContent = formatted;
             updateInlineMetricsStrip({ dlText: formatted });
 
-            if (currentMbps > 40 && activeThreads < cfg.maxThreads) {
-              workers.push(downloadWorker(activeThreads));
+            if (currentMbps > 45 && activeThreads < bounds.max) {
+              workers.push(downloadWorker());
               activeThreads++;
             }
           }
@@ -2135,6 +2328,15 @@
         ? Math.round(loadedRtts.reduce((a, b) => a + b, 0) / loadedRtts.length)
         : null;
 
+      let loadedJitter = null;
+      if (loadedRtts.length > 1) {
+        let jSum = 0;
+        for (let i = 1; i < loadedRtts.length; i++) {
+          jSum += Math.abs(loadedRtts[i] - loadedRtts[i - 1]);
+        }
+        loadedJitter = (jSum / (loadedRtts.length - 1)).toFixed(1);
+      }
+
       const steady = samples.slice(Math.floor(samples.length * 0.2));
       let stability = 95;
       if (steady.length > 2) {
@@ -2144,20 +2346,27 @@
         stability = Math.max(15, Math.min(99, Math.round((1 - cv) * 100)));
       }
 
-      return { mbps: finalMbps, loadedPing: loadedAvg, stability };
+      return { mbps: finalMbps, loadedPing: loadedAvg, loadedJitter, stability };
     }
 
+    // 4. Subida ajustada al perfil del dispositivo (bloque menor en móvil, calentamiento previo)
     async function runUploadPhase(durationMs, signal) {
       let uploadedBytes = 0;
-      const startTime = performance.now();
-      const payload = new Uint8Array(2 * 1024 * 1024);
+      const profile = detectDeviceProfile();
+      const payload = new Uint8Array(profile.uploadChunkBytes);
       let failedAll = true;
-      const threads = Math.min(3, cfg.maxThreads);
+      const threads = profile.uploadThreads;
+
+      try {
+        await fetch(`${BACKEND_URL}/ping?upwarm=${Date.now()}`, { cache: 'no-store', signal });
+      } catch {}
+
+      const startTime = performance.now();
 
       async function uploadWorker() {
         while (!signal.aborted && performance.now() - startTime < durationMs) {
           try {
-            const res = await fetch(`${BACKEND_URL}/upload?t=${Date.now()}`, {
+            const res = await fetch(`${BACKEND_URL}/upload?t=${Date.now()}_${Math.random()}`, {
               method: 'POST',
               body: payload,
               headers: { 'Content-Type': 'application/octet-stream' },
@@ -2166,6 +2375,7 @@
             if (res.ok) {
               failedAll = false;
               uploadedBytes += payload.byteLength;
+              actualBytesTransferred += payload.byteLength;
             } else {
               break;
             }
@@ -2204,8 +2414,10 @@
       }
 
       isRunning = true;
+      actualBytesTransferred = 0;
       abortController = new AbortController();
       const { signal } = abortController;
+      const profile = detectDeviceProfile();
 
       elRestartBtn.classList.add('spinning');
       elStatusDot.className = 'dot running';
@@ -2213,40 +2425,48 @@
       elMainSpeed.textContent = '0';
       elProgress.style.width = '5%';
       elStatusBanner.className = 'status-banner';
-      elStatusBanner.textContent = 'Revisando qué tan rápido responde tu conexión...';
-      elPhaseLabel.textContent = 'Respuesta';
+      elStatusBanner.textContent = 'Midiendo latencia y variación de respuesta...';
+      elPhaseLabel.textContent = 'Latencia';
       updateInlineMetricsStrip();
 
       try {
-        const idlePing = await measurePingSamples(5, signal);
+        const idlePing = await measurePingSamples(6, signal);
         if (signal.aborted) return;
         elProgress.style.width = '12%';
-        updateInlineMetricsStrip({ pingText: String(idlePing.avg) });
+        updateInlineMetricsStrip({
+          pingText: String(idlePing.avg),
+          jitterText: String(idlePing.jitter)
+        });
 
         elPhaseLabel.textContent = 'Bajada';
-        elStatusBanner.textContent = 'Midiendo qué tan rápido descargan las cosas...';
+        elStatusBanner.textContent = 'Midiendo velocidad de bajada...';
         const dlResult = await runDownloadPhase(cfg.durationSec * 1000, signal);
         if (signal.aborted) return;
 
         const finalDlText = formatSpeed(dlResult.mbps);
         elMainSpeed.textContent = finalDlText;
         const loadedMs = dlResult.loadedPing || idlePing.avg;
+        const combinedJitter = dlResult.loadedJitter || idlePing.jitter;
         updateInlineMetricsStrip({
           dlText: finalDlText,
           pingText: `${idlePing.avg}/${loadedMs}`,
+          jitterText: String(combinedJitter),
           stabText: String(dlResult.stability)
         });
 
         elPhaseLabel.textContent = 'Subida';
-        elStatusBanner.textContent = 'Midiendo qué tan rápido envías fotos, mensajes o archivos...';
+        elStatusBanner.textContent = 'Midiendo velocidad de subida...';
         const ulMbps = await runUploadPhase(Math.max(4, cfg.durationSec - 2) * 1000, signal);
         if (signal.aborted) return;
 
         const finalUlText = ulMbps !== null ? formatSpeed(ulMbps) : 'N/D';
+        const usedMbText = `${formatTransferredMb()} MB`;
+
         latestTestMetrics = {
           downloadMbps: Number(dlResult.mbps.toFixed(1)),
           uploadMbps: ulMbps !== null ? Number(ulMbps.toFixed(1)) : null,
           pingMs: idlePing.avg || null,
+          jitterMs: combinedJitter,
           stabilityPct: dlResult.stability
         };
 
@@ -2254,6 +2474,7 @@
           dlText: finalDlText,
           ulText: finalUlText,
           pingText: `${idlePing.avg}/${loadedMs}`,
+          jitterText: String(combinedJitter),
           stabText: String(dlResult.stability)
         });
 
@@ -2262,20 +2483,30 @@
           ulMbps,
           idlePing: idlePing.avg,
           loadedPing: loadedMs,
+          jitter: combinedJitter,
           stability: dlResult.stability
         });
 
+        // 5. Guarda equipo (Móvil vs PC/Laptop) y MB reales en historial y benchmark
         saveHistory({
           date: new Date().toLocaleString(),
+          device: profile.shortLabel,
           isp: detectedClientGeo.isp,
           download: `${finalDlText} Mbps`,
           upload: ulMbps !== null ? `${finalUlText} Mbps` : 'No disponible',
           ping: `${idlePing.avg} / ${loadedMs} ms`,
-          stability: `${dlResult.stability}%`
+          jitter: `${combinedJitter} ms`,
+          stability: `${dlResult.stability}%`,
+          dataUsed: usedMbText
         });
 
         renderBenchmarkSection();
         await postBenchmarkResult({
+          isp: detectedClientGeo.isp,
+          region: detectedClientGeo.region,
+          city: detectedClientGeo.city,
+          countryCode: detectedClientGeo.countryCode,
+          deviceType: profile.shortLabel,
           downloadMbps: latestTestMetrics.downloadMbps,
           uploadMbps: latestTestMetrics.uploadMbps,
           pingMs: latestTestMetrics.pingMs,
@@ -2288,7 +2519,7 @@
 
         if (dlResult.stability < 45) {
           elStatusBanner.className = 'status-banner warning';
-          elStatusBanner.textContent = '* Tu conexión cambió bastante durante la prueba; la velocidad puede variar.';
+          elStatusBanner.textContent = '* Tu conexión tuvo alta variación durante la prueba; la velocidad puede fluctuar.';
         } else {
           elStatusBanner.textContent = 'Listo. Toca la flecha circular si quieres medir de nuevo.';
         }
@@ -2318,14 +2549,17 @@
         ? list.map(r => `
             <tr>
               <td>${r.date}</td>
-              <td>${r.isp || detectedClientGeo.isp || 'No identificado'}</td>
+              <td>${r.device || '--'}</td>
+              <td>${r.isp || detectedClientGeo.isp || 'No identificada'}</td>
               <td><strong>${r.download}</strong></td>
               <td>${r.upload}</td>
               <td>${r.ping}</td>
+              <td>${r.jitter || '--'}</td>
               <td>${r.stability}</td>
+              <td>${r.dataUsed || '--'}</td>
             </tr>
           `).join('')
-        : '<tr><td colspan="6" style="color:var(--text-muted);">Todavía no hay pruebas guardadas.</td></tr>';
+        : '<tr><td colspan="9" style="color:var(--text-muted);">Todavía no hay pruebas guardadas.</td></tr>';
     }
 
     elRestartBtn.addEventListener('click', startTest);
@@ -2336,12 +2570,14 @@
     });
 
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
+      const adaptive = document.getElementById('cfgAdaptiveThreads').checked;
       const minT = Math.max(1, Math.min(8, parseInt(document.getElementById('cfgMinThreads').value, 10) || 2));
       const maxT = Math.max(minT, Math.min(8, parseInt(document.getElementById('cfgMaxThreads').value, 10) || 4));
       const dur = Math.max(4, Math.min(25, parseInt(document.getElementById('cfgDuration').value, 10) || 8));
       const srvId = document.getElementById('cfgServerSelect').value || 'cloudflare';
 
       cfg = {
+        adaptiveThreads: adaptive,
         minThreads: minT,
         maxThreads: maxT,
         durationSec: dur,
@@ -2364,8 +2600,8 @@
     document.getElementById('exportCsvBtn').addEventListener('click', () => {
       const list = JSON.parse(localStorage.getItem('vnet_fast_history') || '[]');
       if (!list.length) return;
-      const csv = ['Fecha,ISP,Bajada,Subida,Respuesta_Reposo_Uso,Constancia']
-        .concat(list.map(r => `"${r.date}","${r.isp || ''}","${r.download}","${r.upload}","${r.ping}","${r.stability}"`))
+      const csv = ['Fecha,Equipo,Red_ISP,Bajada,Subida,Latencia_Reposo_Uso,Variacion,Constancia,Datos_MB']
+        .concat(list.map(r => `"${r.date}","${r.device || ''}","${r.isp || ''}","${r.download}","${r.upload}","${r.ping}","${r.jitter || ''}","${r.stability}","${r.dataUsed || ''}"`))
         .join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
