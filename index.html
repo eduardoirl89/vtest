@@ -1296,7 +1296,32 @@
         </div>
       </div>
 
-      <!-- 4. Benchmarking: Tu prueba vs otros usuarios de VTEST + Historial propio -->
+      <!-- 4. Tabla de referencia -->
+      <div class="sub-accordion">
+        <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
+          <span>📋 Tabla de referencia: Velocidad recomendada por actividad</span>
+          <span id="arrowReferenceTable">▼</span>
+        </div>
+        <div class="sub-accordion-body" id="accReferenceTable">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Actividad</th>
+                  <th>Dispositivos</th>
+                  <th>Velocidad de descarga recomendada</th>
+                </tr>
+              </thead>
+              <tbody id="referenceTableBody"></tbody>
+            </table>
+          </div>
+          <div class="note-text">
+            <strong>Observación:</strong> Una mayor velocidad de bajada ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia, baja variación y buena constancia.
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Benchmarking: Tu prueba vs otros usuarios de VTEST -->
       <div class="sub-accordion" id="benchmarkAccordionBox">
         <div class="sub-accordion-header" data-target="accBenchmark" data-arrow="arrowBenchmark">
           <span>📊 Benchmarking: Tu Conexión vs. Otros Usuarios de VTEST</span>
@@ -1353,32 +1378,42 @@
         </div>
       </div>
 
-      <!-- 5. Tabla de referencia -->
+      <!-- 6. Historial guardado -->
       <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
-          <span>📋 Tabla de referencia: Velocidad recomendada por actividad</span>
-          <span id="arrowReferenceTable">▼</span>
+        <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
+          <span>🕒 Tus pruebas anteriores</span>
+          <span id="arrowHistory">▼</span>
         </div>
-        <div class="sub-accordion-body" id="accReferenceTable">
+        <div class="sub-accordion-body" id="accHistory">
+          <div class="history-top">
+            <span class="service-hint" id="historyClientSummary">Red: Detectando...</span>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
+              <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
+            </div>
+          </div>
           <div style="overflow-x:auto;">
             <table>
               <thead>
                 <tr>
-                  <th>Actividad</th>
-                  <th>Dispositivos</th>
-                  <th>Velocidad de descarga recomendada</th>
+                  <th>Fecha</th>
+                  <th>Equipo</th>
+                  <th>Red / ISP</th>
+                  <th title="Velocidad de bajada: qué tan rápido descargan las cosas.">Bajada</th>
+                  <th title="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida</th>
+                  <th title="Latencia: tiempo de respuesta en reposo / con uso.">Latencia</th>
+                  <th title="Variación (Jitter): cambio entre respuestas sucesivas.">Variación</th>
+                  <th title="Constancia: qué tan parejo se mantuvo el rendimiento.">Constancia</th>
+                  <th>Datos</th>
                 </tr>
               </thead>
-              <tbody id="referenceTableBody"></tbody>
+              <tbody id="historyTableBody"></tbody>
             </table>
-          </div>
-          <div class="note-text">
-            <strong>Observación:</strong> Una mayor velocidad de bajada ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia, baja variación y buena constancia.
           </div>
         </div>
       </div>
 
-      <!-- 6. Ajustes de la prueba -->
+      <!-- 7. Ajustes de la prueba -->
       <div class="sub-accordion">
         <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
           <span>⚙️ Ajustes de la prueba</span>
@@ -1427,41 +1462,6 @@
           <div class="config-actions">
             <button class="btn-sm primary" id="saveCfgBtn">Guardar ajustes</button>
             <button class="btn-sm" id="resetCfgBtn">Valores originales</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7. Historial guardado -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
-          <span>🕒 Tus pruebas anteriores</span>
-          <span id="arrowHistory">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accHistory">
-          <div class="history-top">
-            <span class="service-hint" id="historyClientSummary">Red: Detectando...</span>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
-              <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
-            </div>
-          </div>
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Equipo</th>
-                  <th>Red / ISP</th>
-                  <th title="Velocidad de bajada: qué tan rápido descargan las cosas.">Bajada</th>
-                  <th title="Velocidad de subida: qué tan rápido envías fotos, mensajes o archivos.">Subida</th>
-                  <th title="Latencia: tiempo de respuesta en reposo / con uso.">Latencia</th>
-                  <th title="Variación (Jitter): cambio entre respuestas sucesivas.">Variación</th>
-                  <th title="Constancia: qué tan parejo se mantuvo el rendimiento.">Constancia</th>
-                  <th>Datos</th>
-                </tr>
-              </thead>
-              <tbody id="historyTableBody"></tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -1531,7 +1531,6 @@
     const DEVICE_TYPES = Array.isArray(VNET_CFG.deviceTypes) ? VNET_CFG.deviceTypes : [];
     const ACTIVITY_REF_TABLE = Array.isArray(VNET_CFG.activityReferenceTable) ? VNET_CFG.activityReferenceTable : [];
 
-    // Preguntas del cuestionario en tiempo presente, enfocadas en personas y uso real del servicio
     const LIVE_SPEED_QUIZ = [
       {
         id: 'people_daily',
@@ -1938,7 +1937,6 @@
       } catch {}
     }
 
-    // --- Cuestionario en tiempo presente ---
     function resetQuizState() {
       quizAnswers = {};
       quizStepIndex = 0;
@@ -1962,7 +1960,6 @@
       const basePerPerson = usageOpt ? usageOpt.basePerPerson : 15;
       const overlapAdd = overlapOpt ? overlapOpt.addMbps : 0;
 
-      // Margen de sobrecarga Wi-Fi/TCP (~20%) para que refleje uso real conjunto
       const rawMbps = (basePerPerson * peopleFactor + overlapAdd) * 1.2;
       const estimatedMbps = Math.max(15, Math.round(rawMbps / 5) * 5);
 
@@ -1975,7 +1972,7 @@
     }
 
     function getSuggestedPlanForMbps(mbps) {
-      if (!PLANS.length) return { name: 'Plan actual', label: `${mbps} Mbps`, mbps };
+      if (!PLANS.length) return { name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400 };
       const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
       return sorted.find(p => (p.mbps || 0) >= mbps) || sorted[sorted.length - 1];
     }
@@ -2885,7 +2882,6 @@
       renderBenchmarkSection();
     });
 
-    // Tooltips: hover limpio en escritorio + tap en celular
     (function initTouchAndMouseTooltips() {
       const bubble = document.getElementById('vtestTooltipBubble');
       if (!bubble) return;
