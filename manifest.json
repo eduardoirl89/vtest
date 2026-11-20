@@ -1,0 +1,17 @@
+{
+  "name": "VTEST — Red de Posibilidades",
+  "short_name": "VTEST",
+  "description": "Prueba de velocidad, diagnóstico de red y recomendación de planes VNET.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070a12",
+  "theme_color": "#070a12",
+  "icons": [
+    {
+      "src": "https://vtest-backend-d4nr.onrender.com/ping",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
