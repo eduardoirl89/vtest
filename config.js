@@ -145,8 +145,8 @@ window.VNET_CONFIG = {
     },
     {
       id: 'vnet_backend_dl',
-      name: 'Servidor VNET Render — Prueba ligera (5 MB)',
-      url: 'https://vtest-backend-d4nr.onrender.com/ping?size=5mb'
+      name: 'Servidor VNET Render — Prueba (5 MB)',
+      url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
   ],
 
@@ -164,7 +164,7 @@ window.VNET_CONFIG = {
     {
       id: 'cloudflare_h3',
       name: 'Cloudflare CDN — HTTP/3',
-      url: 'https://h3.speed.cloudflare.com/__down?bytes=100'
+      url: 'https://speed.cloudflare.com/__down?bytes=100'
     },
     {
       id: 'vnet_backend_dl',
