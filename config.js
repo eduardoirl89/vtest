@@ -5,11 +5,8 @@ window.VNET_CONFIG = {
   backendUrl: 'https://vtest-backend-d4nr.onrender.com',
 
   defaults: {
-    adaptiveThreads: true,
-    minThreads: 2,
-    maxThreads: 4,
     durationSec: 8,
-    serverId: 'cloudflare_std',
+    serverId: 'cloudflare',
     autoStart: true,
     alwaysShowDetails: false
   },
@@ -127,48 +124,55 @@ window.VNET_CONFIG = {
     }
   ],
 
+  testTips: [
+    {
+      title: '🔌 Prioriza cable Ethernet',
+      desc: 'Si mides desde una PC o laptop, el cable de red refleja la velocidad real de tu plan sin pérdidas por paredes o distancia.'
+    },
+    {
+      title: '📶 Usa banda Wi-Fi de 5 GHz',
+      desc: 'Si mides por Wi-Fi, conéctate a la red 5 GHz y acércate al router; la banda 2.4 GHz suele limitarse alrededor de 40–70 Mbps.'
+    },
+    {
+      title: '🛡️ Desactiva VPN o proxy',
+      desc: 'Las VPN redirigen tu tráfico hacia otros países y aumentan la latencia, reduciendo la velocidad medida.'
+    },
+    {
+      title: '⏸️ Pausa descargas y streaming',
+      desc: 'Evita actualizaciones de sistema, copias en la nube o videos 4K activos en otros equipos mientras dura la prueba.'
+    },
+    {
+      title: '📱 Ten en cuenta los límites del celular',
+      desc: 'Los teléfonos móviles y las redes celulares (4G/5G) gestionan menos conexiones simultáneas y ahorro de batería que una PC.'
+    },
+    {
+      title: '🔄 Repite tras cambiar de red',
+      desc: 'Si pasas de Wi-Fi a datos móviles, espera un par de segundos a que el teléfono estabilice la ruta antes de iniciar el test.'
+    }
+  ],
+
   cdnNodes: [
     {
-      id: 'cloudflare_std',
-      name: 'Cloudflare CDN — Estándar (15 MB)',
-      url: 'https://speed.cloudflare.com/__down?bytes=15000000'
+      id: 'cloudflare',
+      name: 'Cloudflare',
+      url: 'https://speed.cloudflare.com/__down?bytes=25000000'
     },
     {
-      id: 'cloudflare_high',
-      name: 'Cloudflare CDN — Alta velocidad (50 MB)',
-      url: 'https://speed.cloudflare.com/__down?bytes=50000000'
-    },
-    {
-      id: 'cloudflare_h3',
-      name: 'Cloudflare CDN — HTTP/3 (25 MB)',
-      url: 'https://h3.speed.cloudflare.com/__down?bytes=25000000'
-    },
-    {
-      id: 'vnet_backend_dl',
-      name: 'Servidor VNET Render — Prueba (5 MB)',
+      id: 'render',
+      name: 'Servidor VNET Render',
       url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
   ],
 
   pingEndpoints: [
     {
-      id: 'cloudflare_std',
-      name: 'Cloudflare CDN — Estándar',
+      id: 'cloudflare',
+      name: 'Cloudflare',
       url: 'https://speed.cloudflare.com/__down?bytes=100'
     },
     {
-      id: 'cloudflare_high',
-      name: 'Cloudflare CDN — Alta velocidad',
-      url: 'https://speed.cloudflare.com/__down?bytes=100'
-    },
-    {
-      id: 'cloudflare_h3',
-      name: 'Cloudflare CDN — HTTP/3',
-      url: 'https://speed.cloudflare.com/__down?bytes=100'
-    },
-    {
-      id: 'vnet_backend_dl',
-      name: 'Servidor VNET Render — Ping',
+      id: 'render',
+      name: 'Servidor VNET Render',
       url: 'https://vtest-backend-d4nr.onrender.com/ping'
     }
   ],
@@ -182,16 +186,40 @@ window.VNET_CONFIG = {
 
   faq: [
     {
-      q: '¿Por qué la primera pregunta evalúa el escenario de uso antes de contar equipos?',
-      a: 'Porque un hogar, un puesto de teletrabajo, un comercio o un entorno de juegos/descargas exigen distintos márgenes de velocidad, subida y estabilidad.'
+      q: '1. ¿Cómo se alinean los planes VNET400, VNET600 y VNET1GIGA con el cuestionario?',
+      a: 'El cuestionario calcula la necesidad real según tu escenario, cantidad de personas y coincidencia diaria, y sugiere el escalón correspondiente: VNET400 (hasta 400 Mbps), VNET600 (hasta 600 Mbps) o VNET1GIGA (hasta 1 Gbps).'
     },
     {
-      q: '¿Por qué mi prueba en Wi-Fi o celular puede marcar menos que el plan?',
-      a: 'El alcance del Wi-Fi, la distancia al router, la antena del dispositivo y el tráfico de otros equipos afectan la medición final.'
+      q: '2. ¿Por qué la primera pregunta evalúa el escenario de uso antes de contar personas?',
+      a: 'Porque un hogar, un puesto de teletrabajo, un comercio con cámaras/cajas o un entorno de gaming y descargas exigen distintos márgenes de velocidad, subida y estabilidad.'
     },
     {
-      q: '¿Por qué conviene desactivar VPN o probar por cable?',
-      a: 'Una VPN puede desviar o limitar el tráfico, y una conexión por cable Ethernet suele reflejar mejor la capacidad real de la línea que el Wi-Fi.'
+      q: '3. ¿Por qué se pregunta por las personas que usan el servicio en presente y en horas pico?',
+      a: 'Porque el ancho de banda de una conexión se reparte entre todas las personas y pantallas activas al mismo tiempo, no depende de un solo equipo aislado.'
+    },
+    {
+      q: '4. ¿Por qué mi prueba en celular o Wi-Fi puede marcar menos que por cable?',
+      a: 'El alcance del Wi-Fi, la banda (2.4 GHz vs 5 GHz), las paredes, la antena del celular y el uso simultáneo de otros equipos en la red influyen en la velocidad final.'
+    },
+    {
+      q: '5. ¿Cómo influyen las VPN, proxys o antivirus en el resultado?',
+      a: 'Una VPN o proxy desvía el tráfico hacia servidores externos y reduce la velocidad; los antivirus o firewalls solo afectan si inspeccionan tráfico en tiempo real.'
+    },
+    {
+      q: '6. ¿Cómo se ajusta automáticamente el test según mi dispositivo?',
+      a: 'VTEST detecta si entras desde móvil/tablet o desde PC/laptop y calibra automáticamente la cantidad de canales simultáneos y el tamaño de los bloques de prueba.'
+    },
+    {
+      q: '7. ¿Qué servidores utiliza VTEST para medir bajada, subida y latencia?',
+      a: 'De forma predeterminada utiliza la red global de Cloudflare para bajada y latencia de baja respuesta, junto con el servidor dedicado de VNET en Render para cargas de subida y comparación.'
+    },
+    {
+      q: '8. ¿Qué indican la latencia en reposo, en bajada, en subida y el grado Bufferbloat?',
+      a: 'Miden cuánto tarda en responder tu red sin tráfico y bajo carga intensa de descarga o subida. Si sube mucho al transferir datos (grado C o D), puede haber retrasos en videollamadas o juegos.'
+    },
+    {
+      q: '9. ¿Qué significa la pérdida de paquetes y la variación (Jitter)?',
+      a: 'La pérdida de paquetes muestra el porcentaje de sondas que no llegaron a tiempo, y el Jitter mide qué tanto fluctúa la latencia. Lo ideal es 0% de pérdida y Jitter bajo.'
     }
   ]
 };
