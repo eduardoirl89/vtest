@@ -6,18 +6,24 @@
   <title>VTEST — Red de Posibilidades</title>
   <style>
     :root {
-      --bg: #ffffff;
-      --surface: #f8f9fa;
-      --border: #e5e7eb;
-      --border-hover: #d1d5db;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #e50914;
-      --active-green: #16a34a;
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-alt: #eef2f7;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --gauge-track: #e6ecf2;
+      --gauge-fill: #20c9b7;
+      --dl-color: #20c9b7;
+      --ul-color: #8b6df6;
+      --ping-color: #16a34a;
       --warn: #d97706;
       --bad: #dc2626;
-      --btn-bg: #ffffff;
-      --btn-primary-bg: #111827;
+      --nav-bg: #ffffff;
+      --nav-active-pill: #ede9fe;
+      --nav-active-text: #7c5dfa;
+      --btn-primary-bg: #0f172a;
       --btn-primary-text: #ffffff;
       --quiz-surface: #0b1633;
       --quiz-text: #ffffff;
@@ -25,38 +31,36 @@
       --quiz-accent: #3b82f6;
       --quiz-card-bg: #ffffff;
       --quiz-card-text: #0f172a;
-      --icon-help: #0ea5e9;
-      --icon-web: #374151;
-      --icon-wa: #16a34a;
-      --icon-fb: #1877f2;
-      --icon-ig: #db2777;
+      --shadow-card: 0 2px 10px rgba(15, 23, 42, 0.04);
     }
 
     html[data-theme="dark"] {
-      --bg: #0b0f17;
-      --surface: #131a26;
-      --border: #243044;
-      --border-hover: #374866;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent: #ef4444;
-      --active-green: #22c55e;
+      --bg: #070a12;
+      --surface: #111623;
+      --surface-alt: #182032;
+      --border: #1e293b;
+      --border-hover: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --gauge-track: #172033;
+      --gauge-fill: #14b8a6;
+      --dl-color: #14b8a6;
+      --ul-color: #8b5cf6;
+      --ping-color: #22c55e;
       --warn: #f59e0b;
       --bad: #f87171;
-      --btn-bg: #131a26;
-      --btn-primary-bg: #f3f4f6;
-      --btn-primary-text: #0b0f17;
-      --quiz-surface: #081024;
+      --nav-bg: #0d121d;
+      --nav-active-pill: rgba(124, 93, 250, 0.22);
+      --nav-active-text: #a78bfa;
+      --btn-primary-bg: #f8fafc;
+      --btn-primary-text: #070a12;
+      --quiz-surface: #091229;
       --quiz-text: #ffffff;
       --quiz-muted: #cbd5e1;
       --quiz-accent: #60a5fa;
       --quiz-card-bg: #ffffff;
       --quiz-card-text: #0f172a;
-      --icon-help: #38bdf8;
-      --icon-web: #64748b;
-      --icon-wa: #22c55e;
-      --icon-fb: #3b82f6;
-      --icon-ig: #f472b6;
+      --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -74,844 +78,676 @@
       background-color: var(--bg);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px 40px;
-      line-height: 1.5;
+      line-height: 1.45;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
-    [data-tip] {
-      cursor: help;
-    }
-
-    .vtest-tooltip-bubble {
-      position: fixed;
-      z-index: 9999;
-      max-width: min(310px, calc(100vw - 24px));
-      padding: 9px 12px;
-      border-radius: 8px;
-      background: var(--text-main);
-      color: var(--bg);
-      font-size: 0.8rem;
-      font-weight: 500;
-      line-height: 1.4;
-      text-align: left;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-      pointer-events: none;
-      display: none;
-    }
-
-    .vtest-tooltip-bubble.visible {
-      display: block;
-    }
-
-    header {
-      width: 100%;
-      max-width: 920px;
+    .app-shell {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
+      flex-direction: column;
+      padding-bottom: 84px;
     }
 
-    .brand {
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-group {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 800;
-      font-size: 1.45rem;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
+      flex-wrap: wrap;
     }
 
-    .brand-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--nav-active-pill);
+      color: var(--nav-active-text);
     }
 
-    .header-controls {
+    .topbar-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .header-status {
-      font-size: 0.85rem;
+    .live-pill {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .theme-toggle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      background: var(--btn-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      font-size: 1rem;
-      cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
-    }
-
-    .theme-toggle:hover {
-      border-color: var(--border-hover);
-      background: var(--surface);
-      transform: scale(1.05);
+      gap: 6px;
+      white-space: nowrap;
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--text-muted);
     }
 
     .dot.running {
-      background: var(--active-green);
+      background: var(--dl-color);
       animation: pulse 1.1s infinite;
     }
 
     .dot.done {
-      background: var(--text-main);
+      background: var(--ping-color);
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.4; transform: scale(0.8); }
     }
 
-    main {
-      width: 100%;
-      max-width: 920px;
-      display: flex;
-      flex-direction: column;
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      display: inline-flex;
       align-items: center;
-      text-align: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--border-hover);
+      transform: scale(1.04);
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 14px 14px 20px;
       flex: 1;
     }
 
-    .subtitle {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      font-weight: 400;
-      margin-bottom: 6px;
-    }
-
-    .hero-readout {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 14px;
-      margin: 6px 0 16px;
-      user-select: none;
-    }
-
-    .speed-number {
-      font-size: clamp(4.8rem, 15vw, 8.5rem);
-      font-weight: 300;
-      letter-spacing: -3px;
-      line-height: 1;
-      color: var(--text-muted);
-      transition: color 0.25s ease;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .speed-number.active {
-      color: var(--text-main);
-    }
-
-    .speed-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .speed-unit {
-      font-size: 1.75rem;
-      font-weight: 400;
-      color: var(--text-muted);
-    }
-
-    .btn-circle {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: var(--btn-bg);
-      color: var(--text-main);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-circle:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: scale(1.05);
-    }
-
-    .btn-circle.spinning svg {
-      animation: spin 1s linear infinite;
-      color: var(--active-green);
-    }
-
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
-    .progress-track {
-      width: 100%;
-      max-width: 340px;
-      height: 3px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--active-green);
-      transition: width 0.2s ease;
-    }
-
-    .status-banner {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      min-height: 22px;
-      margin-bottom: 10px;
-    }
-
-    .status-banner.warning {
-      color: var(--warn);
-      font-weight: 500;
-    }
-
-    .inline-metrics-strip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 8px 16px;
-      margin-bottom: 10px;
-      max-width: 100%;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .inline-metrics-strip strong {
-      color: var(--text-main);
-      font-weight: 700;
-    }
-
-    .data-usage-note {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .data-usage-note strong {
-      color: var(--text-main);
-    }
-
-    .actions-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-
-    .btn-more {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 10px 24px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .btn-more:hover {
-      background: var(--surface);
-      border-color: var(--border-hover);
-    }
-
-    .details-panel {
-      width: 100%;
+    .tab-view {
       display: none;
-      flex-direction: column;
-      gap: 14px;
-      text-align: left;
-      border-top: 1px solid var(--border);
-      padding-top: 22px;
-      margin-bottom: 20px;
-      animation: fadeIn 0.25s ease;
+      animation: fadeIn 0.2s ease;
     }
 
-    .details-panel.open {
-      display: flex;
-    }
-
-    .details-panel.faq-only > :not(#faqAccordionBox) {
-      display: none;
+    .tab-view.active {
+      display: block;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .tips-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-    }
-
-    .tip-card {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-    }
-
-    .tip-card-title {
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    .tip-card-desc {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
-      gap: 14px;
-    }
-
-    .service-card {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .service-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .service-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .score-badge {
-      font-size: 0.78rem;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 999px;
+    /* Tarjeta superior de servidor y latencia (como en la imagen) */
+    .server-header-card {
       background: var(--surface);
       border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .server-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .globe-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(20, 184, 166, 0.14);
+      color: var(--dl-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .server-title {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .server-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .server-ping-inline {
+      color: var(--ping-color);
+      font-weight: 700;
+    }
+
+    .device-badge-inline {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--text-muted);
       white-space: nowrap;
     }
 
-    .service-rating {
-      font-size: 0.84rem;
-      font-weight: 700;
-    }
-
-    .rating-good { color: var(--active-green); }
-    .rating-ok { color: var(--warn); }
-    .rating-poor { color: var(--bad); }
-
-    .service-detail {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .service-hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .service-meta {
-      margin-top: 4px;
-      padding-top: 8px;
-      border-top: 1px dashed var(--border);
-      font-size: 0.78rem;
-      color: var(--text-main);
-    }
-
-    .device-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .device-pill {
-      font-size: 0.73rem;
-      padding: 2px 8px;
-      border-radius: 999px;
+    /* Tacómetro semicircular */
+    .gauge-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text-muted);
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .plans-strip {
+    .gauge-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 360 / 245;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .gauge-track-arc {
+      fill: none;
+      stroke: var(--gauge-track);
+      stroke-width: 15;
+      stroke-linecap: round;
+    }
+
+    .gauge-fill-arc {
+      fill: none;
+      stroke: var(--gauge-fill);
+      stroke-width: 15;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.14s linear, stroke 0.2s ease;
+    }
+
+    .gauge-tick-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      fill: var(--text-muted);
+      user-select: none;
+    }
+
+    .gauge-center {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -42%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .gauge-value {
+      font-size: clamp(2.3rem, 8vw, 3.25rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gauge-unit {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .gauge-state {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--dl-color);
+      margin-top: 4px;
+      min-height: 20px;
+    }
+
+    .gauge-state.warn {
+      color: var(--warn);
+    }
+
+    .progress-mini {
+      width: 100%;
+      max-width: 320px;
+      height: 4px;
+      background: var(--surface-alt);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-mini-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gauge-fill);
+      transition: width 0.2s ease;
+    }
+
+    /* Tarjetas Download y Upload con minigráfico */
+    .du-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 14px;
+      margin-bottom: 12px;
     }
 
-    .plan-chip {
-      background: var(--btn-bg);
+    .du-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px 15px 12px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
     }
 
-    .plan-chip.suggested {
-      border-color: var(--active-green);
-      box-shadow: 0 0 0 1px var(--active-green);
+    .du-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
     }
 
-    .plan-chip-title {
-      font-weight: 700;
-      font-size: 0.88rem;
-      margin-bottom: 3px;
+    .du-head.dl { color: var(--dl-color); }
+    .du-head.ul { color: var(--ul-color); }
+
+    .du-num {
+      font-size: clamp(1.5rem, 5vw, 1.95rem);
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
     }
 
-    .plan-chip-sub {
+    .du-unit {
       font-size: 0.78rem;
       color: var(--text-muted);
+      margin-top: 2px;
+      margin-bottom: 8px;
     }
 
-    .devices-summary-strip {
+    .sparkline-svg {
+      width: 100%;
+      height: 36px;
+      display: block;
+    }
+
+    /* 3 tarjetas inferiores: Ping, Jitter, Loss */
+    .pjl-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .device-box {
-      background: var(--btn-bg);
+    .pjl-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: 14px;
+      padding: 12px 10px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      min-width: 0;
     }
 
-    .device-box-name {
-      font-weight: 700;
-      font-size: 0.84rem;
-    }
-
-    .device-box-count {
+    .pjl-label {
       font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .pjl-val {
+      font-size: clamp(1.1rem, 4vw, 1.38rem);
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pjl-sub {
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
-    .quiz-stage {
-      background: var(--quiz-surface);
-      color: var(--quiz-text);
-      border-radius: 10px;
-      padding: 22px 18px;
-      text-align: center;
-    }
-
-    .quiz-top-meta {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--quiz-muted);
-      margin-bottom: 14px;
-    }
-
-    .quiz-back-link {
-      background: transparent;
-      border: none;
-      color: var(--quiz-text);
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-
-    .quiz-back-link:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    .quiz-req-highlight {
-      color: var(--quiz-accent);
-      font-weight: 800;
-    }
-
-    .quiz-question-heading {
-      font-size: clamp(1.15rem, 2.5vw, 1.55rem);
-      font-weight: 800;
-      color: var(--quiz-text);
-      max-width: 720px;
-      margin: 0 auto 22px;
-      line-height: 1.3;
-    }
-
-    .quiz-step-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 14px;
-      max-width: 760px;
-      margin: 0 auto 18px;
-    }
-
-    .quiz-option-card {
-      background: var(--quiz-card-bg);
-      color: var(--quiz-card-text);
-      border: 3px solid transparent;
-      border-radius: 8px;
-      padding: 20px 12px;
-      cursor: pointer;
+    /* Botones de acción en primera pantalla */
+    .test-actions-stack {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       gap: 10px;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-      min-height: 120px;
-    }
-
-    .quiz-option-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--quiz-accent);
-    }
-
-    .quiz-option-card.selected {
-      border-color: var(--quiz-accent);
-      box-shadow: 0 0 0 2px var(--quiz-accent);
-    }
-
-    .quiz-card-badge {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #2563eb;
-      line-height: 1.1;
-    }
-
-    .quiz-card-label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--quiz-card-text);
-      line-height: 1.25;
-    }
-
-    .quiz-nav-footer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .quiz-final-box {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 10px 8px;
-    }
-
-    .quiz-final-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--quiz-text);
-      margin-bottom: 14px;
-    }
-
-    .quiz-speed-frame {
-      display: inline-block;
-      border: 4px solid var(--quiz-accent);
-      border-top: none;
-      border-radius: 0 0 14px 14px;
-      padding: 14px 28px 16px;
       margin-bottom: 12px;
     }
 
-    .quiz-speed-number {
-      font-size: clamp(2.1rem, 5vw, 3.1rem);
-      font-weight: 800;
-      color: var(--quiz-text);
-      line-height: 1.1;
+    .share-link-btn {
+      background: transparent;
+      border: none;
+      color: var(--ul-color);
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 6px 10px;
+      margin: 0 auto;
     }
 
-    .quiz-plan-pill {
-      font-size: 0.92rem;
+    .primary-action-pill {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 0.95rem;
       font-weight: 700;
-      color: var(--quiz-accent);
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: all 0.15s ease;
+    }
+
+    .primary-action-pill:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-alt);
+    }
+
+    .meta-footer-line {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
       margin-top: 4px;
     }
 
-    .quiz-final-desc {
-      font-size: 0.88rem;
-      color: var(--quiz-muted);
-      max-width: 560px;
-      margin: 10px auto 16px;
-    }
-
-    .quiz-reset-btn {
-      background: transparent;
-      border: none;
-      color: var(--quiz-text);
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    .bench-toolbar {
+    /* Acordeón en pestaña Servers (Acordeón) */
+    .section-heading {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 12px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .acc-list {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
     }
 
-    .bench-tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .bench-tab-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--btn-bg);
-      color: var(--text-main);
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .bench-tab-btn.active {
-      background: var(--btn-primary-bg);
-      color: var(--btn-primary-text);
-      border-color: var(--btn-primary-bg);
-    }
-
-    .bench-scope-pill {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 4px 12px;
-    }
-
-    .bench-split-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .bench-box {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-    }
-
-    .bench-box-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bench-bar-row {
-      margin-bottom: 10px;
-    }
-
-    .bench-bar-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .bench-bar-head {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      margin-bottom: 4px;
-      gap: 8px;
-    }
-
-    .bench-bar-track {
-      width: 100%;
-      height: 10px;
+    .acc-card {
       background: var(--surface);
-      border-radius: 999px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow-card);
       overflow: hidden;
-      border: 1px solid var(--border);
     }
 
-    .bench-bar-fill {
-      height: 100%;
-      background: var(--active-green);
-      border-radius: 999px;
-      transition: width 0.25s ease;
-    }
-
-    .bench-bar-fill.secondary {
-      background: var(--quiz-accent);
-    }
-
-    .bench-bar-fill.muted {
-      background: var(--text-muted);
-    }
-
-    .sub-accordion {
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .acc-header {
       padding: 14px 16px;
-      background: var(--surface);
-    }
-
-    .sub-accordion-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.94rem;
       user-select: none;
     }
 
-    .sub-accordion-body {
+    .acc-body {
       display: none;
-      margin-top: 14px;
-      padding-top: 14px;
+      padding: 0 16px 16px;
       border-top: 1px solid var(--border);
     }
 
-    .sub-accordion-body.open {
+    .acc-body.open {
       display: block;
+      padding-top: 14px;
     }
 
-    .sub-accordion-body.grid-2 {
-      display: none;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    .sub-accordion-body.grid-2.open {
+    .cards-2col {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
     }
 
-    .note-text {
-      margin-top: 10px;
-      font-size: 0.82rem;
+    .mini-info-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .mini-info-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .mini-info-sub {
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
-    .field-group label {
-      display: block;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+    .rating-good { color: var(--ping-color); font-weight: 700; font-size: 0.82rem; }
+    .rating-ok { color: var(--warn); font-weight: 700; font-size: 0.82rem; }
+    .rating-poor { color: var(--bad); font-weight: 700; font-size: 0.82rem; }
+
+    /* Cuestionario en pestaña History (Cuestionario) */
+    .quiz-card {
+      background: var(--quiz-surface);
+      color: var(--quiz-text);
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--quiz-muted);
+      margin-bottom: 12px;
+    }
+
+    .quiz-highlight {
+      color: var(--quiz-accent);
+      font-weight: 800;
+    }
+
+    .quiz-q {
+      font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+      font-weight: 800;
+      max-width: 560px;
+      margin: 0 auto 18px;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 560px;
+      margin: 0 auto 14px;
+    }
+
+    .quiz-opt {
+      background: var(--quiz-card-bg);
+      color: var(--quiz-card-text);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.14s ease, border-color 0.14s ease;
+    }
+
+    .quiz-opt:hover {
+      transform: translateY(-2px);
+      border-color: var(--quiz-accent);
+    }
+
+    .quiz-opt.selected {
+      border-color: var(--quiz-accent);
+      box-shadow: 0 0 0 2px var(--quiz-accent);
+    }
+
+    .quiz-opt-badge {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .quiz-opt-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    /* Pestaña Settings (Ajustes, Pruebas anteriores y Benchmarking) */
+    .settings-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .panel-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .field-row {
       display: flex;
-      gap: 8px;
-      align-items: center;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
-    .field-row select {
-      padding: 7px 10px;
+    .field-row label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    select {
+      padding: 9px 12px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      border-radius: 5px;
-      font-size: 0.9rem;
-      background: var(--btn-bg);
+      background: var(--bg);
       color: var(--text-main);
-      width: 100%;
-      max-width: 280px;
+      font-size: 0.9rem;
     }
 
-    .checkbox-label {
+    .check-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.88rem;
-      color: var(--text-main);
+      font-size: 0.86rem;
+      margin-bottom: 8px;
       cursor: pointer;
-      margin-top: 6px;
     }
 
-    .config-actions {
-      grid-column: 1 / -1;
+    .btn-row {
       display: flex;
-      gap: 10px;
-      margin-top: 4px;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
     }
 
     .btn-sm {
-      padding: 7px 14px;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
+      padding: 7px 13px;
+      border-radius: 8px;
       border: 1px solid var(--border);
-      background: var(--btn-bg);
+      background: var(--bg);
       color: var(--text-main);
-    }
-
-    .btn-sm:hover {
-      border-color: var(--border-hover);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .btn-sm.primary {
@@ -920,19 +756,62 @@
       border-color: var(--btn-primary-bg);
     }
 
-    .history-top {
+    .bench-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .bench-tab {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .bench-tab.active {
+      background: var(--nav-active-pill);
+      color: var(--nav-active-text);
+      border-color: var(--nav-active-text);
+    }
+
+    .bar-item {
+      margin-bottom: 10px;
+    }
+
+    .bar-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      gap: 8px;
-      flex-wrap: wrap;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
     }
+
+    .bar-track {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--dl-color);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .bar-fill.ul { background: var(--ul-color); }
+    .bar-fill.muted { background: var(--text-muted); }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
     th, td {
@@ -943,568 +822,479 @@
 
     th {
       color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
     }
 
     .faq-item {
-      margin-bottom: 16px;
-    }
-
-    .faq-item:last-child {
-      margin-bottom: 0;
+      margin-bottom: 12px;
     }
 
     .faq-q {
-      font-size: 0.94rem;
+      font-size: 0.88rem;
       font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .faq-a {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .social-bar {
-      width: 100%;
-      max-width: 720px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin: 12px 0 24px;
-    }
-
-    .icon-link {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      font-weight: 700;
-      transition: transform 0.18s ease, opacity 0.18s ease;
-      border: none;
-      cursor: pointer;
-    }
-
-    .icon-link:hover {
-      transform: translateY(-2px) scale(1.04);
-      opacity: 0.92;
-    }
-
-    .icon-help { background: var(--icon-help); }
-    .icon-web  { background: var(--icon-web); }
-    .icon-wa   { background: var(--icon-wa); }
-    .icon-fb   { background: var(--icon-fb); }
-    .icon-ig   { background: var(--icon-ig); }
-
-    footer.powered-footer {
-      width: 100%;
-      max-width: 920px;
-      margin-top: 28px;
-      padding-top: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .powered-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-muted);
       font-size: 0.82rem;
-      font-weight: 500;
-      transition: color 0.15s ease;
+      color: var(--text-muted);
     }
 
-    .powered-link:hover {
+    .social-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .social-chip {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       color: var(--text-main);
     }
 
-    .powered-brand-strong {
+    .powered-box {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .powered-box a {
+      color: var(--text-main);
       font-weight: 800;
-      letter-spacing: -0.2px;
-      color: var(--text-main);
+      text-decoration: none;
     }
 
-    .powered-logo-img {
-      height: 20px;
-      width: auto;
-      max-width: 72px;
-      object-fit: contain;
-      display: inline-block;
+    /* Barra inferior móvil (y adaptada a escritorio) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: var(--nav-bg);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
     }
 
-    .powered-logo-fallback {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #ffffff;
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 5px 4px;
+      border-radius: 12px;
+      cursor: pointer;
       font-size: 0.72rem;
-      font-weight: 800;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+
+    .nav-icon-wrap {
+      width: 44px;
+      height: 26px;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
 
-    @media (max-width: 600px) {
-      body {
-        padding: 18px 12px 32px;
+    .nav-btn.active {
+      color: var(--nav-active-text);
+    }
+
+    .nav-btn.active .nav-icon-wrap {
+      background: var(--nav-active-pill);
+      color: var(--nav-active-text);
+    }
+
+    /* Escritorio: barra lateral izquierda limpia manteniendo todo el layout */
+    @media (min-width: 900px) {
+      .app-shell {
+        padding-bottom: 24px;
+        padding-left: 112px;
       }
-      header {
-        margin-bottom: 18px;
-      }
-      .speed-right {
-        align-items: center;
-      }
-      .hero-readout {
+
+      .bottom-nav {
+        top: 61px;
+        bottom: 0;
+        left: 0;
+        right: auto;
+        width: 112px;
+        border-top: none;
+        border-right: 1px solid var(--border);
+        display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 6px;
-      }
-      .inline-metrics-strip {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px 10px;
-        width: 100%;
-        border-radius: 12px;
-        padding: 10px 12px;
-        text-align: left;
-        font-size: 0.8rem;
-      }
-      .inline-metrics-strip .metric-sep {
-        display: none;
-      }
-      .quiz-stage {
-        padding: 16px 12px;
-      }
-      .quiz-question-heading {
-        font-size: 1.08rem;
-        margin-bottom: 16px;
-      }
-      .quiz-step-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-content: flex-start;
         gap: 10px;
-        margin-bottom: 14px;
+        padding: 20px 10px;
       }
-      .quiz-option-card {
-        min-height: 98px;
-        padding: 14px 8px;
-        gap: 6px;
-      }
-      .quiz-card-badge {
-        font-size: 1.15rem;
-      }
-      .quiz-card-label {
-        font-size: 0.84rem;
-      }
-      .sub-accordion {
-        padding: 12px 14px;
-      }
-      .sub-accordion-header {
-        font-size: 0.88rem;
-      }
-      #accHistory table,
-      #accHistory thead,
-      #accHistory tbody,
-      #accHistory th,
-      #accHistory td,
-      #accHistory tr {
-        display: block;
+
+      .nav-btn {
         width: 100%;
+        padding: 10px 6px;
       }
-      #accHistory thead {
-        display: none;
+
+      .main-container {
+        max-width: 820px;
+        padding: 20px 24px 32px;
       }
-      #accHistory tr {
-        background: var(--btn-bg);
+    }
+
+    @media (max-width: 520px) {
+      #historyTable thead { display: none; }
+      #historyTable tr {
+        display: block;
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 10px 12px;
-        margin-bottom: 10px;
+        border-radius: 10px;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        background: var(--bg);
       }
-      #accHistory tr:last-child {
-        margin-bottom: 0;
-      }
-      #accHistory td {
+      #historyTable td {
         display: flex;
         justify-content: space-between;
-        align-items: baseline;
-        gap: 12px;
-        padding: 5px 0;
+        gap: 8px;
+        padding: 4px 0;
         border-bottom: 1px dashed var(--border);
-        text-align: right;
-        font-size: 0.82rem;
+        font-size: 0.78rem;
       }
-      #accHistory td:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      #accHistory td::before {
+      #historyTable td:last-child { border-bottom: none; }
+      #historyTable td::before {
         content: attr(data-label);
         font-weight: 700;
-        font-size: 0.74rem;
-        text-transform: uppercase;
         color: var(--text-muted);
-        text-align: left;
-        flex-shrink: 0;
       }
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="brand">
-      <span id="brandTitle">VTEST</span>
-      <span class="brand-badge">RED DE POSIBILIDADES</span>
-    </div>
-    <div class="header-controls">
-      <div class="header-status">
-        <span class="dot" id="statusDot"></span>
-        <span id="phaseLabel">Listo para empezar</span>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-group">
+        <span class="brand-name" id="brandName">VTEST</span>
+        <span class="brand-pill">RED DE POSIBILIDADES</span>
       </div>
-      <button class="theme-toggle" id="themeToggleBtn" type="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro u oscuro">
-        <span id="themeIcon">🌙</span>
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <p class="subtitle">Tu velocidad de bajada es de</p>
-
-    <div class="hero-readout">
-      <div class="speed-number" id="mainSpeed">0</div>
-      <div class="speed-right">
-        <div class="speed-unit">Mbps</div>
-        <button class="btn-circle" id="restartBtn" title="Iniciar o repetir prueba" aria-label="Iniciar prueba">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"></polyline>
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-          </svg>
+      <div class="topbar-right">
+        <div class="live-pill">
+          <span class="dot" id="statusDot"></span>
+          <span id="phaseLabel">Listo</span>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema">
+          <span id="themeIcon">🌙</span>
         </button>
       </div>
-    </div>
+    </header>
 
-    <div class="progress-track">
-      <div class="progress-fill" id="progressBar"></div>
-    </div>
-
-    <div class="status-banner" id="statusBanner">Midiendo tu conexión ahora mismo...</div>
-
-    <div class="inline-metrics-strip" id="inlineMetricsStrip">
-      <span class="metric-item" data-tip="Velocidad de bajada: qué tan rápido descargan archivos, videos y páginas hacia tu equipo.">Bajada: <strong>-- Mbps</strong></span>
-      <span class="metric-sep">•</span>
-      <span class="metric-item" data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes, cámaras o archivos a la nube.">Subida: <strong>-- Mbps</strong></span>
-      <span class="metric-sep">•</span>
-      <span class="metric-item" data-tip="Latencia en reposo / descargando / subiendo (ms): mide el retardo real y el bufferbloat bajo uso.">Latencia (Rep./Baj./Sub.): <strong>-- ms</strong></span>
-      <span class="metric-sep">•</span>
-      <span class="metric-item" data-tip="Variación (Jitter): diferencia entre respuestas sucesivas. Mientras más baja, más estables son llamadas y juegos.">Variación: <strong>-- ms</strong></span>
-      <span class="metric-sep">•</span>
-      <span class="metric-item" data-tip="Pérdida de paquetes estimada: porcentaje de sondas sin respuesta o con retraso extremo.">Pérdida paq.: <strong>--%</strong></span>
-      <span class="metric-sep">•</span>
-      <span class="metric-item" data-tip="Constancia y grado de respuesta bajo carga (Bufferbloat A–D).">Constancia: <strong>--%</strong></span>
-    </div>
-
-    <div class="data-usage-note" id="dataUsageNote">
-      Equipo: <strong>Detectando...</strong> • ISP: <strong>Detectando...</strong> • Datos usados: <strong>0.0 MB</strong>
-    </div>
-
-    <div class="actions-row">
-      <button class="btn-more" id="toggleMoreBtn">Ver más detalles</button>
-    </div>
-
-    <section class="details-panel" id="detailsPanel">
-
-      <!-- 1. Calidad de conexión por actividad -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accUseCases" data-arrow="arrowUseCases">
-          <span data-tip="Puntuación práctica de 1 a 5 según velocidad de bajada, subida, latencia, pérdida de paquetes y constancia.">🎯 Calidad de conexión por actividad</span>
-          <span id="arrowUseCases">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accUseCases">
-          <div class="services-grid" id="servicesGrid"></div>
-          <div class="plans-strip" id="plansStrip"></div>
-        </div>
-      </div>
-
-      <!-- 2. Dispositivos estimados por tipo -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accDevices" data-arrow="arrowDevices">
-          <span>📱 Dispositivos simultáneos estimados (con factor real de red)</span>
-          <span id="arrowDevices">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accDevices">
-          <div class="devices-summary-strip" id="devicesSummaryStrip"></div>
-          <div class="note-text" id="devicesFactorNote">
-            Cálculo basado en tu medición en vivo y en un factor de uso simultáneo real (~75% ajustado por constancia).
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Cuestionario: ¿Qué Velocidad y Plan Necesitas? -->
-      <div class="sub-accordion" id="quizAccordionBox">
-        <div class="sub-accordion-header" data-target="accQuiz" data-arrow="arrowQuiz">
-          <span>🧮 Cuestionario: ¿Qué Velocidad y Plan Necesitas?</span>
-          <span id="arrowQuiz">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accQuiz">
-          <div class="quiz-stage" id="quizStage"></div>
-        </div>
-      </div>
-
-      <!-- 4. Tabla de referencia -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accReferenceTable" data-arrow="arrowReferenceTable">
-          <span>📋 Tabla de referencia: Velocidad recomendada por actividad</span>
-          <span id="arrowReferenceTable">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accReferenceTable">
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Actividad</th>
-                  <th>Dispositivos</th>
-                  <th>Velocidad de descarga recomendada</th>
-                </tr>
-              </thead>
-              <tbody id="referenceTableBody"></tbody>
-            </table>
-          </div>
-          <div class="note-text">
-            <strong>Observación:</strong> Una mayor velocidad de bajada ayuda a evitar pixelación y esperas al cargar o transmitir contenido, especialmente cuando hay varios equipos activos. Para juegos en línea y videollamadas fluidas también son claves una baja latencia en bajada y subida, 0% de pérdida de paquetes y baja variación.
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Sugerencias para el test -->
-      <div class="sub-accordion" id="tipsAccordionBox">
-        <div class="sub-accordion-header" data-target="accTestTips" data-arrow="arrowTestTips">
-          <span>💡 Sugerencias para obtener una medición precisa</span>
-          <span id="arrowTestTips">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accTestTips">
-          <div class="tips-grid" id="testTipsGrid"></div>
-        </div>
-      </div>
-
-      <!-- 6. Benchmarking: Tu prueba vs otros usuarios de VTEST -->
-      <div class="sub-accordion" id="benchmarkAccordionBox">
-        <div class="sub-accordion-header" data-target="accBenchmark" data-arrow="arrowBenchmark">
-          <span>📊 Benchmarking: Tu Conexión vs. Otros Usuarios de VTEST</span>
-          <span id="arrowBenchmark">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accBenchmark">
-          <div class="bench-toolbar">
-            <div class="bench-tabs" role="tablist" aria-label="Métrica de comparación">
-              <button type="button" class="bench-tab-btn active" data-metric="download" title="Velocidad de bajada.">Bajada</button>
-              <button type="button" class="bench-tab-btn" data-metric="upload" title="Velocidad de subida.">Subida</button>
-              <button type="button" class="bench-tab-btn" data-metric="ping" title="Latencia en reposo.">Latencia</button>
-            </div>
-            <div class="bench-scope-pill" id="benchScopeLabel">ISP: Detectando... • Equipo: --</div>
-          </div>
-
-          <div class="bench-split-grid">
-            <div class="bench-box">
-              <div class="bench-box-title">
-                <span>👤 Tu conexión (Actual vs. Tu historial en este equipo)</span>
-                <span class="score-badge" id="personalBestBadge">Mejor: --</span>
+    <main class="main-container">
+      <!-- 1. PESTAÑA PRINCIPAL: TEST -->
+      <section class="tab-view active" id="tab-test">
+        <div class="server-header-card">
+          <div class="server-left">
+            <div class="globe-badge">🌐</div>
+            <div style="min-width:0;">
+              <div class="server-title" id="serverHeaderTitle">Detectando ISP...</div>
+              <div class="server-sub">
+                <span id="serverNodeSub">Cloudflare</span>
+                <span>•</span>
+                <span class="server-ping-inline" id="headerPingText">-- ms</span>
               </div>
-              <div id="personalBenchmarkBars"></div>
             </div>
+          </div>
+          <span class="device-badge-inline" id="deviceHeaderBadge">Equipo</span>
+        </div>
 
-            <div class="bench-box">
-              <div class="bench-box-title">
-                <span>👥 Tu test vs. Otros usuarios de VTEST</span>
-                <span class="score-badge" id="serverSyncBadge">Otros usuarios: --</span>
-              </div>
-              <div id="regionalBenchmarkBars"></div>
+        <div class="gauge-card">
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 360 245" aria-hidden="true">
+              <path id="gaugeTrackPath" class="gauge-track-arc"></path>
+              <path id="gaugeFillPath" class="gauge-fill-arc"></path>
+              <g id="gaugeTicksGroup"></g>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-value" id="gaugeValue">0.00</div>
+              <div class="gauge-unit">Mbps</div>
+              <div class="gauge-state" id="gaugeState">Iniciando...</div>
+            </div>
+          </div>
+          <div class="progress-mini">
+            <div class="progress-mini-fill" id="progressBar"></div>
+          </div>
+        </div>
+
+        <div class="du-grid">
+          <div class="du-card">
+            <div>
+              <div class="du-head dl">↓ DOWNLOAD</div>
+              <div class="du-num" id="dlCardVal">--</div>
+              <div class="du-unit">Mbps</div>
+            </div>
+            <svg class="sparkline-svg" id="dlSparkline" viewBox="0 0 160 36" preserveAspectRatio="none">
+              <path id="dlSparkPath" fill="none" stroke="var(--dl-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
+            </svg>
+          </div>
+
+          <div class="du-card">
+            <div>
+              <div class="du-head ul">↑ UPLOAD</div>
+              <div class="du-num" id="ulCardVal">—</div>
+              <div class="du-unit">Mbps</div>
+            </div>
+            <svg class="sparkline-svg" id="ulSparkline" viewBox="0 0 160 36" preserveAspectRatio="none">
+              <path id="ulSparkPath" fill="none" stroke="var(--ul-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="pjl-grid">
+          <div class="pjl-card">
+            <div class="pjl-label">Ping</div>
+            <div class="pjl-val" id="pingCardVal">--</div>
+            <div class="pjl-sub" id="pingCardSub">ms (R/B/S)</div>
+          </div>
+          <div class="pjl-card">
+            <div class="pjl-label">Jitter</div>
+            <div class="pjl-val" id="jitterCardVal">--</div>
+            <div class="pjl-sub" id="jitterCardSub">ms</div>
+          </div>
+          <div class="pjl-card">
+            <div class="pjl-label">Loss</div>
+            <div class="pjl-val" id="lossCardVal">--</div>
+            <div class="pjl-sub" id="lossCardSub">%</div>
+          </div>
+        </div>
+
+        <div class="test-actions-stack">
+          <button type="button" class="share-link-btn" id="shareResultBtn">
+            <span>⇄</span>
+            <span id="shareResultLabel">Compartir resultado</span>
+          </button>
+          <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
+        </div>
+
+        <div class="meta-footer-line" id="dataUsageFooter">
+          Datos usados: <strong>0.0 MB</strong> • Constancia: <strong>--</strong>
+        </div>
+      </section>
+
+      <!-- 2. PESTAÑA HISTORY -> CUESTIONARIO -->
+      <section class="tab-view" id="tab-quiz">
+        <div class="section-heading">
+          <span>🧮 Cuestionario de plan y velocidad</span>
+        </div>
+        <div class="quiz-card" id="quizStage"></div>
+      </section>
+
+      <!-- 3. PESTAÑA SERVERS -> ACORDEÓN -->
+      <section class="tab-view" id="tab-accordion">
+        <div class="section-heading">
+          <span>📂 Acordeón de posibilidades y guía</span>
+        </div>
+        <div class="acc-list">
+          <div class="acc-card">
+            <div class="acc-header" data-acc="bodyActivities">
+              <span>🎯 Calidad de conexión por actividad</span>
+              <span>▼</span>
+            </div>
+            <div class="acc-body open" id="bodyActivities">
+              <div class="cards-2col" id="activitiesGrid"></div>
             </div>
           </div>
 
-          <div class="bench-box">
-            <div class="bench-box-title">
-              <span>🏢 Otros usuarios por red / proveedor en tu zona / país</span>
-              <span class="service-hint" id="monthlyRecordText">Récord registrado: --</span>
+          <div class="acc-card">
+            <div class="acc-header" data-acc="bodyDevices">
+              <span>📱 Dispositivos simultáneos estimados</span>
+              <span>▼</span>
             </div>
-            <div style="overflow-x:auto;">
+            <div class="acc-body" id="bodyDevices">
+              <div class="cards-2col" id="devicesGrid"></div>
+              <div class="mini-info-sub" id="devicesNote" style="margin-top:10px;"></div>
+            </div>
+          </div>
+
+          <div class="acc-card">
+            <div class="acc-header" data-acc="bodyRefTable">
+              <span>📋 Tabla de referencia por actividad</span>
+              <span>▼</span>
+            </div>
+            <div class="acc-body" id="bodyRefTable">
               <table>
                 <thead>
                   <tr>
-                    <th>Red / Proveedor</th>
-                    <th>Pruebas</th>
-                    <th>Bajada media</th>
-                    <th>Subida media</th>
-                    <th>Latencia media</th>
+                    <th>Actividad</th>
+                    <th>Equipos</th>
+                    <th>Recomendado</th>
                   </tr>
                 </thead>
-                <tbody id="peerProvidersBody"></tbody>
+                <tbody id="refTableBody"></tbody>
               </table>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- 7. Historial guardado -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accHistory" data-arrow="arrowHistory">
-          <span>🕒 Tus pruebas anteriores</span>
-          <span id="arrowHistory">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accHistory">
-          <div class="history-top">
-            <span class="service-hint" id="historyClientSummary">ISP: Detectando...</span>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn-sm" id="exportCsvBtn">Descargar Excel / CSV</button>
-              <button class="btn-sm" id="clearHistoryBtn">Borrar historial</button>
+          <div class="acc-card">
+            <div class="acc-header" data-acc="bodyTips">
+              <span>💡 Sugerencias para obtener una medición precisa</span>
+              <span>▼</span>
+            </div>
+            <div class="acc-body" id="bodyTips">
+              <div class="cards-2col" id="tipsGrid"></div>
             </div>
           </div>
-          <div style="overflow-x:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Equipo</th>
-                  <th>ISP</th>
-                  <th>Bajada</th>
-                  <th>Subida</th>
-                  <th>Latencia (R/B/S)</th>
-                  <th>Jitter / Pérdida</th>
-                  <th>Constancia</th>
-                  <th>Datos</th>
-                </tr>
-              </thead>
-              <tbody id="historyTableBody"></tbody>
-            </table>
+
+          <div class="acc-card">
+            <div class="acc-header" data-acc="bodyFaq">
+              <span>❓ Preguntas y respuestas</span>
+              <span>▼</span>
+            </div>
+            <div class="acc-body" id="bodyFaq">
+              <div id="faqList"></div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 8. Ajustes de la prueba (Automáticos por dispositivo + Cloudflare / Render) -->
-      <div class="sub-accordion">
-        <div class="sub-accordion-header" data-target="accConfig" data-arrow="arrowConfig">
-          <span>⚙️ Ajustes de la prueba</span>
-          <span id="arrowConfig">▼</span>
-        </div>
-        <div class="sub-accordion-body grid-2" id="accConfig">
-          <div class="field-group">
-            <label for="cfgServerSelect">Servidor de prueba</label>
+      <!-- 4. PESTAÑA SETTINGS -> AJUSTES, PRUEBAS ANTERIORES Y BENCHMARKING -->
+      <section class="tab-view" id="tab-settings">
+        <div class="settings-stack">
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>⚙️ Ajustes</span>
+            </div>
             <div class="field-row">
-              <select id="cfgServerSelect"></select>
+              <label for="serverSelect">Servidor predeterminado</label>
+              <select id="serverSelect"></select>
+              <span class="mini-info-sub">Los canales y bloques de prueba se ajustan automáticamente según tu equipo.</span>
             </div>
-            <div class="service-hint" style="margin-top:6px;">
-              La configuración de canales y tamaño de paquetes se ajusta automáticamente según tu equipo (Móvil o PC).
-            </div>
-          </div>
-          <div class="field-group">
-            <label>Preferencias</label>
-            <label class="checkbox-label">
+            <label class="check-row">
               <input type="checkbox" id="cfgAutoStart" checked />
               Medir automáticamente al abrir
             </label>
-            <label class="checkbox-label">
-              <input type="checkbox" id="cfgAlwaysShowDetails" />
-              Mostrar siempre todos los detalles
-            </label>
+            <div class="btn-row">
+              <button type="button" class="btn-sm primary" id="saveCfgBtn">Guardar ajustes</button>
+              <button type="button" class="btn-sm" id="resetCfgBtn">Restaurar</button>
+            </div>
           </div>
-          <div class="config-actions">
-            <button class="btn-sm primary" id="saveCfgBtn">Guardar ajustes</button>
-            <button class="btn-sm" id="resetCfgBtn">Valores originales</button>
+
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>📊 Benchmarking</span>
+              <span class="mini-info-sub" id="benchScopeText">ISP: Detectando...</span>
+            </div>
+            <div class="bench-tabs">
+              <button type="button" class="bench-tab active" data-metric="download">Bajada</button>
+              <button type="button" class="bench-tab" data-metric="upload">Subida</button>
+              <button type="button" class="bench-tab" data-metric="ping">Latencia</button>
+            </div>
+            <div id="benchBars"></div>
+            <div class="mini-info-sub" id="benchSummaryLine" style="margin-top:8px;"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>🕒 Pruebas anteriores</span>
+              <div class="btn-row" style="margin-top:0;">
+                <button type="button" class="btn-sm" id="exportCsvBtn">CSV</button>
+                <button type="button" class="btn-sm" id="clearHistBtn">Borrar</button>
+              </div>
+            </div>
+            <table id="historyTable">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>ISP</th>
+                  <th>Bajada</th>
+                  <th>Subida</th>
+                  <th>Ping</th>
+                  <th>Loss</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
           </div>
         </div>
+      </section>
+
+      <div class="social-row">
+        <a id="linkWeb" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">🌐 Web</a>
+        <a id="linkWa" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">💬 WhatsApp</a>
+        <a id="linkFb" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">Facebook</a>
+        <a id="linkIg" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">Instagram</a>
       </div>
 
-      <!-- 9. Preguntas y respuestas -->
-      <div class="sub-accordion" id="faqAccordionBox">
-        <div class="sub-accordion-header" data-target="accFaq" data-arrow="arrowFaq">
-          <span>❓ Preguntas y respuestas sobre VTEST</span>
-          <span id="arrowFaq">▼</span>
-        </div>
-        <div class="sub-accordion-body" id="accFaq"></div>
+      <div class="powered-box">
+        Powered by <a id="poweredLink" href="#" target="_blank" rel="noopener noreferrer"><span id="poweredName">VNET</span></a>
       </div>
+    </main>
 
-    </section>
-
-    <nav class="social-bar" aria-label="Ayuda y canales oficiales">
-      <button type="button" id="openFaqBtn" class="icon-link icon-help" title="Preguntas y respuestas" aria-label="Abrir preguntas y respuestas">?</button>
-
-      <a id="linkWebsite" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-web" title="Web oficial" aria-label="Visitar web oficial">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="2" y1="12" x2="22" y2="12"></line>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
-      </a>
-
-      <a id="linkWhatsapp" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-wa" title="WhatsApp" aria-label="Contactar por WhatsApp">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-        </svg>
-      </a>
-
-      <a id="linkFacebook" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-fb" title="Facebook" aria-label="Visitar Facebook">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-        </svg>
-      </a>
-
-      <a id="linkInstagram" href="#" target="_blank" rel="noopener noreferrer" class="icon-link icon-ig" title="Instagram" aria-label="Visitar Instagram">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-        </svg>
-      </a>
+    <!-- Navegación inferior (4 pestañas) -->
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button type="button" class="nav-btn active" data-tab="tab-test">
+        <span class="nav-icon-wrap">⏱️</span>
+        <span>Test</span>
+      </button>
+      <button type="button" class="nav-btn" data-tab="tab-quiz">
+        <span class="nav-icon-wrap">🧮</span>
+        <span>Cuestionario</span>
+      </button>
+      <button type="button" class="nav-btn" data-tab="tab-accordion">
+        <span class="nav-icon-wrap">📂</span>
+        <span>Acordeón</span>
+      </button>
+      <button type="button" class="nav-btn" data-tab="tab-settings">
+        <span class="nav-icon-wrap">⚙️</span>
+        <span>Ajustes</span>
+      </button>
     </nav>
-  </main>
-
-  <footer class="powered-footer">
-    <a id="poweredByLink" href="#" target="_blank" rel="noopener noreferrer" class="powered-link">
-      <span>Powered by</span>
-      <span id="poweredByText" class="powered-brand-strong">VNET</span>
-      <span id="poweredLogoSlot"></span>
-    </a>
-  </footer>
-
-  <div id="vtestTooltipBubble" class="vtest-tooltip-bubble" role="tooltip"></div>
+  </div>
 
   <script src="config.js"></script>
   <script>
-    const VNET_CFG = window.VNET_CONFIG || {};
-    const BACKEND_URL = VNET_CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
-    const CDN_NODES = VNET_CFG.cdnNodes || [];
-    const PING_ENDPOINTS = VNET_CFG.pingEndpoints || [];
-    const PLANS = Array.isArray(VNET_CFG.plans) ? VNET_CFG.plans : [];
-    const USE_CASES = Array.isArray(VNET_CFG.useCases) ? VNET_CFG.useCases : [];
-    const DEVICE_TYPES = Array.isArray(VNET_CFG.deviceTypes) ? VNET_CFG.deviceTypes : [];
-    const ACTIVITY_REF_TABLE = Array.isArray(VNET_CFG.activityReferenceTable) ? VNET_CFG.activityReferenceTable : [];
-    const TEST_TIPS = Array.isArray(VNET_CFG.testTips) ? VNET_CFG.testTips : [];
+    const CFG = window.VNET_CONFIG || {};
+    const BACKEND_URL = CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
+    const CDN_NODES = Array.isArray(CFG.cdnNodes) ? CFG.cdnNodes : [];
+    const PING_ENDPOINTS = Array.isArray(CFG.pingEndpoints) ? CFG.pingEndpoints : [];
+    const PLANS = Array.isArray(CFG.plans) ? CFG.plans : [];
+    const USE_CASES = Array.isArray(CFG.useCases) ? CFG.useCases : [];
+    const DEVICE_TYPES = Array.isArray(CFG.deviceTypes) ? CFG.deviceTypes : [];
+    const REF_TABLE = Array.isArray(CFG.activityReferenceTable) ? CFG.activityReferenceTable : [];
+    const TEST_TIPS = Array.isArray(CFG.testTips) ? CFG.testTips : [];
+    const FAQ_LIST = Array.isArray(CFG.faq) ? CFG.faq : [];
 
-    const LIVE_SPEED_QUIZ = [
+    const DEFAULT_PREFS = Object.assign({
+      durationSec: 8,
+      serverId: 'cloudflare',
+      autoStart: true
+    }, CFG.defaults || {});
+
+    const QUIZ_STEPS = [
       {
         id: 'scenario_now',
         question: '¿Cuál de estos escenarios describe mejor tu uso actual del internet?',
         options: [
           { badge: '🏠', label: 'Hogar (streaming, redes y tareas)', basePerPerson: 22 },
           { badge: '💻', label: 'Home office y videollamadas', basePerPerson: 34 },
-          { badge: '🏪', label: 'Comercio / negocio (cajas, cámaras y gestión)', basePerPerson: 32 },
-          { badge: '🎮', label: 'Gaming, descargas y contenido pesado', basePerPerson: 44 }
+          { badge: '🏪', label: 'Comercio / negocio', basePerPerson: 32 },
+          { badge: '🎮', label: 'Gaming y descargas pesadas', basePerPerson: 44 }
         ]
       },
       {
         id: 'people_daily',
-        question: '¿Cuántas personas están usando o usarán el servicio de internet a diario?',
+        question: '¿Cuántas personas usan el servicio de internet a diario?',
         options: [
           { badge: '1–2', label: '1 a 2 personas', peopleCount: 2, factor: 1.5 },
           { badge: '3–4', label: '3 a 4 personas', peopleCount: 4, factor: 2.7 },
@@ -1514,7 +1304,7 @@
       },
       {
         id: 'peak_overlap',
-        question: '¿Con qué frecuencia coinciden varias personas o equipos al mismo tiempo?',
+        question: '¿Con qué frecuencia coinciden varias personas o equipos a la vez?',
         options: [
           { badge: 'Rara vez', label: 'Casi nunca coinciden', addMbps: 10 },
           { badge: 'A veces', label: 'En horas pico o tardes', addMbps: 40 },
@@ -1524,22 +1314,18 @@
       }
     ];
 
-    const DEFAULT_CFG = Object.assign({
-      durationSec: 8,
-      serverId: 'cloudflare',
-      autoStart: true,
-      alwaysShowDetails: false
-    }, VNET_CFG.defaults || {});
-
-    let cfg = loadConfig();
+    let prefs = loadPrefs();
     let isRunning = false;
-    let abortController = null;
-    let lastMeasuredDownloadMbps = null;
+    let abortCtrl = null;
+    let bytesUsed = 0;
+    let dlSeries = [];
+    let ulSeries = [];
     let quizAnswers = {};
-    let quizStepIndex = 0;
-    let actualBytesTransferred = 0;
+    let quizStep = 0;
+    let activeBenchMetric = 'download';
+    let serverComparison = null;
 
-    let detectedClientGeo = {
+    let geoInfo = {
       ip: '',
       isp: 'Detectando ISP...',
       region: 'No especificada',
@@ -1547,7 +1333,7 @@
       countryCode: 'VE'
     };
 
-    let latestTestMetrics = {
+    let lastMetrics = {
       downloadMbps: null,
       uploadMbps: null,
       pingMs: null,
@@ -1555,939 +1341,271 @@
       upLoadedPingMs: null,
       jitterMs: null,
       packetLossPct: null,
-      stabilityPct: null,
-      bufferbloatGrade: null
+      stabilityPct: null
     };
-    let latestServerComparison = null;
-    let activeBenchMetric = 'download';
 
-    const elMainSpeed = document.getElementById('mainSpeed');
-    const elRestartBtn = document.getElementById('restartBtn');
-    const elProgress = document.getElementById('progressBar');
-    const elStatusBanner = document.getElementById('statusBanner');
-    const elInlineMetricsStrip = document.getElementById('inlineMetricsStrip');
-    const elDataUsageNote = document.getElementById('dataUsageNote');
-    const elPhaseLabel = document.getElementById('phaseLabel');
-    const elStatusDot = document.getElementById('statusDot');
-    const elDetailsPanel = document.getElementById('detailsPanel');
-    const elToggleMoreBtn = document.getElementById('toggleMoreBtn');
-    const elThemeToggleBtn = document.getElementById('themeToggleBtn');
-    const elThemeIcon = document.getElementById('themeIcon');
+    function loadPrefs() {
+      try {
+        return { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem('vtest_wa_prefs')) || {}) };
+      } catch {
+        return { ...DEFAULT_PREFS };
+      }
+    }
 
-    function detectDeviceProfile() {
+    function detectDevice() {
       const ua = navigator.userAgent || '';
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
         || (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
       const cores = navigator.hardwareConcurrency || 4;
       const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      const saveData = Boolean(conn && conn.saveData);
-      const eff = conn && conn.effectiveType ? String(conn.effectiveType).toLowerCase() : '';
-      const isSlowRadio = saveData || eff === '2g' || eff === 'slow-2g' || eff === '3g';
-
-      let recMin = isMobile ? 1 : 2;
-      let recMax = isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3);
-      if (isSlowRadio) {
-        recMin = 1;
-        recMax = 2;
-      }
+      const slow = Boolean(conn && (conn.saveData || ['2g', 'slow-2g', '3g'].includes(String(conn.effectiveType || '').toLowerCase())));
 
       return {
         isMobile,
-        label: isMobile ? 'Móvil / Tablet' : 'Escritorio / Laptop',
-        shortLabel: isMobile ? 'Móvil' : 'PC/Laptop',
-        recMinThreads: recMin,
-        recMaxThreads: recMax,
+        label: isMobile ? 'Móvil' : 'PC / Laptop',
+        minThreads: isMobile || slow ? 1 : 2,
+        maxThreads: slow ? 2 : (isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3)),
         uploadChunkBytes: isMobile ? (1024 * 1024) : (3 * 1024 * 1024),
         uploadThreads: isMobile ? 2 : 3,
-        durationSec: cfg.durationSec || 8
+        durationSec: prefs.durationSec || 8
       };
     }
 
-    function getSelectedDownloadNode() {
-      return CDN_NODES.find(n => n.id === cfg.serverId) || CDN_NODES[0] || {
+    function getDlNode() {
+      return CDN_NODES.find(n => n.id === prefs.serverId) || CDN_NODES[0] || {
         id: 'cloudflare',
         name: 'Cloudflare',
         url: 'https://speed.cloudflare.com/__down?bytes=25000000'
       };
     }
 
-    function getSelectedPingEndpoint() {
-      return PING_ENDPOINTS.find(p => p.id === cfg.serverId) || PING_ENDPOINTS[0] || {
+    function getPingNode() {
+      return PING_ENDPOINTS.find(p => p.id === prefs.serverId) || PING_ENDPOINTS[0] || {
         id: 'cloudflare',
         name: 'Cloudflare',
         url: 'https://speed.cloudflare.com/__down?bytes=100'
       };
     }
 
-    function formatTransferredMb() {
-      const mb = actualBytesTransferred / (1024 * 1024);
-      return mb >= 100 ? mb.toFixed(0) : mb.toFixed(1);
-    }
-
-    function computeBufferbloatGrade(idleMs, downMs, upMs) {
-      if (!idleMs || idleMs <= 0) return 'N/D';
-      const maxLoaded = Math.max(downMs || idleMs, upMs || idleMs);
-      const delta = Math.max(0, maxLoaded - idleMs);
-      if (delta <= 15) return 'A';
-      if (delta <= 40) return 'B';
-      if (delta <= 90) return 'C';
-      return 'D';
-    }
-
-    function updateDataUsageNote() {
-      const profile = detectDeviceProfile();
-      elDataUsageNote.innerHTML =
-        `Equipo: <strong>${profile.label}</strong> • ` +
-        `ISP: <strong>${detectedClientGeo.isp}</strong> • ` +
-        `Datos usados: <strong>${formatTransferredMb()} MB</strong>`;
-    }
-
-    function updateInlineMetricsStrip({
-      dlText = '--',
-      ulText = '--',
-      pingText = '--',
-      jitterText = '--',
-      lossText = '--',
-      stabText = '--'
-    } = {}) {
-      const profile = detectDeviceProfile();
-      elInlineMetricsStrip.innerHTML =
-        `<span class="metric-item" data-tip="Velocidad de bajada: qué tan rápido descargan archivos, videos y páginas hacia tu equipo.">Bajada: <strong>${dlText} Mbps</strong></span>` +
-        `<span class="metric-sep">•</span>` +
-        `<span class="metric-item" data-tip="Velocidad de subida: qué tan rápido envías fotos, mensajes, cámaras o archivos a la nube.">Subida: <strong>${ulText} Mbps</strong></span>` +
-        `<span class="metric-sep">•</span>` +
-        `<span class="metric-item" data-tip="Latencia en reposo / descargando / subiendo (ms): mide el retardo real y el bufferbloat bajo uso.">Latencia (R/B/S): <strong>${pingText} ms</strong></span>` +
-        `<span class="metric-sep">•</span>` +
-        `<span class="metric-item" data-tip="Variación (Jitter): diferencia entre respuestas sucesivas.">Variación: <strong>${jitterText} ms</strong></span>` +
-        `<span class="metric-sep">•</span>` +
-        `<span class="metric-item" data-tip="Pérdida de paquetes estimada: porcentaje de sondas sin respuesta o con retraso extremo.">Pérdida paq.: <strong>${lossText}%</strong></span>` +
-        `<span class="metric-sep">•</span>` +
-        `<span class="metric-item" data-tip="Constancia del flujo y calificación de respuesta bajo carga (Bufferbloat A–D).">Constancia: <strong>${stabText}</strong></span>`;
-      document.getElementById('historyClientSummary').textContent =
-        `ISP actual: ${detectedClientGeo.isp} • Equipo: ${profile.label}`;
-      updateDataUsageNote();
-    }
-
-    function setMainDetailsOpen(open, faqOnly = false) {
-      elDetailsPanel.classList.toggle('open', open);
-      elDetailsPanel.classList.toggle('faq-only', Boolean(open && faqOnly));
-      elToggleMoreBtn.textContent = open ? 'Ocultar detalles' : 'Ver más detalles';
-    }
-
-    function setSubAccordionOpen(bodyId, arrowId, open) {
-      const body = document.getElementById(bodyId);
-      const arrow = document.getElementById(arrowId);
-      if (!body || !arrow) return;
-      body.classList.toggle('open', open);
-      arrow.textContent = open ? '▲' : '▼';
-    }
-
-    function closeOtherAccordions(exceptBodyId) {
-      document.querySelectorAll('.sub-accordion-header').forEach(hdr => {
-        const targetId = hdr.getAttribute('data-target');
-        const arrowId = hdr.getAttribute('data-arrow');
-        if (targetId && targetId !== exceptBodyId) {
-          setSubAccordionOpen(targetId, arrowId, false);
-        }
-      });
-    }
-
-    document.querySelectorAll('.sub-accordion-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const bodyId = header.getAttribute('data-target');
-        const arrowId = header.getAttribute('data-arrow');
-        const body = document.getElementById(bodyId);
-        const willOpen = !body.classList.contains('open');
-        if (willOpen) {
-          closeOtherAccordions(bodyId);
-        }
-        setSubAccordionOpen(bodyId, arrowId, willOpen);
-      });
-    });
-
-    document.getElementById('openFaqBtn').addEventListener('click', () => {
-      const isAlreadyFaqOpen =
-        elDetailsPanel.classList.contains('open') &&
-        elDetailsPanel.classList.contains('faq-only') &&
-        document.getElementById('accFaq').classList.contains('open');
-
-      if (isAlreadyFaqOpen) {
-        setMainDetailsOpen(false, false);
-        setSubAccordionOpen('accFaq', 'arrowFaq', false);
-      } else {
-        setMainDetailsOpen(true, true);
-        closeOtherAccordions('accFaq');
-        setSubAccordionOpen('accFaq', 'arrowFaq', true);
-        document.getElementById('faqAccordionBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    });
-
-    function parseMetricVal(str) {
-      if (!str) return null;
-      const num = parseFloat(String(str).replace(',', '.'));
-      return Number.isFinite(num) ? num : null;
-    }
-
-    function getPersonalStats() {
-      const list = JSON.parse(localStorage.getItem('vnet_fast_history') || '[]');
-      const dls = list.map(r => parseMetricVal(r.download)).filter(v => v !== null);
-      const uls = list.map(r => parseMetricVal(r.upload)).filter(v => v !== null);
-      const pings = list.map(r => {
-        if (!r.ping) return null;
-        const firstPart = String(r.ping).split('/')[0];
-        return parseMetricVal(firstPart);
-      }).filter(v => v !== null);
-
-      const avg = arr => arr.length ? Number((arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1)) : null;
-      const bestMax = arr => arr.length ? Math.max(...arr) : null;
-      const bestMin = arr => arr.length ? Math.min(...arr.filter(v => v > 0)) : null;
-
-      return {
-        download: { current: latestTestMetrics.downloadMbps, best: bestMax(dls), avg: avg(dls) },
-        upload: { current: latestTestMetrics.uploadMbps, best: bestMax(uls), avg: avg(uls) },
-        ping: { current: latestTestMetrics.pingMs, best: bestMin(pings), avg: avg(pings) }
-      };
-    }
-
-    function renderBarItem(label, value, maxVal, unit, fillClass = '') {
-      const numeric = typeof value === 'number' && Number.isFinite(value) ? value : null;
-      const pct = numeric !== null && maxVal > 0
-        ? Math.max(4, Math.min(100, (numeric / maxVal) * 100))
-        : 0;
-      const displayVal = numeric !== null ? `${numeric} ${unit}` : '--';
-
-      return `
-        <div class="bench-bar-row">
-          <div class="bench-bar-head">
-            <span>${label}</span>
-            <strong>${displayVal}</strong>
-          </div>
-          <div class="bench-bar-track">
-            <div class="bench-bar-fill ${fillClass}" style="width:${pct}%;"></div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderBenchmarkSection() {
-      const metric = activeBenchMetric;
-      const unit = metric === 'ping' ? 'ms' : 'Mbps';
-      const personal = getPersonalStats()[metric];
-      const profile = detectDeviceProfile();
-
-      document.getElementById('benchScopeLabel').textContent =
-        `ISP: ${detectedClientGeo.isp} • Equipo: ${profile.shortLabel}`;
-
-      document.getElementById('personalBestBadge').textContent =
-        personal.best !== null ? `Mejor: ${personal.best} ${unit}` : 'Mejor: --';
-
-      const pMax = Math.max(10, personal.current || 0, personal.best || 0, personal.avg || 0);
-
-      document.getElementById('personalBenchmarkBars').innerHTML = [
-        renderBarItem(`Mi prueba actual (${profile.shortLabel})`, personal.current, pMax, unit, ''),
-        renderBarItem('Mi mejor histórica', personal.best, pMax, unit, 'secondary'),
-        renderBarItem('Mi promedio histórico', personal.avg, pMax, unit, 'muted')
-      ].join('');
-
-      const comp = latestServerComparison;
-      if (!comp) {
-        document.getElementById('serverSyncBadge').textContent = 'Otros usuarios: Sin datos aún';
-        document.getElementById('regionalBenchmarkBars').innerHTML =
-          `<div class="service-hint">Completa una prueba para comparar tu test con otros usuarios de VTEST.</div>`;
-        document.getElementById('monthlyRecordText').textContent = 'Récord registrado: --';
-        document.getElementById('peerProvidersBody').innerHTML =
-          `<tr><td colspan="5" style="color:var(--text-muted);">Sin datos de otros usuarios registrados aún.</td></tr>`;
-        return;
-      }
-
-      document.getElementById('serverSyncBadge').textContent =
-        `Local: ${comp.counts.localUsersTests} • Nac.: ${comp.counts.nationalUsersTests}`;
-
-      const propKey = metric === 'download' ? 'downloadAvg' : (metric === 'upload' ? 'uploadAvg' : 'pingAvg');
-      const curVal = personal.current;
-      const otherLocalVal = comp.otherUsersLocal ? comp.otherUsersLocal[propKey] : null;
-      const otherNatVal = comp.otherUsersNational ? comp.otherUsersNational[propKey] : null;
-
-      const rMax = Math.max(10, curVal || 0, otherLocalVal || 0, otherNatVal || 0);
-
-      document.getElementById('regionalBenchmarkBars').innerHTML = [
-        renderBarItem('Mi prueba actual', curVal, rMax, unit, ''),
-        renderBarItem(`Otros usuarios en ${comp.scope.region}`, otherLocalVal, rMax, unit, 'secondary'),
-        renderBarItem(`Otros usuarios en ${comp.scope.countryCode}`, otherNatVal, rMax, unit, 'muted')
-      ].join('');
-
-      if (comp.monthlyRecord) {
-        const dStr = new Date(comp.monthlyRecord.date).toLocaleDateString();
-        document.getElementById('monthlyRecordText').textContent =
-          `Récord: ${comp.monthlyRecord.downloadMbps} Mbps (${comp.monthlyRecord.isp} • ${comp.monthlyRecord.deviceType || 'Equipo'}, ${dStr})`;
-      } else {
-        document.getElementById('monthlyRecordText').textContent = 'Récord registrado: --';
-      }
-
-      const peers = Array.isArray(comp.peerProviders) ? comp.peerProviders : [];
-      document.getElementById('peerProvidersBody').innerHTML = peers.length
-        ? peers.map(p => `
-            <tr>
-              <td><strong>${p.isp}</strong> <span class="service-hint">(${p.region})</span></td>
-              <td>${p.count}</td>
-              <td>${p.downloadAvg !== null ? `${p.downloadAvg} Mbps` : '--'}</td>
-              <td>${p.uploadAvg !== null ? `${p.uploadAvg} Mbps` : '--'}</td>
-              <td>${p.pingAvg !== null ? `${p.pingAvg} ms` : '--'}</td>
-            </tr>
-          `).join('')
-        : `<tr><td colspan="5" style="color:var(--text-muted);">Aún no hay suficientes pruebas en esta zona.</td></tr>`;
-    }
-
-    document.querySelectorAll('.bench-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bench-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeBenchMetric = btn.getAttribute('data-metric') || 'download';
-        renderBenchmarkSection();
-      });
-    });
-
-    async function fetchInitialBenchmark() {
-      try {
-        const params = new URLSearchParams({
-          isp: detectedClientGeo.isp,
-          region: detectedClientGeo.region,
-          countryCode: detectedClientGeo.countryCode,
-          t: String(Date.now())
-        });
-        const res = await fetch(`${BACKEND_URL}/api/benchmark?${params.toString()}`, { cache: 'no-store' });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data && data.ok && data.comparison) {
-          latestServerComparison = data.comparison;
-          renderBenchmarkSection();
-        }
-      } catch {}
-    }
-
-    async function postBenchmarkResult(payload) {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/benchmark`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data && data.ok && data.comparison) {
-          latestServerComparison = data.comparison;
-          renderBenchmarkSection();
-        }
-      } catch {}
-    }
-
-    function resetQuizState() {
-      quizAnswers = {};
-      quizStepIndex = 0;
-    }
-
-    function getQuizEstimate() {
-      const qScenario = LIVE_SPEED_QUIZ[0];
-      const qPeople = LIVE_SPEED_QUIZ[1];
-      const qOverlap = LIVE_SPEED_QUIZ[2];
-
-      const sIdx = quizAnswers[qScenario.id];
-      const pIdx = quizAnswers[qPeople.id];
-      const oIdx = quizAnswers[qOverlap.id];
-
-      const scenarioOpt = typeof sIdx === 'number' ? qScenario.options[sIdx] : null;
-      const peopleOpt = typeof pIdx === 'number' ? qPeople.options[pIdx] : null;
-      const overlapOpt = typeof oIdx === 'number' ? qOverlap.options[oIdx] : null;
-
-      const basePerPerson = scenarioOpt ? scenarioOpt.basePerPerson : 22;
-      const peopleCount = peopleOpt ? peopleOpt.peopleCount : 2;
-      const peopleFactor = peopleOpt ? peopleOpt.factor : 1.5;
-      const overlapAdd = overlapOpt ? overlapOpt.addMbps : 10;
-
-      const rawMbps = (basePerPerson * peopleFactor + overlapAdd) * 1.2;
-      const estimatedMbps = Math.max(20, Math.round(rawMbps / 5) * 5);
-
-      return {
-        estimatedMbps,
-        peopleCount,
-        peopleLabel: peopleOpt ? peopleOpt.label : '1 a 2 personas',
-        usageLabel: scenarioOpt ? scenarioOpt.label : 'Hogar (streaming, redes y tareas)'
-      };
-    }
-
-    function getSuggestedPlanForMbps(mbps) {
-      if (!PLANS.length) return { name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400 };
-      const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
-      return sorted.find(p => (p.mbps || 0) >= mbps) || sorted[sorted.length - 1];
-    }
-
-    function renderQuizStage() {
-      const stage = document.getElementById('quizStage');
-      if (!stage) return;
-
-      const totalSteps = LIVE_SPEED_QUIZ.length;
-      const est = getQuizEstimate();
-
-      if (quizStepIndex >= totalSteps) {
-        const suggestedPlan = getSuggestedPlanForMbps(est.estimatedMbps);
-        const waHref = (VNET_CFG.links && VNET_CFG.links.whatsapp) || '#';
-        const profile = detectDeviceProfile();
-
-        let comparisonText =
-          `Estimación para ${est.peopleLabel} en escenario "${est.usageLabel}", considerando uso simultáneo y no solo un equipo (${profile.shortLabel}).`;
-
-        if (lastMeasuredDownloadMbps !== null) {
-          const dlNow = Math.round(lastMeasuredDownloadMbps);
-          const diff = dlNow - est.estimatedMbps;
-          if (diff >= 0) {
-            comparisonText += ` Tu bajada actual en vivo (${dlNow} Mbps) cubre esta estimación con ~${diff} Mbps de margen.`;
-          } else {
-            comparisonText += ` Tu bajada actual en vivo (${dlNow} Mbps) está ~${Math.abs(diff)} Mbps por debajo de lo estimado para ${est.peopleLabel}.`;
-          }
-        }
-
-        stage.innerHTML = `
-          <div class="quiz-final-box">
-            <div class="quiz-final-title">Velocidad sugerida para ${est.peopleLabel}:</div>
-            <div class="quiz-speed-frame">
-              <div class="quiz-speed-number">${est.estimatedMbps} Mbps</div>
-              <div class="quiz-plan-pill">Plan cercano sugerido: ${suggestedPlan.name} (${suggestedPlan.label})</div>
-            </div>
-            <p class="quiz-final-desc">${comparisonText}</p>
-            <div class="quiz-nav-footer">
-              <a href="${waHref}" target="_blank" rel="noopener noreferrer" class="btn-sm primary" style="text-decoration:none;">Consultar plan por WhatsApp</a>
-              <button type="button" class="btn-sm" id="quizGoBackBtn">‹ Cambiar respuestas</button>
-            </div>
-            <div style="margin-top:14px;">
-              <button type="button" class="quiz-reset-btn" id="quizRestartBtn">Empezar de nuevo ↻</button>
-            </div>
-          </div>
-        `;
-
-        document.getElementById('quizGoBackBtn').addEventListener('click', () => {
-          quizStepIndex = 0;
-          renderQuizStage();
-        });
-        document.getElementById('quizRestartBtn').addEventListener('click', () => {
-          resetQuizState();
-          renderQuizStage();
-        });
-        return;
-      }
-
-      const q = LIVE_SPEED_QUIZ[quizStepIndex];
-      const selectedIdx = quizAnswers[q.id];
-
-      const cardsHtml = q.options.map((opt, idx) => {
-        const isSel = selectedIdx === idx ? 'selected' : '';
-        return `
-          <button type="button" class="quiz-option-card ${isSel}" data-oidx="${idx}">
-            <span class="quiz-card-badge">${opt.badge}</span>
-            <span class="quiz-card-label">${opt.label}</span>
-          </button>
-        `;
-      }).join('');
-
-      stage.innerHTML = `
-        <div class="quiz-top-meta">
-          <button type="button" class="quiz-back-link" id="quizPrevBtn" ${quizStepIndex === 0 ? 'disabled' : ''}>‹</button>
-          <span>Pregunta ${quizStepIndex + 1}/${totalSteps}</span>
-          <span>|</span>
-          <span>Estimado (${est.peopleLabel}): <span class="quiz-req-highlight">${est.estimatedMbps} Mbps</span></span>
-        </div>
-        <div class="quiz-question-heading">${q.question}</div>
-        <div class="quiz-step-cards">${cardsHtml}</div>
-        <div class="quiz-nav-footer">
-          ${typeof selectedIdx === 'number' ? `<button type="button" class="btn-sm primary" id="quizNextBtn">${quizStepIndex === totalSteps - 1 ? 'Ver resultado' : 'Siguiente ›'}</button>` : ''}
-          ${Object.keys(quizAnswers).length ? `<button type="button" class="btn-sm" id="quizResetSmallBtn">Reiniciar</button>` : ''}
-        </div>
-      `;
-
-      const prevBtn = document.getElementById('quizPrevBtn');
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          if (quizStepIndex > 0) {
-            quizStepIndex--;
-            renderQuizStage();
-          }
-        });
-      }
-
-      stage.querySelectorAll('.quiz-option-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const oidx = parseInt(card.getAttribute('data-oidx'), 10);
-          quizAnswers[q.id] = oidx;
-          quizStepIndex++;
-          renderQuizStage();
-        });
-      });
-
-      const nextBtn = document.getElementById('quizNextBtn');
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          quizStepIndex++;
-          renderQuizStage();
-        });
-      }
-
-      const resetSmall = document.getElementById('quizResetSmallBtn');
-      if (resetSmall) {
-        resetSmall.addEventListener('click', () => {
-          resetQuizState();
-          renderQuizStage();
-        });
-      }
-    }
-
-    function renderActivityReferenceTable() {
-      const tbody = document.getElementById('referenceTableBody');
-      tbody.innerHTML = ACTIVITY_REF_TABLE.map(row => `
-        <tr>
-          <td><strong>${row.activity}</strong></td>
-          <td>${row.devices}</td>
-          <td>${row.recommended}</td>
-        </tr>
-      `).join('');
-    }
-
-    function renderTestTips() {
-      const container = document.getElementById('testTipsGrid');
-      if (!container) return;
-      container.innerHTML = TEST_TIPS.map(tip => `
-        <div class="tip-card">
-          <div class="tip-card-title">${tip.title}</div>
-          <div class="tip-card-desc">${tip.desc}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderPoweredByLogo() {
-      const poweredName = VNET_CFG.poweredByName || 'VNET';
-      document.getElementById('poweredByText').textContent = poweredName;
-
-      const links = VNET_CFG.links || {};
-      const poweredLink = document.getElementById('poweredByLink');
-      if (links.website) poweredLink.href = links.website;
-
-      const slot = document.getElementById('poweredLogoSlot');
-      const logoUrl = (VNET_CFG.brandLogoUrl || '').trim();
-
-      if (!logoUrl) {
-        slot.innerHTML = `<span class="powered-logo-fallback" aria-hidden="true">${poweredName.charAt(0).toUpperCase()}</span>`;
-        return;
-      }
-
-      const img = document.createElement('img');
-      img.src = logoUrl;
-      img.alt = `Logo ${poweredName}`;
-      img.className = 'powered-logo-img';
-      img.addEventListener('error', () => {
-        slot.innerHTML = `<span class="powered-logo-fallback" aria-hidden="true">${poweredName.charAt(0).toUpperCase()}</span>`;
-      });
-      slot.innerHTML = '';
-      slot.appendChild(img);
-    }
-
-    function populateServerSelect() {
-      const select = document.getElementById('cfgServerSelect');
-      if (!select) return;
-      select.innerHTML = CDN_NODES.map(node =>
-        `<option value="${node.id}">${node.name}</option>`
-      ).join('');
-      select.value = CDN_NODES.some(n => n.id === cfg.serverId) ? cfg.serverId : (CDN_NODES[0]?.id || 'cloudflare');
-    }
-
-    function applyBrandAndLinks() {
-      const brand = VNET_CFG.brandName || 'VTEST';
-      document.getElementById('brandTitle').textContent = brand;
-      document.title = `${brand} — Red de Posibilidades`;
-
-      const links = VNET_CFG.links || {};
-      if (links.website) document.getElementById('linkWebsite').href = links.website;
-      if (links.whatsapp) document.getElementById('linkWhatsapp').href = links.whatsapp;
-      if (links.facebook) document.getElementById('linkFacebook').href = links.facebook;
-      if (links.instagram) document.getElementById('linkInstagram').href = links.instagram;
-
-      renderPoweredByLogo();
-      populateServerSelect();
-
-      const faqContainer = document.getElementById('accFaq');
-      const items = Array.isArray(VNET_CFG.faq) ? VNET_CFG.faq : [];
-      faqContainer.innerHTML = items.map(item => `
-        <div class="faq-item">
-          <div class="faq-q">${item.q}</div>
-          <p class="faq-a">${item.a}</p>
-        </div>
-      `).join('');
-
-      renderUseCasesPlaceholder();
-      renderActivityReferenceTable();
-      renderTestTips();
-      resetQuizState();
-      renderQuizStage();
-      renderBenchmarkSection();
-    }
-
-    function renderUseCasesPlaceholder() {
-      const grid = document.getElementById('servicesGrid');
-      grid.innerHTML = USE_CASES.map(uc => {
-        const tags = (uc.featuredDevices || [])
-          .map(d => `<span class="device-pill">${d}</span>`)
-          .join('');
-        return `
-          <div class="service-card">
-            <div class="service-top-row">
-              <div class="service-name">${uc.title}</div>
-              <span class="score-badge">-- / 5</span>
-            </div>
-            <div class="service-rating">Evaluando...</div>
-            <div class="service-detail">Esperando medición de bajada, subida, latencia y pérdida de paquetes...</div>
-            <div class="service-hint">${uc.usageHint || ''}</div>
-            <div class="device-tags">${tags}</div>
-            <div class="service-meta">Plan ref.: <strong>${uc.planRef}</strong> • Hasta ~${uc.planDevices} equipos en plan</div>
-          </div>
-        `;
-      }).join('');
-
-      const devStrip = document.getElementById('devicesSummaryStrip');
-      devStrip.innerHTML = DEVICE_TYPES.map(dt => `
-        <div class="device-box">
-          <div class="device-box-name">${dt.label}</div>
-          <div class="device-box-count">~${dt.loadMbps} Mbps por equipo • Calculando...</div>
-        </div>
-      `).join('');
-
-      const strip = document.getElementById('plansStrip');
-      strip.innerHTML = PLANS.map(p => `
-        <div class="plan-chip" data-plan-id="${p.id}">
-          <div class="plan-chip-title">${p.name} (${p.label})</div>
-          <div class="plan-chip-sub">${p.summary} • Ref.: ~${p.recommendedDevices} equipos</div>
-        </div>
-      `).join('');
-    }
-
-    function computeActivityScore(uc, { dlMbps, ulMbps, idlePing, downLoadedPing, upLoadedPing, jitter, packetLossPct, stability }) {
-      let score = 1;
-      if (dlMbps >= uc.idealMbps) score = 5;
-      else if (dlMbps >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
-      else if (dlMbps >= uc.minMbps) score = 3;
-      else if (dlMbps >= uc.minMbps * 0.5) score = 2;
-
-      const maxLoaded = Math.max(downLoadedPing || idlePing || 0, upLoadedPing || idlePing || 0);
-      const extraDelay = Math.max(0, maxLoaded - (idlePing || 0));
-      const jit = parseFloat(jitter) || 0;
-      const loss = parseFloat(packetLossPct) || 0;
-
-      if (loss >= 5) score -= 2;
-      else if (loss >= 2) score -= 1;
-
-      if (uc.id === 'online_gaming') {
-        if ((idlePing || 0) > 110 || extraDelay > 95 || jit > 35 || loss > 1) score -= 2;
-        else if ((idlePing || 0) > 70 || extraDelay > 50 || jit > 18) score -= 1;
-      } else if (uc.id === 'video_conferencing') {
-        if (ulMbps !== null && ulMbps < (uc.minUploadMbps || 2)) score -= 1;
-        if (extraDelay > 75 || stability < 55 || jit > 25) score -= 1;
-      } else if (uc.id === 'video_streaming') {
-        if (stability < 50 || extraDelay > 90) score -= 1;
-      } else if (uc.id === 'web_browsing') {
-        if (stability < 45) score -= 1;
-      }
-
-      return Math.max(1, Math.min(5, score));
-    }
-
-    function evaluateUseCasesAndPlans({ dlMbps, ulMbps, idlePing, downLoadedPing, upLoadedPing, jitter, packetLossPct, stability }) {
-      lastMeasuredDownloadMbps = dlMbps;
-
-      const suggestedPlan = getSuggestedPlanForMbps(dlMbps);
-      const stabilityFactor = Math.max(0.55, Math.min(1, (stability || 85) / 100));
-      const effectiveShareFactor = 0.75 * stabilityFactor;
-      const effectiveMbps = dlMbps * effectiveShareFactor;
-
-      document.getElementById('devicesFactorNote').textContent =
-        `Con tu bajada real (${formatSpeed(dlMbps)} Mbps) y constancia (${stability}%), el margen útil estimado es ~${Math.round(effectiveMbps)} Mbps (factor ~${Math.round(effectiveShareFactor * 100)}%).`;
-
-      const grid = document.getElementById('servicesGrid');
-      grid.innerHTML = USE_CASES.map(uc => {
-        const score = computeActivityScore(uc, { dlMbps, ulMbps, idlePing, downLoadedPing, upLoadedPing, jitter, packetLossPct, stability });
-
-        let cls = 'rating-poor';
-        let verdict = 'Limitado en este momento';
-        let explanation = uc.lowText;
-
-        if (score >= 4) {
-          cls = 'rating-good';
-          verdict = score === 5 ? 'Óptimo para este uso' : 'Bueno para este uso';
-          explanation = uc.okText;
-        } else if (score === 3) {
-          cls = 'rating-ok';
-          verdict = 'Aceptable con uso moderado';
-          explanation = uc.lowText;
-        }
-
-        const currentEstDevices = Math.max(
-          1,
-          Math.min(uc.planDevices, Math.floor(effectiveMbps / Math.max(1, uc.deviceLoadMbps)))
-        );
-
-        const tags = (uc.featuredDevices || [])
-          .map(d => `<span class="device-pill">${d}</span>`)
-          .join('');
-
-        return `
-          <div class="service-card">
-            <div class="service-top-row">
-              <div class="service-name">${uc.title}</div>
-              <span class="score-badge">${score} / 5</span>
-            </div>
-            <div class="service-rating ${cls}">${verdict}</div>
-            <div class="service-detail">${explanation}</div>
-            <div class="service-hint">${uc.usageHint || ''}</div>
-            <div class="device-tags">${tags}</div>
-            <div class="service-meta">
-              Equipos simultáneos estimados: <strong>~${currentEstDevices}</strong> (hasta <strong>~${uc.planDevices}</strong> con <strong>${uc.planRef}</strong>)
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const devStrip = document.getElementById('devicesSummaryStrip');
-      devStrip.innerHTML = DEVICE_TYPES.map(dt => {
-        const nowCount = Math.max(
-          1,
-          Math.floor(effectiveMbps / Math.max(1, dt.loadMbps))
-        );
-        const planMbps = suggestedPlan.mbps || 400;
-        const planCount = Math.max(
-          1,
-          Math.floor((planMbps * 0.75) / Math.max(1, dt.loadMbps))
-        );
-        return `
-          <div class="device-box">
-            <div class="device-box-name">${dt.label}</div>
-            <div class="device-box-count">Ahora: <strong>~${nowCount}</strong> • En ${suggestedPlan.name}: <strong>~${planCount}</strong></div>
-          </div>
-        `;
-      }).join('');
-
-      document.querySelectorAll('.plan-chip').forEach(el => {
-        const isSug = el.getAttribute('data-plan-id') === suggestedPlan.id;
-        el.classList.toggle('suggested', isSug);
-      });
-
-      renderQuizStage();
-    }
-
-    function getPreferredTheme() {
-      const saved = localStorage.getItem('vnet_theme');
-      if (saved === 'light' || saved === 'dark') return saved;
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-    }
-
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('vnet_theme', theme);
-      elThemeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    }
-
-    elThemeToggleBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
-
-    function loadConfig() {
-      try {
-        const saved = JSON.parse(localStorage.getItem('vnet_fast_cfg'));
-        return { ...DEFAULT_CFG, ...(saved || {}) };
-      } catch {
-        return { ...DEFAULT_CFG };
-      }
-    }
-
-    function applyConfigToUI() {
-      populateServerSelect();
-      document.getElementById('cfgAutoStart').checked = cfg.autoStart;
-      document.getElementById('cfgAlwaysShowDetails').checked = cfg.alwaysShowDetails;
-      setMainDetailsOpen(Boolean(cfg.alwaysShowDetails), false);
-      updateDataUsageNote();
-    }
-
-    function formatSpeed(mbps) {
+    function fmtSpeed(mbps) {
+      if (typeof mbps !== 'number' || !Number.isFinite(mbps)) return '--';
       if (mbps >= 100) return Math.round(mbps).toString();
       if (mbps >= 10) return mbps.toFixed(1);
       return mbps.toFixed(2);
     }
 
-    function wakeUpBackend() {
-      fetch(`${BACKEND_URL}/ping?wake=${Date.now()}`, { cache: 'no-store' }).catch(() => {});
+    function fmtGauge(mbps) {
+      if (typeof mbps !== 'number' || !Number.isFinite(mbps)) return '0.00';
+      return mbps.toFixed(2);
     }
 
-    async function fetchWithTimeout(url, ms = 3500) {
+    // Construcción del tacómetro semicircular con escala 0..1000
+    const GAUGE_TICKS = [0, 1, 5, 10, 25, 50, 100, 250, 500, 1000];
+    const GAUGE_CX = 180;
+    const GAUGE_CY = 135;
+    const GAUGE_R = 112;
+    const START_DEG = 140;
+    const SWEEP_DEG = 260;
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+      const rad = (angleDeg * Math.PI) / 180;
+      return {
+        x: cx + r * Math.cos(rad),
+        y: cy + r * Math.sin(rad)
+      };
+    }
+
+    function buildArcPath(cx, cy, r, startDeg, endDeg) {
+      const s = polarToCartesian(cx, cy, r, startDeg);
+      const e = polarToCartesian(cx, cy, r, endDeg);
+      const largeArc = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
+      const sweepFlag = endDeg >= startDeg ? 1 : 0;
+      return `M ${s.x.toFixed(2)} ${s.y.toFixed(2)} A ${r} ${r} 0 ${largeArc} ${sweepFlag} ${e.x.toFixed(2)} ${e.y.toFixed(2)}`;
+    }
+
+    function mbpsToProgress(mbps) {
+      if (!mbps || mbps <= 0) return 0;
+      const clamped = Math.min(1000, mbps);
+      const idx = GAUGE_TICKS.findIndex((v, i) => i < GAUGE_TICKS.length - 1 && clamped >= v && clamped <= GAUGE_TICKS[i + 1]);
+      if (idx === -1) return 1;
+      const low = GAUGE_TICKS[idx];
+      const high = GAUGE_TICKS[idx + 1];
+      const frac = (clamped - low) / (high - low);
+      return (idx + frac) / (GAUGE_TICKS.length - 1);
+    }
+
+    let gaugeTotalLen = 0;
+
+    function initGauge() {
+      const trackPath = document.getElementById('gaugeTrackPath');
+      const fillPath = document.getElementById('gaugeFillPath');
+      const ticksGroup = document.getElementById('gaugeTicksGroup');
+
+      const d = buildArcPath(GAUGE_CX, GAUGE_CY, GAUGE_R, START_DEG, START_DEG + SWEEP_DEG);
+      trackPath.setAttribute('d', d);
+      fillPath.setAttribute('d', d);
+      gaugeTotalLen = fillPath.getTotalLength();
+      fillPath.style.strokeDasharray = `${gaugeTotalLen}`;
+      fillPath.style.strokeDashoffset = `${gaugeTotalLen}`;
+
+      ticksGroup.innerHTML = GAUGE_TICKS.map((val, i) => {
+        const ratio = i / (GAUGE_TICKS.length - 1);
+        const deg = START_DEG + ratio * SWEEP_DEG;
+        const pos = polarToCartesian(GAUGE_CX, GAUGE_CY, GAUGE_R + 24, deg);
+        return `<text x="${pos.x.toFixed(1)}" y="${(pos.y + 4).toFixed(1)}" text-anchor="middle" class="gauge-tick-label">${val}</text>`;
+      }).join('');
+    }
+
+    function setGaugeProgress(mbps) {
+      const fillPath = document.getElementById('gaugeFillPath');
+      if (!gaugeTotalLen) return;
+      const p = mbpsToProgress(mbps);
+      fillPath.style.strokeDashoffset = `${(gaugeTotalLen * (1 - p)).toFixed(2)}`;
+    }
+
+    function updateSparkline(pathId, series) {
+      const el = document.getElementById(pathId);
+      if (!el) return;
+      if (!series.length) {
+        el.setAttribute('d', '');
+        return;
+      }
+      const maxVal = Math.max(...series, 10);
+      const w = 160;
+      const h = 34;
+      const pts = series.map((v, idx) => {
+        const x = series.length === 1 ? w : (idx / (series.length - 1)) * w;
+        const y = h - Math.max(3, Math.min(h - 3, (v / maxVal) * (h - 6)));
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      el.setAttribute('d', `M ${pts.join(' L ')}`);
+    }
+
+    function updateHeaderAndFooter() {
+      const dev = detectDevice();
+      const node = getDlNode();
+      document.getElementById('serverHeaderTitle').textContent = geoInfo.isp;
+      document.getElementById('serverNodeSub').textContent = `${node.name} (${geoInfo.region})`;
+      document.getElementById('deviceHeaderBadge').textContent = dev.label;
+      document.getElementById('headerPingText').textContent =
+        lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '-- ms';
+
+      const mb = (bytesUsed / (1024 * 1024)).toFixed(1);
+      const stab = lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}%` : '--';
+      document.getElementById('dataUsageFooter').innerHTML =
+        `Datos usados: <strong>${mb} MB</strong> • Constancia: <strong>${stab}</strong>`;
+    }
+
+    async function fetchWithTimeout(url, ms = 3200) {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), ms);
+      const t = setTimeout(() => ctrl.abort(), ms);
       try {
         const res = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP error');
+        if (!res.ok) throw new Error('bad status');
         return await res.json();
       } finally {
-        clearTimeout(timer);
+        clearTimeout(t);
       }
     }
 
-    async function fetchClientInfo(forceRefresh = false) {
-      if (forceRefresh) {
-        detectedClientGeo.isp = 'Detectando ISP...';
-        updateDataUsageNote();
+    async function refreshIsp(force = false) {
+      if (force) {
+        geoInfo.isp = 'Detectando ISP...';
+        updateHeaderAndFooter();
       }
+      const q = `_t=${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      let ok = false;
 
-      const bust = `_t=${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-      let resolved = false;
-
-      // 1. Intentar ipwho.is sin caché (muy rápido y detecta cambios móviles al instante)
       try {
-        const data = await fetchWithTimeout(`https://ipwho.is/?${bust}`, 3200);
-        if (data && data.success !== false && data.connection) {
-          const ispName = data.connection.isp || data.connection.org || 'Red no identificada';
-          const asnPart = data.connection.asn ? ` (AS${data.connection.asn})` : '';
-          detectedClientGeo = {
-            ip: data.ip || '',
-            isp: `${ispName}${asnPart}`.trim(),
-            region: (data.region || data.city || 'No especificada').trim(),
-            city: (data.city || 'No especificada').trim(),
-            countryCode: (data.country_code || 'VE').trim().toUpperCase()
+        const d = await fetchWithTimeout(`https://ipwho.is/?${q}`);
+        if (d && d.success !== false && d.connection) {
+          const isp = d.connection.isp || d.connection.org || 'Red no identificada';
+          geoInfo = {
+            ip: d.ip || '',
+            isp: String(isp).trim(),
+            region: (d.region || d.city || 'No especificada').trim(),
+            city: (d.city || 'No especificada').trim(),
+            countryCode: (d.country_code || 'VE').trim().toUpperCase()
           };
-          resolved = true;
+          ok = true;
         }
       } catch {}
 
-      // 2. Fallback ipapi.co
-      if (!resolved) {
+      if (!ok) {
         try {
-          const data = await fetchWithTimeout(`https://ipapi.co/json/?${bust}`, 3200);
-          if (data && (data.org || data.asn)) {
-            detectedClientGeo = {
-              ip: data.ip || '',
-              isp: (data.org || data.asn).trim(),
-              region: (data.region || data.city || 'No especificada').trim(),
-              city: (data.city || 'No especificada').trim(),
-              countryCode: (data.country_code || 'VE').trim().toUpperCase()
+          const d = await fetchWithTimeout(`https://ipapi.co/json/?${q}`);
+          if (d && (d.org || d.asn)) {
+            geoInfo = {
+              ip: d.ip || '',
+              isp: String(d.org || d.asn).trim(),
+              region: (d.region || d.city || 'No especificada').trim(),
+              city: (d.city || 'No especificada').trim(),
+              countryCode: (d.country_code || 'VE').trim().toUpperCase()
             };
-            resolved = true;
+            ok = true;
           }
         } catch {}
       }
 
-      // 3. Fallback ipinfo.io
-      if (!resolved) {
+      if (!ok) {
         try {
-          const data = await fetchWithTimeout(`https://ipinfo.io/json?${bust}`, 3200);
-          if (data && data.org) {
-            detectedClientGeo = {
-              ip: data.ip || '',
-              isp: String(data.org).trim(),
-              region: (data.region || data.city || 'No especificada').trim(),
-              city: (data.city || 'No especificada').trim(),
-              countryCode: (data.country || 'VE').trim().toUpperCase()
+          const d = await fetchWithTimeout(`${BACKEND_URL}/api/client-ip?${q}`, 3800);
+          if (d && d.ok && d.isp) {
+            geoInfo = {
+              ip: d.ip || '',
+              isp: d.isp,
+              region: d.region || 'No especificada',
+              city: d.city || 'No especificada',
+              countryCode: d.countryCode || 'VE'
             };
-            resolved = true;
+            ok = true;
           }
         } catch {}
       }
 
-      // 4. Fallback directo via backend de VTEST leyendo la IP pública real del cliente
-      if (!resolved) {
-        try {
-          const data = await fetchWithTimeout(`${BACKEND_URL}/api/client-ip?${bust}`, 4000);
-          if (data && data.ok && data.isp) {
-            detectedClientGeo = {
-              ip: data.ip || '',
-              isp: data.isp,
-              region: data.region || 'No especificada',
-              city: data.city || 'No especificada',
-              countryCode: data.countryCode || 'VE'
-            };
-            resolved = true;
-          }
-        } catch {}
+      if (!ok) {
+        geoInfo.isp = 'Red no identificada';
       }
 
-      if (!resolved) {
-        detectedClientGeo.isp = 'Red no identificada';
-      }
-
-      refreshMetricsDisplay();
-      renderHistory();
-      renderBenchmarkSection();
-      await fetchInitialBenchmark();
+      updateHeaderAndFooter();
+      renderBenchmark();
+      fetchBenchmarkServer();
     }
 
-    function refreshMetricsDisplay() {
-      const m = latestTestMetrics;
-      const pingCombined = m.pingMs !== null
-        ? `${m.pingMs}/${m.downLoadedPingMs ?? m.pingMs}/${m.upLoadedPingMs ?? m.pingMs}`
-        : '--';
-      const stabCombined = m.stabilityPct !== null
-        ? `${m.stabilityPct}% (${m.bufferbloatGrade || 'B'})`
-        : '--';
-
-      updateInlineMetricsStrip({
-        dlText: m.downloadMbps !== null ? formatSpeed(m.downloadMbps) : '--',
-        ulText: m.uploadMbps !== null ? formatSpeed(m.uploadMbps) : '--',
-        pingText: pingCombined,
-        jitterText: m.jitterMs !== null ? String(m.jitterMs) : '--',
-        lossText: m.packetLossPct !== null ? String(m.packetLossPct) : '--',
-        stabText: stabCombined
-      });
+    const connObj = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connObj && typeof connObj.addEventListener === 'function') {
+      connObj.addEventListener('change', () => refreshIsp(true));
     }
+    window.addEventListener('online', () => refreshIsp(true));
 
-    const netConn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (netConn && typeof netConn.addEventListener === 'function') {
-      netConn.addEventListener('change', () => {
-        fetchClientInfo(true);
-      });
-    }
-    window.addEventListener('online', () => fetchClientInfo(true));
-
-    async function measurePingSamples(count, signal) {
+    async function measureIdlePing(count, signal) {
+      const pingNode = getPingNode();
       const rtts = [];
       let sent = 0;
       let lost = 0;
-      const target = getSelectedPingEndpoint();
-
-      try {
-        await fetch(`${target.url}${target.url.includes('?') ? '&' : '?'}warm=${Date.now()}`, {
-          cache: 'no-store',
-          signal
-        });
-      } catch {}
 
       for (let i = 0; i < count; i++) {
         if (signal.aborted) break;
         sent++;
         const t0 = performance.now();
-        const probeCtrl = new AbortController();
-        const timeoutId = setTimeout(() => probeCtrl.abort(), 1800);
-        const onMainAbort = () => probeCtrl.abort();
-        signal.addEventListener('abort', onMainAbort, { once: true });
+        const pCtrl = new AbortController();
+        const timer = setTimeout(() => pCtrl.abort(), 1700);
+        const onAbort = () => pCtrl.abort();
+        signal.addEventListener('abort', onAbort, { once: true });
 
         try {
-          const res = await fetch(`${target.url}${target.url.includes('?') ? '&' : '?'}t=${Date.now()}_${i}_${Math.random()}`, {
+          const res = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}p=${Date.now()}_${i}_${Math.random()}`, {
             cache: 'no-store',
-            signal: probeCtrl.signal
+            signal: pCtrl.signal
           });
-          clearTimeout(timeoutId);
-          signal.removeEventListener('abort', onMainAbort);
-          const elapsed = performance.now() - t0;
-          if (res.ok && elapsed > 0 && elapsed < 1800) {
-            rtts.push(elapsed);
-          } else {
-            lost++;
-          }
+          clearTimeout(timer);
+          signal.removeEventListener('abort', onAbort);
+          const ms = performance.now() - t0;
+          if (res.ok && ms > 0 && ms < 1700) rtts.push(ms);
+          else lost++;
         } catch {
-          clearTimeout(timeoutId);
-          signal.removeEventListener('abort', onMainAbort);
+          clearTimeout(timer);
+          signal.removeEventListener('abort', onAbort);
           if (!signal.aborted) lost++;
         }
       }
@@ -2495,62 +1613,60 @@
       const lossPct = sent > 0 ? Number(((lost / sent) * 100).toFixed(1)) : 0;
       if (!rtts.length) return { avg: 0, jitter: '0.0', lossPct };
 
-      const avg = rtts.reduce((a, b) => a + b, 0) / rtts.length;
-      let jitterSum = 0;
-      for (let i = 1; i < rtts.length; i++) {
-        jitterSum += Math.abs(rtts[i] - rtts[i - 1]);
-      }
-      const jitter = rtts.length > 1 ? jitterSum / (rtts.length - 1) : 0;
-      return { avg: Math.round(avg), jitter: jitter.toFixed(1), lossPct };
+      const avg = Math.round(rtts.reduce((a, b) => a + b, 0) / rtts.length);
+      let jSum = 0;
+      for (let i = 1; i < rtts.length; i++) jSum += Math.abs(rtts[i] - rtts[i - 1]);
+      const jitter = rtts.length > 1 ? (jSum / (rtts.length - 1)).toFixed(1) : '0.0';
+      return { avg, jitter, lossPct };
     }
 
-    async function runDownloadPhase(durationMs, signal) {
+    async function runDownload(durationMs, signal) {
+      const dev = detectDevice();
+      const dlNode = getDlNode();
+      const pingNode = getPingNode();
       let totalBytes = 0;
       const samples = [];
       const loadedRtts = [];
-      let pingSent = 0;
-      let pingLost = 0;
-      const startTime = performance.now();
-      const profile = detectDeviceProfile();
-      let activeThreads = profile.recMinThreads;
-      const selectedNode = getSelectedDownloadNode();
-      const pingNode = getSelectedPingEndpoint();
+      let pSent = 0;
+      let pLost = 0;
+      let threads = dev.minThreads;
+      const tStart = performance.now();
 
-      const loadedPingTask = (async () => {
-        while (!signal.aborted && performance.now() - startTime < durationMs) {
-          pingSent++;
+      const pingTask = (async () => {
+        while (!signal.aborted && performance.now() - tStart < durationMs) {
+          pSent++;
           const t0 = performance.now();
           try {
-            const r = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}lp=${Date.now()}_${Math.random()}`, {
+            const r = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}dp=${Date.now()}_${Math.random()}`, {
               cache: 'no-store',
               signal
             });
             const ms = performance.now() - t0;
-            if (r.ok && ms > 0 && ms < 2500) loadedRtts.push(ms);
-            else pingLost++;
+            if (r.ok && ms > 0 && ms < 2400) loadedRtts.push(ms);
+            else pLost++;
           } catch {
-            if (!signal.aborted) pingLost++;
+            if (!signal.aborted) pLost++;
           }
           await new Promise(r => setTimeout(r, 450));
         }
       })();
 
-      async function downloadWorker() {
-        while (!signal.aborted && performance.now() - startTime < durationMs) {
+      async function worker() {
+        while (!signal.aborted && performance.now() - tStart < durationMs) {
           try {
-            const resp = await fetch(`${selectedNode.url}${selectedNode.url.includes('?') ? '&' : '?'}r=${Math.random()}`, {
+            const resp = await fetch(`${dlNode.url}${dlNode.url.includes('?') ? '&' : '?'}r=${Math.random()}`, {
               cache: 'no-store',
               signal
             });
             const reader = resp.body.getReader();
             while (true) {
               const { done, value } = await reader.read();
-              if (done || signal.aborted || performance.now() - startTime >= durationMs) {
+              if (done || signal.aborted || performance.now() - tStart >= durationMs) {
                 reader.cancel().catch(() => {});
                 break;
               }
               totalBytes += value.byteLength;
-              actualBytesTransferred += value.byteLength;
+              bytesUsed += value.byteLength;
             }
           } catch {
             await new Promise(r => setTimeout(r, 150));
@@ -2558,54 +1674,44 @@
         }
       }
 
-      const workers = [];
-      for (let i = 0; i < activeThreads; i++) {
-        workers.push(downloadWorker());
-      }
+      const workers = Array.from({ length: threads }, () => worker());
 
-      await new Promise((resolve) => {
-        const ticker = setInterval(() => {
-          const elapsed = (performance.now() - startTime) / 1000;
-          if (signal.aborted || elapsed * 1000 >= durationMs) {
-            clearInterval(ticker);
+      await new Promise(resolve => {
+        const iv = setInterval(() => {
+          const sec = (performance.now() - tStart) / 1000;
+          if (signal.aborted || sec * 1000 >= durationMs) {
+            clearInterval(iv);
             resolve();
             return;
           }
+          if (sec > 0.25) {
+            const curMbps = (totalBytes * 8) / (sec * 1_000_000);
+            samples.push(curMbps);
+            dlSeries.push(curMbps);
+            if (dlSeries.length > 28) dlSeries.shift();
 
-          if (elapsed > 0.3) {
-            const currentMbps = (totalBytes * 8) / (elapsed * 1_000_000);
-            samples.push(currentMbps);
-            const formatted = formatSpeed(currentMbps);
-            elMainSpeed.textContent = formatted;
-            updateInlineMetricsStrip({ dlText: formatted });
+            document.getElementById('gaugeValue').textContent = fmtGauge(curMbps);
+            document.getElementById('dlCardVal').textContent = fmtSpeed(curMbps);
+            setGaugeProgress(curMbps);
+            updateSparkline('dlSparkPath', dlSeries);
+            updateHeaderAndFooter();
 
-            if (currentMbps > 45 && activeThreads < profile.recMaxThreads) {
-              workers.push(downloadWorker());
-              activeThreads++;
+            if (curMbps > 45 && threads < dev.maxThreads) {
+              workers.push(worker());
+              threads++;
             }
           }
-
-          const pct = Math.min(55, 10 + (elapsed / (durationMs / 1000)) * 45);
-          elProgress.style.width = `${pct}%`;
-        }, 250);
+          document.getElementById('progressBar').style.width = `${Math.min(55, 10 + (sec / (durationMs / 1000)) * 45)}%`;
+        }, 240);
       });
 
-      await Promise.allSettled([...workers, loadedPingTask]);
+      await Promise.allSettled([...workers, pingTask]);
 
-      const finalElapsed = Math.max(0.5, (performance.now() - startTime) / 1000);
-      const finalMbps = (totalBytes * 8) / (finalElapsed * 1_000_000);
+      const secFinal = Math.max(0.5, (performance.now() - tStart) / 1000);
+      const finalMbps = (totalBytes * 8) / (secFinal * 1_000_000);
       const loadedAvg = loadedRtts.length
         ? Math.round(loadedRtts.reduce((a, b) => a + b, 0) / loadedRtts.length)
         : null;
-
-      let loadedJitter = null;
-      if (loadedRtts.length > 1) {
-        let jSum = 0;
-        for (let i = 1; i < loadedRtts.length; i++) {
-          jSum += Math.abs(loadedRtts[i] - loadedRtts[i - 1]);
-        }
-        loadedJitter = (jSum / (loadedRtts.length - 1)).toFixed(1);
-      }
 
       const steady = samples.slice(Math.floor(samples.length * 0.2));
       let stability = 95;
@@ -2616,434 +1722,597 @@
         stability = Math.max(15, Math.min(99, Math.round((1 - cv) * 100)));
       }
 
-      return {
-        mbps: finalMbps,
-        loadedPing: loadedAvg,
-        loadedJitter,
-        stability,
-        pingSent,
-        pingLost
-      };
+      return { mbps: finalMbps, loadedPing: loadedAvg, stability, pSent, pLost };
     }
 
-    async function runUploadPhase(durationMs, signal) {
-      let uploadedBytes = 0;
-      const profile = detectDeviceProfile();
-      const payload = new Uint8Array(profile.uploadChunkBytes);
-      let failedAll = true;
-      const threads = profile.uploadThreads;
-      const upLoadedRtts = [];
-      let upPingSent = 0;
-      let upPingLost = 0;
-      const pingNode = getSelectedPingEndpoint();
+    async function runUpload(durationMs, signal) {
+      const dev = detectDevice();
+      const pingNode = getPingNode();
+      const payload = new Uint8Array(dev.uploadChunkBytes);
+      let uploaded = 0;
+      let anyOk = false;
+      const loadedRtts = [];
+      let pSent = 0;
+      let pLost = 0;
+      const tStart = performance.now();
 
-      try {
-        await fetch(`${BACKEND_URL}/ping?upwarm=${Date.now()}`, { cache: 'no-store', signal });
-      } catch {}
-
-      const startTime = performance.now();
-
-      const uploadPingTask = (async () => {
-        while (!signal.aborted && performance.now() - startTime < durationMs) {
-          upPingSent++;
+      const pingTask = (async () => {
+        while (!signal.aborted && performance.now() - tStart < durationMs) {
+          pSent++;
           const t0 = performance.now();
           try {
-            const r = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}ulp=${Date.now()}_${Math.random()}`, {
+            const r = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}up=${Date.now()}_${Math.random()}`, {
               cache: 'no-store',
               signal
             });
             const ms = performance.now() - t0;
-            if (r.ok && ms > 0 && ms < 2500) upLoadedRtts.push(ms);
-            else upPingLost++;
+            if (r.ok && ms > 0 && ms < 2400) loadedRtts.push(ms);
+            else pLost++;
           } catch {
-            if (!signal.aborted) upPingLost++;
+            if (!signal.aborted) pLost++;
           }
           await new Promise(r => setTimeout(r, 450));
         }
       })();
 
-      async function uploadWorker() {
-        while (!signal.aborted && performance.now() - startTime < durationMs) {
+      async function worker() {
+        while (!signal.aborted && performance.now() - tStart < durationMs) {
           try {
-            const res = await fetch(`${BACKEND_URL}/upload?t=${Date.now()}_${Math.random()}`, {
+            const res = await fetch(`${BACKEND_URL}/upload?u=${Date.now()}_${Math.random()}`, {
               method: 'POST',
               body: payload,
               headers: { 'Content-Type': 'application/octet-stream' },
               signal
             });
             if (res.ok) {
-              failedAll = false;
-              uploadedBytes += payload.byteLength;
-              actualBytesTransferred += payload.byteLength;
-            } else {
-              break;
-            }
+              anyOk = true;
+              uploaded += payload.byteLength;
+              bytesUsed += payload.byteLength;
+            } else break;
           } catch {
             break;
           }
         }
       }
 
-      const workers = Array.from({ length: threads }, () => uploadWorker());
+      const workers = Array.from({ length: dev.uploadThreads }, () => worker());
 
-      const ticker = setInterval(() => {
-        const elapsed = (performance.now() - startTime) / 1000;
-        const pct = Math.min(98, 55 + (elapsed / (durationMs / 1000)) * 43);
-        elProgress.style.width = `${pct}%`;
-        if (uploadedBytes > 0 && elapsed > 0.2) {
-          const upMbps = (uploadedBytes * 8) / (elapsed * 1_000_000);
-          updateInlineMetricsStrip({
-            dlText: elMainSpeed.textContent || '--',
-            ulText: formatSpeed(upMbps)
-          });
+      const iv = setInterval(() => {
+        const sec = (performance.now() - tStart) / 1000;
+        document.getElementById('progressBar').style.width = `${Math.min(98, 55 + (sec / (durationMs / 1000)) * 43)}%`;
+        if (uploaded > 0 && sec > 0.2) {
+          const curUl = (uploaded * 8) / (sec * 1_000_000);
+          ulSeries.push(curUl);
+          if (ulSeries.length > 28) ulSeries.shift();
+          document.getElementById('ulCardVal').textContent = fmtSpeed(curUl);
+          document.getElementById('gaugeValue').textContent = fmtGauge(curUl);
+          setGaugeProgress(curUl);
+          updateSparkline('ulSparkPath', ulSeries);
+          updateHeaderAndFooter();
         }
-      }, 300);
+      }, 280);
 
-      await Promise.allSettled([...workers, uploadPingTask]);
-      clearInterval(ticker);
+      await Promise.allSettled([...workers, pingTask]);
+      clearInterval(iv);
 
-      const upLoadedAvg = upLoadedRtts.length
-        ? Math.round(upLoadedRtts.reduce((a, b) => a + b, 0) / upLoadedRtts.length)
+      const loadedAvg = loadedRtts.length
+        ? Math.round(loadedRtts.reduce((a, b) => a + b, 0) / loadedRtts.length)
         : null;
 
-      if (failedAll || uploadedBytes === 0) {
-        return { mbps: null, loadedPing: upLoadedAvg, pingSent: upPingSent, pingLost: upPingLost };
+      if (!anyOk || uploaded === 0) {
+        return { mbps: null, loadedPing: loadedAvg, pSent, pLost };
       }
-      const totalSec = Math.max(0.5, (performance.now() - startTime) / 1000);
-      return {
-        mbps: (uploadedBytes * 8) / (totalSec * 1_000_000),
-        loadedPing: upLoadedAvg,
-        pingSent: upPingSent,
-        pingLost: upPingLost
-      };
+
+      const secFinal = Math.max(0.5, (performance.now() - tStart) / 1000);
+      return { mbps: (uploaded * 8) / (secFinal * 1_000_000), loadedPing: loadedAvg, pSent, pLost };
     }
 
     async function startTest() {
-      if (isRunning && abortController) {
-        abortController.abort();
+      if (isRunning && abortCtrl) {
+        abortCtrl.abort();
       }
 
       isRunning = true;
-      actualBytesTransferred = 0;
-      abortController = new AbortController();
-      const { signal } = abortController;
-      const profile = detectDeviceProfile();
+      abortCtrl = new AbortController();
+      const { signal } = abortCtrl;
+      const dev = detectDevice();
 
-      // Refrescar ISP siempre en paralelo al iniciar para evitar valores cacheados al cambiar de red
-      const ispRefreshPromise = fetchClientInfo(true);
+      bytesUsed = 0;
+      dlSeries = [];
+      ulSeries = [];
+      updateSparkline('dlSparkPath', []);
+      updateSparkline('ulSparkPath', []);
+      setGaugeProgress(0);
 
-      elRestartBtn.classList.add('spinning');
-      elStatusDot.className = 'dot running';
-      elMainSpeed.classList.remove('active');
-      elMainSpeed.textContent = '0';
-      elProgress.style.width = '5%';
-      elStatusBanner.className = 'status-banner';
-      elStatusBanner.textContent = 'Midiendo latencia y pérdida de paquetes...';
-      elPhaseLabel.textContent = 'Latencia';
-      updateInlineMetricsStrip();
+      const ispPromise = refreshIsp(true);
+
+      document.getElementById('actionTestBtn').textContent = 'Detener prueba';
+      document.getElementById('statusDot').className = 'dot running';
+      document.getElementById('phaseLabel').textContent = 'Latencia';
+      document.getElementById('gaugeValue').textContent = '0.00';
+      document.getElementById('gaugeState').className = 'gauge-state';
+      document.getElementById('gaugeState').textContent = 'Midiendo ping...';
+      document.getElementById('dlCardVal').textContent = '--';
+      document.getElementById('ulCardVal').textContent = '—';
+      document.getElementById('progressBar').style.width = '6%';
 
       try {
-        const idlePing = await measurePingSamples(8, signal);
-        if (signal.aborted) return;
-        elProgress.style.width = '12%';
-        updateInlineMetricsStrip({
-          pingText: `${idlePing.avg}/--/--`,
-          jitterText: String(idlePing.jitter),
-          lossText: String(idlePing.lossPct)
-        });
-
-        elPhaseLabel.textContent = 'Bajada';
-        elStatusBanner.textContent = 'Midiendo velocidad y latencia en bajada...';
-        elMainSpeed.classList.add('active');
-        const dlResult = await runDownloadPhase(profile.durationSec * 1000, signal);
+        const pingRes = await measureIdlePing(8, signal);
         if (signal.aborted) return;
 
-        const finalDlText = formatSpeed(dlResult.mbps);
-        elMainSpeed.textContent = finalDlText;
-        const downLoadedMs = dlResult.loadedPing || idlePing.avg;
-        const combinedJitter = dlResult.loadedJitter || idlePing.jitter;
-        updateInlineMetricsStrip({
-          dlText: finalDlText,
-          pingText: `${idlePing.avg}/${downLoadedMs}/--`,
-          jitterText: String(combinedJitter),
-          lossText: String(idlePing.lossPct),
-          stabText: `${dlResult.stability}%`
-        });
+        document.getElementById('pingCardVal').textContent = pingRes.avg ? `${pingRes.avg}` : '--';
+        document.getElementById('jitterCardVal').textContent = pingRes.jitter;
+        document.getElementById('lossCardVal').textContent = `${pingRes.lossPct}`;
+        document.getElementById('headerPingText').textContent = `${pingRes.avg} ms`;
 
-        elPhaseLabel.textContent = 'Subida';
-        elStatusBanner.textContent = 'Midiendo velocidad y latencia en subida...';
-        const ulResult = await runUploadPhase(Math.max(4, profile.durationSec - 2) * 1000, signal);
+        document.getElementById('phaseLabel').textContent = 'Bajada';
+        document.getElementById('gaugeState').textContent = 'Testing download...';
+        const dlRes = await runDownload(dev.durationSec * 1000, signal);
         if (signal.aborted) return;
 
-        await ispRefreshPromise;
+        const downLoaded = dlRes.loadedPing || pingRes.avg;
+        document.getElementById('dlCardVal').textContent = fmtSpeed(dlRes.mbps);
+        document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
+        setGaugeProgress(dlRes.mbps);
 
-        const ulMbps = ulResult.mbps;
-        const finalUlText = ulMbps !== null ? formatSpeed(ulMbps) : 'N/D';
-        const upLoadedMs = ulResult.loadedPing || idlePing.avg;
+        document.getElementById('phaseLabel').textContent = 'Subida';
+        document.getElementById('gaugeState').textContent = 'Testing upload...';
+        const ulRes = await runUpload(Math.max(4, dev.durationSec - 2) * 1000, signal);
+        if (signal.aborted) return;
 
-        const totalProbes = 8 + (dlResult.pingSent || 0) + (ulResult.pingSent || 0);
-        const totalLost = Math.round((idlePing.lossPct / 100) * 8) + (dlResult.pingLost || 0) + (ulResult.pingLost || 0);
-        const overallLossPct = totalProbes > 0 ? Number(((totalLost / totalProbes) * 100).toFixed(1)) : idlePing.lossPct;
-        const bloatGrade = computeBufferbloatGrade(idlePing.avg, downLoadedMs, upLoadedMs);
-        const usedMbText = `${formatTransferredMb()} MB`;
+        await ispPromise;
 
-        latestTestMetrics = {
-          downloadMbps: Number(dlResult.mbps.toFixed(1)),
-          uploadMbps: ulMbps !== null ? Number(ulMbps.toFixed(1)) : null,
-          pingMs: idlePing.avg || null,
-          downLoadedPingMs: downLoadedMs,
-          upLoadedPingMs: upLoadedMs,
-          jitterMs: combinedJitter,
-          packetLossPct: overallLossPct,
-          stabilityPct: dlResult.stability,
-          bufferbloatGrade: bloatGrade
+        const upLoaded = ulRes.loadedPing || pingRes.avg;
+        const totalSent = 8 + (dlRes.pSent || 0) + (ulRes.pSent || 0);
+        const totalLost = Math.round((pingRes.lossPct / 100) * 8) + (dlRes.pLost || 0) + (ulRes.pLost || 0);
+        const lossPct = totalSent > 0 ? Number(((totalLost / totalSent) * 100).toFixed(1)) : pingRes.lossPct;
+
+        lastMetrics = {
+          downloadMbps: Number(dlRes.mbps.toFixed(1)),
+          uploadMbps: ulRes.mbps !== null ? Number(ulRes.mbps.toFixed(1)) : null,
+          pingMs: pingRes.avg || null,
+          downLoadedPingMs: downLoaded,
+          upLoadedPingMs: upLoaded,
+          jitterMs: pingRes.jitter,
+          packetLossPct: lossPct,
+          stabilityPct: dlRes.stability
         };
 
-        refreshMetricsDisplay();
+        document.getElementById('ulCardVal').textContent = ulRes.mbps !== null ? fmtSpeed(ulRes.mbps) : 'N/D';
+        document.getElementById('pingCardVal').textContent = `${pingRes.avg}`;
+        document.getElementById('pingCardSub').textContent = `ms (B:${downLoaded} / S:${upLoaded})`;
+        document.getElementById('lossCardVal').textContent = `${lossPct}`;
+        document.getElementById('progressBar').style.width = '100%';
+        document.getElementById('phaseLabel').textContent = 'Listo';
+        document.getElementById('statusDot').className = 'dot done';
+        document.getElementById('gaugeState').textContent = 'Done';
+        document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
+        setGaugeProgress(dlRes.mbps);
 
-        evaluateUseCasesAndPlans({
-          dlMbps: dlResult.mbps,
-          ulMbps,
-          idlePing: idlePing.avg,
-          downLoadedPing: downLoadedMs,
-          upLoadedPing: upLoadedMs,
-          jitter: combinedJitter,
-          packetLossPct: overallLossPct,
-          stability: dlResult.stability
-        });
-
+        updateHeaderAndFooter();
+        renderAccordionInsights();
+        renderQuiz();
         saveHistory({
           date: new Date().toLocaleString(),
-          device: profile.shortLabel,
-          isp: detectedClientGeo.isp,
-          download: `${finalDlText} Mbps`,
-          upload: ulMbps !== null ? `${finalUlText} Mbps` : 'No disponible',
-          ping: `${idlePing.avg} / ${downLoadedMs} / ${upLoadedMs} ms`,
-          jitterLoss: `${combinedJitter} ms / ${overallLossPct}%`,
-          stability: `${dlResult.stability}% (${bloatGrade})`,
-          dataUsed: usedMbText
+          isp: geoInfo.isp,
+          download: `${fmtSpeed(dlRes.mbps)} Mbps`,
+          upload: ulRes.mbps !== null ? `${fmtSpeed(ulRes.mbps)} Mbps` : 'N/D',
+          ping: `${pingRes.avg}/${downLoaded}/${upLoaded} ms`,
+          loss: `${lossPct}%`
         });
-
-        renderBenchmarkSection();
-        await postBenchmarkResult({
-          isp: detectedClientGeo.isp,
-          region: detectedClientGeo.region,
-          city: detectedClientGeo.city,
-          countryCode: detectedClientGeo.countryCode,
-          deviceType: profile.shortLabel,
-          downloadMbps: latestTestMetrics.downloadMbps,
-          uploadMbps: latestTestMetrics.uploadMbps,
-          pingMs: latestTestMetrics.pingMs,
-          stabilityPct: dlResult.stability
-        });
-
-        elProgress.style.width = '100%';
-        elPhaseLabel.textContent = 'Listo';
-        elStatusDot.className = 'dot done';
-
-        if (overallLossPct >= 2) {
-          elStatusBanner.className = 'status-banner warning';
-          elStatusBanner.textContent = `* Se detectó ${overallLossPct}% de pérdida de paquetes; puede afectar llamadas o juegos.`;
-        } else if (dlResult.stability < 45) {
-          elStatusBanner.className = 'status-banner warning';
-          elStatusBanner.textContent = '* Tu conexión tuvo alta variación durante la prueba; la velocidad puede fluctuar.';
-        } else {
-          elStatusBanner.textContent = 'Listo. Toca la flecha circular si quieres medir de nuevo.';
-        }
-
-      } catch (err) {
+        renderBenchmark();
+        postBenchmarkServer();
+      } catch {
         if (!signal.aborted) {
-          elStatusBanner.className = 'status-banner warning';
-          elStatusBanner.textContent = '* No pudimos conectarnos con los servidores de prueba.';
+          document.getElementById('gaugeState').className = 'gauge-state warn';
+          document.getElementById('gaugeState').textContent = 'Error de red';
         }
       } finally {
         isRunning = false;
-        elRestartBtn.classList.remove('spinning');
+        document.getElementById('actionTestBtn').textContent = 'Repetir prueba';
       }
     }
 
-    function saveHistory(entry) {
-      const list = JSON.parse(localStorage.getItem('vnet_fast_history') || '[]');
-      list.unshift(entry);
-      localStorage.setItem('vnet_fast_history', JSON.stringify(list.slice(0, 15)));
+    function stopOrRestart() {
+      if (isRunning && abortCtrl) {
+        abortCtrl.abort();
+        isRunning = false;
+        document.getElementById('statusDot').className = 'dot';
+        document.getElementById('phaseLabel').textContent = 'Detenido';
+        document.getElementById('gaugeState').textContent = 'Stopped';
+        document.getElementById('actionTestBtn').textContent = 'Iniciar prueba';
+      } else {
+        startTest();
+      }
+    }
+
+    document.getElementById('actionTestBtn').addEventListener('click', stopOrRestart);
+
+    document.getElementById('shareResultBtn').addEventListener('click', async () => {
+      const dl = lastMetrics.downloadMbps !== null ? `${lastMetrics.downloadMbps} Mbps` : '--';
+      const ul = lastMetrics.uploadMbps !== null ? `${lastMetrics.uploadMbps} Mbps` : '--';
+      const pg = lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '--';
+      const text = `VTEST (${geoInfo.isp}) — Bajada: ${dl} | Subida: ${ul} | Ping: ${pg} | Loss: ${lastMetrics.packetLossPct ?? '--'}%`;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'Resultado VTEST', text });
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          document.getElementById('shareResultLabel').textContent = '¡Copiado!';
+          setTimeout(() => {
+            document.getElementById('shareResultLabel').textContent = 'Compartir resultado';
+          }, 1800);
+        }
+      } catch {}
+    });
+
+    // Cuestionario (pestaña History -> Cuestionario)
+    function getQuizResult() {
+      const sOpt = QUIZ_STEPS[0].options[quizAnswers[QUIZ_STEPS[0].id]];
+      const pOpt = QUIZ_STEPS[1].options[quizAnswers[QUIZ_STEPS[1].id]];
+      const oOpt = QUIZ_STEPS[2].options[quizAnswers[QUIZ_STEPS[2].id]];
+
+      const base = sOpt ? sOpt.basePerPerson : 22;
+      const peopleLabel = pOpt ? pOpt.label : '1 a 2 personas';
+      const factor = pOpt ? pOpt.factor : 1.5;
+      const add = oOpt ? oOpt.addMbps : 10;
+      const mbps = Math.max(20, Math.round(((base * factor + add) * 1.2) / 5) * 5);
+
+      const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
+      const plan = sorted.find(p => (p.mbps || 0) >= mbps) || sorted[sorted.length - 1] || { name: 'VNET400', label: 'Hasta 400 Mbps' };
+
+      return { mbps, peopleLabel, plan };
+    }
+
+    function renderQuiz() {
+      const stage = document.getElementById('quizStage');
+      if (!stage) return;
+      const res = getQuizResult();
+
+      if (quizStep >= QUIZ_STEPS.length) {
+        stage.innerHTML = `
+          <div class="quiz-meta"><span>Resultado del cuestionario</span></div>
+          <div class="quiz-q">Recomendación para ${res.peopleLabel}</div>
+          <div class="quiz-opt-badge" style="font-size:2rem; color:#60a5fa; margin-bottom:6px;">${res.mbps} Mbps</div>
+          <div style="font-weight:700; margin-bottom:10px;">Plan sugerido: ${res.plan.name} (${res.plan.label})</div>
+          <p style="font-size:0.84rem; color:var(--quiz-muted); margin-bottom:16px;">
+            ${lastMetrics.downloadMbps !== null ? `Tu bajada medida hoy es de ${lastMetrics.downloadMbps} Mbps.` : 'Ejecuta la prueba en Test para comparar con tu velocidad actual.'}
+          </p>
+          <button type="button" class="btn-sm primary" id="quizRestartBtn">Repetir cuestionario</button>
+        `;
+        document.getElementById('quizRestartBtn').addEventListener('click', () => {
+          quizAnswers = {};
+          quizStep = 0;
+          renderQuiz();
+        });
+        return;
+      }
+
+      const q = QUIZ_STEPS[quizStep];
+      const sel = quizAnswers[q.id];
+
+      stage.innerHTML = `
+        <div class="quiz-meta">
+          <span>Pregunta ${quizStep + 1}/${QUIZ_STEPS.length}</span>
+          <span>•</span>
+          <span>Estimado: <span class="quiz-highlight">${res.mbps} Mbps</span></span>
+        </div>
+        <div class="quiz-q">${q.question}</div>
+        <div class="quiz-options">
+          ${q.options.map((o, idx) => `
+            <button type="button" class="quiz-opt ${sel === idx ? 'selected' : ''}" data-idx="${idx}">
+              <span class="quiz-opt-badge">${o.badge}</span>
+              <span class="quiz-opt-label">${o.label}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="btn-row" style="justify-content:center;">
+          ${quizStep > 0 ? `<button type="button" class="btn-sm" id="quizBackBtn">‹ Anterior</button>` : ''}
+        </div>
+      `;
+
+      stage.querySelectorAll('.quiz-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          quizAnswers[q.id] = parseInt(btn.getAttribute('data-idx'), 10);
+          quizStep++;
+          renderQuiz();
+        });
+      });
+
+      const backBtn = document.getElementById('quizBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          quizStep = Math.max(0, quizStep - 1);
+          renderQuiz();
+        });
+      }
+    }
+
+    // Acordeón (pestaña Servers -> Acordeón)
+    function renderAccordionInsights() {
+      const dl = lastMetrics.downloadMbps || 0;
+      const ul = lastMetrics.uploadMbps;
+      const stab = lastMetrics.stabilityPct || 85;
+      const loss = lastMetrics.packetLossPct || 0;
+      const effMbps = dl * 0.75 * Math.max(0.55, Math.min(1, stab / 100));
+
+      document.getElementById('activitiesGrid').innerHTML = USE_CASES.map(uc => {
+        let score = 1;
+        if (dl >= uc.idealMbps) score = 5;
+        else if (dl >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
+        else if (dl >= uc.minMbps) score = 3;
+        else if (dl >= uc.minMbps * 0.5) score = 2;
+        if (loss >= 2) score = Math.max(1, score - 1);
+        if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
+
+        const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
+        const label = score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado');
+        const estDev = Math.max(1, Math.min(uc.planDevices, Math.floor(effMbps / Math.max(1, uc.deviceLoadMbps))));
+
+        return `
+          <div class="mini-info-card">
+            <div class="mini-info-title">${uc.title} (${score}/5)</div>
+            <div class="${cls}">${label}</div>
+            <div class="mini-info-sub" style="margin-top:4px;">${score >= 3 ? uc.okText : uc.lowText}</div>
+            <div class="mini-info-sub" style="margin-top:6px;">~${estDev} equipos • Plan ref.: <strong>${uc.planRef}</strong></div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('devicesGrid').innerHTML = DEVICE_TYPES.map(dt => {
+        const nowCount = Math.max(1, Math.floor(effMbps / Math.max(1, dt.loadMbps)));
+        return `
+          <div class="mini-info-card">
+            <div class="mini-info-title">${dt.label}</div>
+            <div class="mini-info-sub">Estimados ahora: <strong>~${nowCount}</strong> (~${dt.loadMbps} Mbps/eq)</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('devicesNote').textContent =
+        `Margen útil estimado: ~${Math.round(effMbps)} Mbps (considerando uso simultáneo y constancia de red).`;
+
+      document.getElementById('refTableBody').innerHTML = REF_TABLE.map(r => `
+        <tr>
+          <td><strong>${r.activity}</strong></td>
+          <td>${r.devices}</td>
+          <td>${r.recommended}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('tipsGrid').innerHTML = TEST_TIPS.map(t => `
+        <div class="mini-info-card">
+          <div class="mini-info-title">${t.title}</div>
+          <div class="mini-info-sub">${t.desc}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('faqList').innerHTML = FAQ_LIST.map(f => `
+        <div class="faq-item">
+          <div class="faq-q">${f.q}</div>
+          <div class="faq-a">${f.a}</div>
+        </div>
+      `).join('');
+    }
+
+    document.querySelectorAll('.acc-header').forEach(h => {
+      h.addEventListener('click', () => {
+        const id = h.getAttribute('data-acc');
+        const body = document.getElementById(id);
+        if (body) body.classList.toggle('open');
+      });
+    });
+
+    // Historial y Benchmarking (pestaña Settings -> Ajustes)
+    function saveHistory(item) {
+      const list = JSON.parse(localStorage.getItem('vtest_wa_hist') || '[]');
+      list.unshift(item);
+      localStorage.setItem('vtest_wa_hist', JSON.stringify(list.slice(0, 15)));
       renderHistory();
     }
 
     function renderHistory() {
-      const list = JSON.parse(localStorage.getItem('vnet_fast_history') || '[]');
-      const tbody = document.getElementById('historyTableBody');
-      tbody.innerHTML = list.length
+      const list = JSON.parse(localStorage.getItem('vtest_wa_hist') || '[]');
+      const body = document.getElementById('historyBody');
+      body.innerHTML = list.length
         ? list.map(r => `
             <tr>
               <td data-label="Fecha">${r.date}</td>
-              <td data-label="Equipo">${r.device || '--'}</td>
-              <td data-label="ISP">${r.isp || detectedClientGeo.isp || 'No identificada'}</td>
+              <td data-label="ISP">${r.isp}</td>
               <td data-label="Bajada"><strong>${r.download}</strong></td>
               <td data-label="Subida">${r.upload}</td>
-              <td data-label="Latencia (R/B/S)">${r.ping}</td>
-              <td data-label="Jitter / Pérdida">${r.jitterLoss || r.jitter || '--'}</td>
-              <td data-label="Constancia">${r.stability}</td>
-              <td data-label="Datos">${r.dataUsed || '--'}</td>
+              <td data-label="Ping">${r.ping}</td>
+              <td data-label="Loss">${r.loss || '0%'}</td>
             </tr>
           `).join('')
-        : '<tr><td colspan="9" style="color:var(--text-muted);">Todavía no hay pruebas guardadas.</td></tr>';
+        : '<tr><td colspan="6" style="color:var(--text-muted);">Sin pruebas guardadas todavía.</td></tr>';
     }
 
-    elRestartBtn.addEventListener('click', startTest);
+    async function fetchBenchmarkServer() {
+      try {
+        const q = new URLSearchParams({
+          isp: geoInfo.isp,
+          region: geoInfo.region,
+          countryCode: geoInfo.countryCode,
+          t: String(Date.now())
+        });
+        const r = await fetch(`${BACKEND_URL}/api/benchmark?${q.toString()}`, { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (j && j.ok && j.comparison) {
+          serverComparison = j.comparison;
+          renderBenchmark();
+        }
+      } catch {}
+    }
 
-    elToggleMoreBtn.addEventListener('click', () => {
-      const willOpen = !elDetailsPanel.classList.contains('open');
-      setMainDetailsOpen(willOpen, false);
+    async function postBenchmarkServer() {
+      if (!lastMetrics.downloadMbps) return;
+      try {
+        const r = await fetch(`${BACKEND_URL}/api/benchmark`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            isp: geoInfo.isp,
+            region: geoInfo.region,
+            city: geoInfo.city,
+            countryCode: geoInfo.countryCode,
+            deviceType: detectDevice().label,
+            downloadMbps: lastMetrics.downloadMbps,
+            uploadMbps: lastMetrics.uploadMbps,
+            pingMs: lastMetrics.pingMs,
+            stabilityPct: lastMetrics.stabilityPct
+          })
+        });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (j && j.ok && j.comparison) {
+          serverComparison = j.comparison;
+          renderBenchmark();
+        }
+      } catch {}
+    }
+
+    function renderBenchmark() {
+      const m = activeBenchMetric;
+      const unit = m === 'ping' ? 'ms' : 'Mbps';
+      const cur = m === 'download' ? lastMetrics.downloadMbps : (m === 'upload' ? lastMetrics.uploadMbps : lastMetrics.pingMs);
+
+      const localAvg = serverComparison?.otherUsersLocal
+        ? serverComparison.otherUsersLocal[m === 'download' ? 'downloadAvg' : (m === 'upload' ? 'uploadAvg' : 'pingAvg')]
+        : null;
+      const natAvg = serverComparison?.otherUsersNational
+        ? serverComparison.otherUsersNational[m === 'download' ? 'downloadAvg' : (m === 'upload' ? 'uploadAvg' : 'pingAvg')]
+        : null;
+
+      const maxV = Math.max(10, cur || 0, localAvg || 0, natAvg || 0);
+      document.getElementById('benchScopeText').textContent = `ISP: ${geoInfo.isp}`;
+
+      const rows = [
+        { label: 'Tu prueba actual', val: cur, cls: '' },
+        { label: `Otros en ${geoInfo.region}`, val: localAvg, cls: 'ul' },
+        { label: `Otros en ${geoInfo.countryCode}`, val: natAvg, cls: 'muted' }
+      ];
+
+      document.getElementById('benchBars').innerHTML = rows.map(item => {
+        const pct = typeof item.val === 'number' && maxV > 0 ? Math.max(4, Math.min(100, (item.val / maxV) * 100)) : 0;
+        return `
+          <div class="bar-item">
+            <div class="bar-head">
+              <span>${item.label}</span>
+              <strong>${typeof item.val === 'number' ? `${item.val} ${unit}` : '--'}</strong>
+            </div>
+            <div class="bar-track"><div class="bar-fill ${item.cls}" style="width:${pct}%;"></div></div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('benchSummaryLine').textContent = serverComparison
+        ? `Muestras — Zona: ${serverComparison.counts.localUsersTests} • País: ${serverComparison.counts.nationalUsersTests}`
+        : 'Completa una prueba para sincronizar con otros usuarios de VTEST.';
+    }
+
+    document.querySelectorAll('.bench-tab').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.bench-tab').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        activeBenchMetric = b.getAttribute('data-metric') || 'download';
+        renderBenchmark();
+      });
     });
 
+    // Navegación por pestañas
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+        document.getElementById(targetTab)?.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // Tema y preferencias
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('vtest_wa_theme', t);
+      document.getElementById('themeIcon').textContent = t === 'dark' ? '☀️' : '🌙';
+    }
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    function syncPrefsUI() {
+      const sel = document.getElementById('serverSelect');
+      sel.innerHTML = CDN_NODES.map(n => `<option value="${n.id}">${n.name}</option>`).join('');
+      sel.value = CDN_NODES.some(n => n.id === prefs.serverId) ? prefs.serverId : (CDN_NODES[0]?.id || 'cloudflare');
+      document.getElementById('cfgAutoStart').checked = Boolean(prefs.autoStart);
+      updateHeaderAndFooter();
+    }
+
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
-      const srvId = document.getElementById('cfgServerSelect').value || 'cloudflare';
-      cfg = {
-        durationSec: DEFAULT_CFG.durationSec,
-        serverId: srvId,
-        autoStart: document.getElementById('cfgAutoStart').checked,
-        alwaysShowDetails: document.getElementById('cfgAlwaysShowDetails').checked
+      prefs = {
+        durationSec: DEFAULT_PREFS.durationSec,
+        serverId: document.getElementById('serverSelect').value || 'cloudflare',
+        autoStart: document.getElementById('cfgAutoStart').checked
       };
-      localStorage.setItem('vnet_fast_cfg', JSON.stringify(cfg));
-      applyConfigToUI();
-      elStatusBanner.textContent = 'Ajustes guardados en este dispositivo.';
+      localStorage.setItem('vtest_wa_prefs', JSON.stringify(prefs));
+      syncPrefsUI();
     });
 
     document.getElementById('resetCfgBtn').addEventListener('click', () => {
-      cfg = { ...DEFAULT_CFG };
-      localStorage.removeItem('vnet_fast_cfg');
-      applyConfigToUI();
-      elStatusBanner.textContent = 'Ajustes restaurados.';
+      prefs = { ...DEFAULT_PREFS };
+      localStorage.removeItem('vtest_wa_prefs');
+      syncPrefsUI();
     });
 
     document.getElementById('exportCsvBtn').addEventListener('click', () => {
-      const list = JSON.parse(localStorage.getItem('vnet_fast_history') || '[]');
+      const list = JSON.parse(localStorage.getItem('vtest_wa_hist') || '[]');
       if (!list.length) return;
-      const csv = ['Fecha,Equipo,ISP,Bajada,Subida,Latencia_Reposo_Bajada_Subida,Jitter_Perdida,Constancia,Datos_MB']
-        .concat(list.map(r => `"${r.date}","${r.device || ''}","${r.isp || ''}","${r.download}","${r.upload}","${r.ping}","${r.jitterLoss || r.jitter || ''}","${r.stability}","${r.dataUsed || ''}"`))
+      const csv = ['Fecha,ISP,Bajada,Subida,Ping,Loss']
+        .concat(list.map(r => `"${r.date}","${r.isp}","${r.download}","${r.upload}","${r.ping}","${r.loss || ''}"`))
         .join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'vtest_pruebas_velocidad.csv';
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      a.download = 'vtest_historial.csv';
       a.click();
     });
 
-    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-      localStorage.removeItem('vnet_fast_history');
+    document.getElementById('clearHistBtn').addEventListener('click', () => {
+      localStorage.removeItem('vtest_wa_hist');
       renderHistory();
-      renderBenchmarkSection();
     });
 
-    (function initTouchAndMouseTooltips() {
-      const bubble = document.getElementById('vtestTooltipBubble');
-      if (!bubble) return;
-
-      let activeTarget = null;
-      let pinnedByTap = false;
-
-      function syncTipAttributes(root = document) {
-        root.querySelectorAll('[title]').forEach(el => {
-          if (!el.hasAttribute('data-tip')) {
-            const t = el.getAttribute('title');
-            if (t) el.setAttribute('data-tip', t);
-          }
-          el.removeAttribute('title');
-        });
+    function initLinks() {
+      document.getElementById('brandName').textContent = CFG.brandName || 'VTEST';
+      document.getElementById('poweredName').textContent = CFG.poweredByName || 'VNET';
+      const l = CFG.links || {};
+      if (l.website) {
+        document.getElementById('linkWeb').href = l.website;
+        document.getElementById('poweredLink').href = l.website;
       }
+      if (l.whatsapp) document.getElementById('linkWa').href = l.whatsapp;
+      if (l.facebook) document.getElementById('linkFb').href = l.facebook;
+      if (l.instagram) document.getElementById('linkIg').href = l.instagram;
+    }
 
-      function positionBubble(targetEl) {
-        const rect = targetEl.getBoundingClientRect();
-        bubble.classList.add('visible');
-        const bRect = bubble.getBoundingClientRect();
-        const pad = 12;
-
-        let left = rect.left + (rect.width / 2) - (bRect.width / 2);
-        left = Math.max(pad, Math.min(window.innerWidth - bRect.width - pad, left));
-
-        let top = rect.top - bRect.height - 8;
-        if (top < pad) {
-          top = Math.min(window.innerHeight - bRect.height - pad, rect.bottom + 8);
-        }
-
-        bubble.style.left = `${Math.round(left)}px`;
-        bubble.style.top = `${Math.round(top)}px`;
-      }
-
-      function showTip(targetEl, fromTap = false) {
-        const text = targetEl.getAttribute('data-tip');
-        if (!text) return;
-        activeTarget = targetEl;
-        pinnedByTap = fromTap;
-        bubble.textContent = text;
-        positionBubble(targetEl);
-      }
-
-      function hideTip() {
-        activeTarget = null;
-        pinnedByTap = false;
-        bubble.classList.remove('visible');
-      }
-
-      syncTipAttributes(document);
-
-      const observer = new MutationObserver(mutations => {
-        for (const m of mutations) {
-          m.addedNodes.forEach(node => {
-            if (node.nodeType === 1) syncTipAttributes(node);
-          });
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-
-      document.addEventListener('pointerover', (e) => {
-        if (e.pointerType === 'mouse') {
-          const tipEl = e.target.closest('[data-tip]');
-          if (tipEl) showTip(tipEl, false);
-        }
-      });
-
-      document.addEventListener('pointerout', (e) => {
-        if (e.pointerType === 'mouse' && activeTarget && !pinnedByTap) {
-          const related = e.relatedTarget;
-          if (!related || !activeTarget.contains(related)) hideTip();
-        }
-      });
-
-      document.addEventListener('click', (e) => {
-        const tipEl = e.target.closest('[data-tip]');
-        if (tipEl) {
-          if (activeTarget === tipEl && bubble.classList.contains('visible') && pinnedByTap) {
-            hideTip();
-          } else {
-            showTip(tipEl, true);
-          }
-        } else {
-          hideTip();
-        }
-      });
-
-      window.addEventListener('scroll', hideTip, { passive: true });
-      window.addEventListener('resize', () => {
-        if (activeTarget && bubble.classList.contains('visible')) {
-          positionBubble(activeTarget);
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') hideTip();
-      });
-    })();
-
-    applyBrandAndLinks();
-    applyTheme(getPreferredTheme());
-    applyConfigToUI();
+    initGauge();
+    initLinks();
+    applyTheme(localStorage.getItem('vtest_wa_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    syncPrefsUI();
+    renderAccordionInsights();
+    renderQuiz();
     renderHistory();
-    updateInlineMetricsStrip();
-    wakeUpBackend();
-    if (cfg.autoStart) {
+    renderBenchmark();
+
+    fetch(`${BACKEND_URL}/ping?wake=${Date.now()}`, { cache: 'no-store' }).catch(() => {});
+    if (prefs.autoStart) {
       startTest();
     } else {
-      fetchClientInfo(true);
+      refreshIsp(true);
     }
   </script>
 </body>
