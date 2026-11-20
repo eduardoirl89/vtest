@@ -1533,33 +1533,57 @@
 
     const LIVE_SPEED_QUIZ = [
       {
-        id: 'people_daily',
-        question: '¿Cuántas personas están usando o usarán el servicio de internet a diario?',
+        id: 'scenario_now',
+        question: '¿Cuál de estos escenarios describe mejor tu uso actual del internet?',
         options: [
-          { badge: '1', label: '1 persona', peopleCount: 1, factor: 1.0 },
-          { badge: '2', label: '2 personas', peopleCount: 2, factor: 1.75 },
-          { badge: '3–4', label: '3 a 4 personas', peopleCount: 4, factor: 3.1 },
-          { badge: '5+', label: '5 o más personas', peopleCount: 6, factor: 4.3 }
+          {
+            badge: '🏠',
+            label: 'Hogar (streaming, redes y tareas)',
+            basePerPerson: 22,
+            defaultPeopleLabel: 'Hogar',
+            defaultUsageLabel: 'Hogar (streaming, redes y tareas)'
+          },
+          {
+            badge: '💻',
+            label: 'Home office y videollamadas',
+            basePerPerson: 34,
+            defaultPeopleLabel: 'Teletrabajo',
+            defaultUsageLabel: 'Home office y videollamadas'
+          },
+          {
+            badge: '🏪',
+            label: 'Comercio / negocio (cajas, cámaras y gestión)',
+            basePerPerson: 32,
+            defaultPeopleLabel: 'Negocio',
+            defaultUsageLabel: 'Comercio / negocio'
+          },
+          {
+            badge: '🎮',
+            label: 'Gaming, descargas y contenido pesado',
+            basePerPerson: 44,
+            defaultPeopleLabel: 'Alto rendimiento',
+            defaultUsageLabel: 'Gaming, descargas y contenido pesado'
+          }
         ]
       },
       {
-        id: 'main_usage_now',
-        question: '¿Qué hacen principalmente en el día a día?',
+        id: 'people_daily',
+        question: '¿Cuántas personas están usando o usarán el servicio de internet a diario?',
         options: [
-          { badge: '💬', label: 'Redes, mensajería y navegar', basePerPerson: 12 },
-          { badge: '📺', label: 'Videos HD / 4K y streaming', basePerPerson: 28 },
-          { badge: '💻', label: 'Teletrabajo, clases y videollamadas', basePerPerson: 35 },
-          { badge: '🎮', label: 'Juegos en línea, descargas o nube', basePerPerson: 45 }
+          { badge: '1–2', label: '1 a 2 personas', peopleCount: 2, factor: 1.5 },
+          { badge: '3–4', label: '3 a 4 personas', peopleCount: 4, factor: 2.7 },
+          { badge: '5–8', label: '5 a 8 personas', peopleCount: 8, factor: 4.4 },
+          { badge: '9+', label: '9 o más personas', peopleCount: 12, factor: 6.0 }
         ]
       },
       {
         id: 'peak_overlap',
-        question: '¿Con qué frecuencia coinciden varias personas o pantallas al mismo tiempo?',
+        question: '¿Con qué frecuencia coinciden varias personas o equipos al mismo tiempo?',
         options: [
-          { badge: 'Rara vez', label: 'Casi nunca coinciden', addMbps: 0 },
-          { badge: 'A veces', label: 'En horas pico o tardes', addMbps: 25 },
-          { badge: 'Seguido', label: 'Varias horas al día', addMbps: 55 },
-          { badge: 'Siempre', label: 'Casi todo el día a la vez', addMbps: 90 }
+          { badge: 'Rara vez', label: 'Casi nunca coinciden', addMbps: 10 },
+          { badge: 'A veces', label: 'En horas pico o tardes', addMbps: 40 },
+          { badge: 'Seguido', label: 'Varias horas al día', addMbps: 75 },
+          { badge: 'Siempre', label: 'Casi todo el día a la vez', addMbps: 120 }
         ]
       }
     ];
@@ -1943,31 +1967,31 @@
     }
 
     function getQuizEstimate() {
-      const qPeople = LIVE_SPEED_QUIZ[0];
-      const qUsage = LIVE_SPEED_QUIZ[1];
+      const qScenario = LIVE_SPEED_QUIZ[0];
+      const qPeople = LIVE_SPEED_QUIZ[1];
       const qOverlap = LIVE_SPEED_QUIZ[2];
 
+      const sIdx = quizAnswers[qScenario.id];
       const pIdx = quizAnswers[qPeople.id];
-      const uIdx = quizAnswers[qUsage.id];
       const oIdx = quizAnswers[qOverlap.id];
 
+      const scenarioOpt = typeof sIdx === 'number' ? qScenario.options[sIdx] : null;
       const peopleOpt = typeof pIdx === 'number' ? qPeople.options[pIdx] : null;
-      const usageOpt = typeof uIdx === 'number' ? qUsage.options[uIdx] : null;
       const overlapOpt = typeof oIdx === 'number' ? qOverlap.options[oIdx] : null;
 
-      const peopleCount = peopleOpt ? peopleOpt.peopleCount : 1;
-      const peopleFactor = peopleOpt ? peopleOpt.factor : 1.0;
-      const basePerPerson = usageOpt ? usageOpt.basePerPerson : 15;
-      const overlapAdd = overlapOpt ? overlapOpt.addMbps : 0;
+      const basePerPerson = scenarioOpt ? scenarioOpt.basePerPerson : 22;
+      const peopleCount = peopleOpt ? peopleOpt.peopleCount : 2;
+      const peopleFactor = peopleOpt ? peopleOpt.factor : 1.5;
+      const overlapAdd = overlapOpt ? overlapOpt.addMbps : 10;
 
       const rawMbps = (basePerPerson * peopleFactor + overlapAdd) * 1.2;
-      const estimatedMbps = Math.max(15, Math.round(rawMbps / 5) * 5);
+      const estimatedMbps = Math.max(20, Math.round(rawMbps / 5) * 5);
 
       return {
         estimatedMbps,
         peopleCount,
-        peopleLabel: peopleOpt ? peopleOpt.label : '1 persona',
-        usageLabel: usageOpt ? usageOpt.label : 'Uso general'
+        peopleLabel: peopleOpt ? peopleOpt.label : '1 a 2 personas',
+        usageLabel: scenarioOpt ? scenarioOpt.label : 'Hogar (streaming, redes y tareas)'
       };
     }
 
@@ -1990,7 +2014,7 @@
         const profile = detectDeviceProfile();
 
         let comparisonText =
-          `Estimación para ${est.peopleLabel} (${est.usageLabel}) considerando uso simultáneo en el hogar/oficina, no solo un equipo (${profile.shortLabel}).`;
+          `Estimación para ${est.peopleLabel} en escenario "${est.usageLabel}", considerando uso simultáneo y no solo un equipo (${profile.shortLabel}).`;
 
         if (lastMeasuredDownloadMbps !== null) {
           const dlNow = Math.round(lastMeasuredDownloadMbps);
