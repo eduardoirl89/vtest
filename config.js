@@ -75,8 +75,8 @@ window.VNET_CONFIG = {
       planDevices: 28,
       featuredDevices: ['PS5/XBOX', 'Desktop', 'Laptop'],
       usageHint: 'Ping ideal <50 ms • Descargas de juegos pesan decenas de GB',
-      okText: 'Buen respaldo para partidas en línea cuando el ping y el retraso extra son bajos.',
-      lowText: 'Con ping alto, retraso extra o descargas activas puede presentarse lag.'
+      okText: 'Buen respaldo para partidas en línea cuando la latencia y la variación son bajas.',
+      lowText: 'Con latencia alta, variación o descargas activas puede presentarse lag.'
     },
     {
       id: 'video_streaming',
@@ -210,6 +210,7 @@ window.VNET_CONFIG = {
   ],
 
   defaults: {
+    adaptiveThreads: true,
     minThreads: 2,
     maxThreads: 4,
     durationSec: 8,
@@ -220,24 +221,20 @@ window.VNET_CONFIG = {
 
   faq: [
     {
-      q: '¿Qué mide VTEST?',
-      a: 'VTEST calcula la velocidad aproximada que tiene tu internet en este momento, tanto para descargar como para subir, junto con la latencia y la constancia, para puntuar de 1 a 5 cómo rinde cada actividad.'
+      q: '¿Por qué puede variar el resultado entre un celular y una laptop en la misma red?',
+      a: 'Las laptops suelen tener antenas Wi-Fi con mayor capacidad (MIMO) y procesadores más potentes para manejar múltiples conexiones paralelas, mientras que los celulares priorizan ahorro de energía o pueden conectarse en banda de 2.4 GHz.'
+    },
+    {
+      q: '¿Qué significan los términos de medición en VTEST?',
+      a: 'Pasa el cursor sobre Bajada, Subida, Latencia, Variación o Constancia para ver su definición breve. VTEST mide bytes reales transferidos y ajusta los canales según el dispositivo.'
     },
     {
       q: '¿Cómo funciona el benchmarking de VTEST?',
       a: 'Separa tu benchmarking propio (tu prueba actual frente a tu mejor marca histórica y promedio) de la comparación entre tu test y los tests de otros usuarios de VTEST en tu zona, país y proveedores.'
     },
     {
-      q: '¿Por qué una buena velocidad de bajada no siempre garantiza buen juego o videollamada?',
-      a: 'En juegos en línea y videollamadas también influyen el ping en reposo, el retraso extra al usar internet, la velocidad de subida y la constancia de la conexión.'
-    },
-    {
       q: '¿Cómo puedo mejorar mi conexión si va lenta?',
-      a: 'Reinicia el router/ONU, ubícalo en un punto central lejos de obstáculos, usa cable Ethernet cuando sea posible o verifica si hay descargas y actualizaciones activas en otros equipos.'
-    },
-    {
-      q: '¿Qué puedo hacer si quiero contratar o consultar un plan?',
-      a: 'Puedes escribirnos directo por WhatsApp (584122593059), visitar nuestro Instagram (@vnet_ve), Facebook o nuestra web oficial usando los botones circulares.'
+      a: 'Reinicia el router/ONU, ubícalo en un punto central lejos de obstáculos, conéctate a la banda Wi-Fi de 5 GHz o usa cable Ethernet cuando sea posible.'
     }
   ]
 };
