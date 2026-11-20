@@ -1,14 +1,14 @@
 window.VNET_CONFIG = {
   brandName: 'VTEST',
   poweredByName: 'VNET',
+  // Coloca aquí la URL de tu logo PNG/SVG si tienes uno alojado (ej. './logo-vnet.png'), o déjalo vacío para usar el emblema automático
   brandLogoUrl: '',
   backendUrl: 'https://vtest-backend-d4nr.onrender.com',
 
   defaults: {
     durationSec: 8,
     serverId: 'cloudflare',
-    autoStart: true,
-    alwaysShowDetails: false
+    autoStart: true
   },
 
   plans: [
