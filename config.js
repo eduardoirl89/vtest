@@ -9,7 +9,7 @@ window.VNET_CONFIG = {
     minThreads: 2,
     maxThreads: 4,
     durationSec: 8,
-    serverId: 'cloudflare',
+    serverId: 'cloudflare_std',
     autoStart: true,
     alwaysShowDetails: false
   },
@@ -129,17 +129,47 @@ window.VNET_CONFIG = {
 
   cdnNodes: [
     {
-      id: 'cloudflare',
-      name: 'Cloudflare CDN (Recomendado)',
+      id: 'cloudflare_std',
+      name: 'Cloudflare CDN — Estándar (15 MB)',
       url: 'https://speed.cloudflare.com/__down?bytes=15000000'
+    },
+    {
+      id: 'cloudflare_high',
+      name: 'Cloudflare CDN — Alta velocidad (50 MB)',
+      url: 'https://speed.cloudflare.com/__down?bytes=50000000'
+    },
+    {
+      id: 'cloudflare_h3',
+      name: 'Cloudflare CDN — HTTP/3 (25 MB)',
+      url: 'https://h3.speed.cloudflare.com/__down?bytes=25000000'
+    },
+    {
+      id: 'vnet_backend_dl',
+      name: 'Servidor VNET Render — Prueba ligera (5 MB)',
+      url: 'https://vtest-backend-d4nr.onrender.com/ping?size=5mb'
     }
   ],
 
   pingEndpoints: [
     {
-      id: 'cloudflare',
-      name: 'Cloudflare CDN (Recomendado)',
+      id: 'cloudflare_std',
+      name: 'Cloudflare CDN — Estándar',
       url: 'https://speed.cloudflare.com/__down?bytes=100'
+    },
+    {
+      id: 'cloudflare_high',
+      name: 'Cloudflare CDN — Alta velocidad',
+      url: 'https://speed.cloudflare.com/__down?bytes=100'
+    },
+    {
+      id: 'cloudflare_h3',
+      name: 'Cloudflare CDN — HTTP/3',
+      url: 'https://h3.speed.cloudflare.com/__down?bytes=100'
+    },
+    {
+      id: 'vnet_backend_dl',
+      name: 'Servidor VNET Render — Ping',
+      url: 'https://vtest-backend-d4nr.onrender.com/ping'
     }
   ],
 
