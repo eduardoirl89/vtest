@@ -8,7 +8,7 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Servidor VNET Render',
+      name: 'Render',
       url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
   ],
@@ -20,14 +20,14 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Servidor VNET Render',
+      name: 'Render',
       url: 'https://vtest-backend-d4nr.onrender.com/ping'
     }
   ],
   uploadEndpoints: [
     {
       id: 'render_upload',
-      name: 'Servidor VNET Render (Upload)',
+      name: 'Render (Upload)',
       url: 'https://vtest-backend-d4nr.onrender.com/upload'
     }
   ]
