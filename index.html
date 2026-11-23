@@ -31,11 +31,12 @@
       --nav-active-text: #7c5dfa;
       --btn-primary-bg: #0f172a;
       --btn-primary-text: #ffffff;
-      --quiz-surface: #0b1633;
-      --quiz-text: #ffffff;
-      --quiz-muted: #cbd5e1;
-      --quiz-accent: #3b82f6;
-      --quiz-card-bg: #f8fafc;
+      --quiz-surface: #eef2ff;
+      --quiz-border: #c7d2fe;
+      --quiz-text: #0f172a;
+      --quiz-muted: #475569;
+      --quiz-accent: #2563eb;
+      --quiz-card-bg: #ffffff;
       --quiz-card-text: #0f172a;
       --quiz-card-border: #cbd5e1;
       --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.04);
@@ -61,13 +62,14 @@
       --nav-active-text: #a78bfa;
       --btn-primary-bg: #f8fafc;
       --btn-primary-text: #070a12;
-      --quiz-surface: #0c1324;
+      --quiz-surface: #0d1424;
+      --quiz-border: #1e293b;
       --quiz-text: #f8fafc;
       --quiz-muted: #94a3b8;
-      --quiz-accent: #60a5fa;
-      --quiz-card-bg: #161f33;
-      --quiz-card-text: #f8fafc;
-      --quiz-card-border: #27354f;
+      --quiz-accent: #38bdf8;
+      --quiz-card-bg: #151e31;
+      --quiz-card-text: #f1f5f9;
+      --quiz-card-border: #26344d;
       --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
@@ -94,7 +96,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 68px;
+      padding-bottom: 66px;
     }
 
     .topbar {
@@ -217,7 +219,7 @@
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 8px 12px 12px;
+      padding: 8px 12px 10px;
       flex: 1;
     }
 
@@ -235,7 +237,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Compacto en Pestaña Test */
     .server-header-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -287,15 +288,29 @@
       flex-wrap: wrap;
     }
 
-    .server-ping-inline {
-      color: var(--ping-color);
+    .server-right-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .ip-chip {
+      font-size: 0.68rem;
       font-weight: 700;
+      color: var(--text-main);
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
     }
 
     .device-badge-inline {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 1px 7px;
       border-radius: 999px;
       background: var(--surface-alt);
       color: var(--text-muted);
@@ -500,31 +515,9 @@
       text-overflow: ellipsis;
     }
 
-    .test-actions-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .share-link-btn {
-      background: transparent;
-      border: none;
-      color: var(--ul-color);
-      font-size: 0.8rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      cursor: pointer;
-      padding: 3px 8px;
-      margin: 0 auto;
-    }
-
     .primary-action-pill {
       width: 100%;
-      padding: 9px 14px;
+      padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
@@ -541,14 +534,6 @@
       background: var(--surface-alt);
     }
 
-    .meta-footer-line {
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Resto de vistas */
     .section-heading {
       font-size: 1.02rem;
       font-weight: 800;
@@ -627,7 +612,7 @@
     .quiz-card {
       background: var(--quiz-surface);
       color: var(--quiz-text);
-      border: 1px solid var(--border);
+      border: 1px solid var(--quiz-border);
       border-radius: 16px;
       padding: 18px 14px;
       text-align: center;
@@ -656,6 +641,7 @@
       font-weight: 800;
       max-width: 560px;
       margin: 0 auto 14px;
+      color: var(--quiz-text);
     }
 
     .quiz-options {
@@ -741,7 +727,13 @@
       font-weight: 600;
     }
 
-    select {
+    .field-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    select, input[type="number"] {
       width: 100%;
       padding: 8px 10px;
       border-radius: 10px;
@@ -983,6 +975,9 @@
     }
 
     @media (max-width: 520px) {
+      .field-grid-2 {
+        grid-template-columns: 1fr;
+      }
       #historyTable thead { display: none; }
       #historyTable tr {
         display: block;
@@ -1038,12 +1033,13 @@
               <div class="server-title" id="serverHeaderTitle">Detectando ISP...</div>
               <div class="server-sub">
                 <span id="serverNodeSub">Cloudflare</span>
-                <span>•</span>
-                <span class="server-ping-inline" id="headerPingText">-- ms</span>
               </div>
             </div>
           </div>
-          <span class="device-badge-inline" id="deviceHeaderBadge">Equipo</span>
+          <div class="server-right-meta">
+            <span class="ip-chip" id="serverIpChip">IP: --</span>
+            <span class="device-badge-inline" id="deviceHeaderBadge">Equipo</span>
+          </div>
         </div>
 
         <div class="gauge-card">
@@ -1090,38 +1086,28 @@
 
         <div class="pjl-grid">
           <div class="pjl-card">
-            <div class="pjl-label">Ping</div>
+            <div class="pjl-label">Ping (carga)</div>
             <div class="pjl-val" id="pingCardVal">--</div>
-            <div class="pjl-sub" id="pingCardSub">ms (0–30 excel.)</div>
+            <div class="pjl-sub" id="pingCardSub">ms • bajo carga</div>
           </div>
           <div class="pjl-card">
-            <div class="pjl-label">Jitter</div>
+            <div class="pjl-label">Jitter (carga)</div>
             <div class="pjl-val" id="jitterCardVal">--</div>
-            <div class="pjl-sub" id="jitterCardSub">ms (variación)</div>
+            <div class="pjl-sub" id="jitterCardSub">ms • bajo carga</div>
           </div>
           <div class="pjl-card">
             <div class="pjl-label">Constancia</div>
             <div class="pjl-val" id="stabilityCardVal">--</div>
-            <div class="pjl-sub" id="stabilityCardSub">% flujo</div>
+            <div class="pjl-sub" id="stabilityCardSub">% • bajo carga</div>
           </div>
           <div class="pjl-card">
-            <div class="pjl-label">Loss</div>
+            <div class="pjl-label">Loss (carga)</div>
             <div class="pjl-val" id="lossCardVal">--</div>
-            <div class="pjl-sub" id="lossCardSub">% (&lt;1% ideal)</div>
+            <div class="pjl-sub" id="lossCardSub">% • bajo carga</div>
           </div>
         </div>
 
-        <div class="test-actions-stack">
-          <button type="button" class="share-link-btn" id="shareResultBtn">
-            <span>⇄</span>
-            <span id="shareResultLabel">Compartir resultado</span>
-          </button>
-          <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
-        </div>
-
-        <div class="meta-footer-line" id="guideReminderFooter">
-          Tip VNET: haz al menos 3 pruebas seguidas y mide por cable Ethernet cuando sea posible.
-        </div>
+        <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
       </section>
 
       <!-- 2. PESTAÑA CUESTIONARIO -->
@@ -1143,7 +1129,7 @@
               <span>🎯 Calidad de conexión por actividad</span>
               <span>▼</span>
             </div>
-            <div class="acc-body open" id="bodyActivities">
+            <div class="acc-body" id="bodyActivities">
               <div class="cards-2col" id="activitiesGrid"></div>
             </div>
           </div>
@@ -1153,7 +1139,7 @@
               <span>📱 Dispositivos simultáneos estimados</span>
               <span>▼</span>
             </div>
-            <div class="acc-body open" id="bodyDevices">
+            <div class="acc-body" id="bodyDevices">
               <div class="cards-2col" id="devicesGrid"></div>
               <div class="mini-info-sub" id="devicesNote" style="margin-top:8px;"></div>
             </div>
@@ -1164,7 +1150,7 @@
               <span>📋 Tabla de referencia por actividad</span>
               <span>▼</span>
             </div>
-            <div class="acc-body open" id="bodyRefTable">
+            <div class="acc-body" id="bodyRefTable">
               <table>
                 <thead>
                   <tr>
@@ -1183,7 +1169,7 @@
               <span>💡 Sugerencias para obtener una medición precisa</span>
               <span>▼</span>
             </div>
-            <div class="acc-body open" id="bodyTips">
+            <div class="acc-body" id="bodyTips">
               <div class="cards-2col" id="tipsGrid"></div>
             </div>
           </div>
@@ -1193,7 +1179,7 @@
               <span>❓ Preguntas y glosario VNET</span>
               <span>▼</span>
             </div>
-            <div class="acc-body open" id="bodyFaq">
+            <div class="acc-body" id="bodyFaq">
               <div id="faqList"></div>
             </div>
           </div>
@@ -1205,16 +1191,38 @@
         <div class="settings-stack">
           <div class="panel-card">
             <div class="panel-title">
-              <span>⚙️ Ajustes y aplicación</span>
+              <span>⚙️ Ajustes de prueba y aplicación</span>
             </div>
             <div class="field-row">
               <label for="serverSelect">Servidor predeterminado</label>
-              <select id="serverSelect">
-                <option value="cloudflare">Cloudflare</option>
-                <option value="render">Servidor VNET Render</option>
-              </select>
-              <span class="mini-info-sub">Los canales y bloques de prueba se ajustan automáticamente según tu equipo.</span>
+              <select id="serverSelect"></select>
+              <span class="mini-info-sub">Servidores cargados desde <code>servers.js</code>.</span>
             </div>
+
+            <div class="field-grid-2">
+              <div class="field-row">
+                <label for="repeatCountSelect">Repeticiones seguidas del test</label>
+                <select id="repeatCountSelect">
+                  <option value="1">1 prueba</option>
+                  <option value="2">2 pruebas seguidas</option>
+                  <option value="3">3 pruebas seguidas</option>
+                  <option value="4">4 pruebas seguidas</option>
+                  <option value="5">5 pruebas seguidas</option>
+                </select>
+              </div>
+
+              <div class="field-row">
+                <label for="simDevicesInput">Concurrencia simulada (equipos)</label>
+                <input type="number" id="simDevicesInput" min="0" max="30" step="1" value="2" />
+              </div>
+            </div>
+
+            <div class="field-row">
+              <label for="mbpsPerDeviceInput">Consumo simulado por dispositivo (Mbps)</label>
+              <input type="number" id="mbpsPerDeviceInput" min="1" max="200" step="1" value="18" />
+              <span class="mini-info-sub" id="simLoadSummary">Carga simulada activa: 36 Mbps (2 equipos × 18 Mbps).</span>
+            </div>
+
             <label class="check-row">
               <input type="checkbox" id="cfgAutoStart" checked />
               Medir automáticamente al abrir
@@ -1229,7 +1237,7 @@
 
           <div class="panel-card">
             <div class="panel-title">
-              <span>📊 Benchmarking</span>
+              <span>📊 Benchmarking — Top 3 proveedores</span>
               <span class="mini-info-sub" id="benchScopeText">ISP: Detectando...</span>
             </div>
             <div class="bench-tabs">
@@ -1298,8 +1306,10 @@
     </nav>
   </div>
 
+  <script src="servers.js"></script>
   <script src="config.js"></script>
   <script>
+    const SRV_CFG = window.VTEST_SERVERS || {};
     const CFG = window.VNET_CONFIG || {};
     const BACKEND_URL = CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
 
@@ -1310,6 +1320,9 @@
     const FALLBACK_PING_ENDPOINTS = [
       { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
       { id: 'render', name: 'Servidor VNET Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+    ];
+    const FALLBACK_UPLOAD_ENDPOINTS = [
+      { id: 'render_upload', name: 'Servidor VNET Render (Upload)', url: 'https://vtest-backend-d4nr.onrender.com/upload' }
     ];
     const FALLBACK_PLANS = [
       { id: 'vnet400', name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400, recommendedDevices: 8 },
@@ -1346,8 +1359,18 @@
       { q: '3. ¿Qué significan fibra óptica, NAP, ONT/ONU y velocidad simétrica?', a: 'La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala descarga y subida.' }
     ];
 
-    const CDN_NODES = Array.isArray(CFG.cdnNodes) && CFG.cdnNodes.length ? CFG.cdnNodes : FALLBACK_CDN_NODES;
-    const PING_ENDPOINTS = Array.isArray(CFG.pingEndpoints) && CFG.pingEndpoints.length ? CFG.pingEndpoints : FALLBACK_PING_ENDPOINTS;
+    const CDN_NODES = Array.isArray(CFG.cdnNodes) && CFG.cdnNodes.length
+      ? CFG.cdnNodes
+      : (Array.isArray(SRV_CFG.cdnNodes) && SRV_CFG.cdnNodes.length ? SRV_CFG.cdnNodes : FALLBACK_CDN_NODES);
+
+    const PING_ENDPOINTS = Array.isArray(CFG.pingEndpoints) && CFG.pingEndpoints.length
+      ? CFG.pingEndpoints
+      : (Array.isArray(SRV_CFG.pingEndpoints) && SRV_CFG.pingEndpoints.length ? SRV_CFG.pingEndpoints : FALLBACK_PING_ENDPOINTS);
+
+    const UPLOAD_ENDPOINTS = Array.isArray(CFG.uploadEndpoints) && CFG.uploadEndpoints.length
+      ? CFG.uploadEndpoints
+      : (Array.isArray(SRV_CFG.uploadEndpoints) && SRV_CFG.uploadEndpoints.length ? SRV_CFG.uploadEndpoints : FALLBACK_UPLOAD_ENDPOINTS);
+
     const PLANS = Array.isArray(CFG.plans) && CFG.plans.length ? CFG.plans : FALLBACK_PLANS;
     const USE_CASES = Array.isArray(CFG.useCases) && CFG.useCases.length ? CFG.useCases : FALLBACK_USE_CASES;
     const DEVICE_TYPES = Array.isArray(CFG.deviceTypes) && CFG.deviceTypes.length ? CFG.deviceTypes : FALLBACK_DEVICE_TYPES;
@@ -1358,7 +1381,10 @@
     const DEFAULT_PREFS = Object.assign({
       durationSec: 8,
       serverId: CDN_NODES[0].id,
-      autoStart: true
+      autoStart: true,
+      repeatCount: 1,
+      simulatedDevices: 2,
+      mbpsPerDevice: 18
     }, CFG.defaults || {});
 
     const QUIZ_STEPS = [
@@ -1417,8 +1443,6 @@
       downloadMbps: null,
       uploadMbps: null,
       pingMs: null,
-      downLoadedPingMs: null,
-      upLoadedPingMs: null,
       jitterMs: null,
       packetLossPct: null,
       stabilityPct: null
@@ -1478,10 +1502,18 @@
 
     function loadPrefs() {
       try {
-        return { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem('vtest_wa_prefs')) || {}) };
+        const merged = { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem('vtest_wa_prefs')) || {}) };
+        merged.repeatCount = Math.max(1, Math.min(5, parseInt(merged.repeatCount, 10) || 1));
+        merged.simulatedDevices = Math.max(0, Math.min(30, parseInt(merged.simulatedDevices, 10) || 0));
+        merged.mbpsPerDevice = Math.max(1, Math.min(200, parseInt(merged.mbpsPerDevice, 10) || 18));
+        return merged;
       } catch {
         return { ...DEFAULT_PREFS };
       }
+    }
+
+    function getSimulatedLoadMbps() {
+      return (prefs.simulatedDevices || 0) * (prefs.mbpsPerDevice || 18);
     }
 
     function detectDevice() {
@@ -1491,14 +1523,15 @@
       const cores = navigator.hardwareConcurrency || 4;
       const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       const slow = Boolean(conn && (conn.saveData || ['2g', 'slow-2g', '3g'].includes(String(conn.effectiveType || '').toLowerCase())));
+      const extraThreads = Math.min(3, Math.floor((prefs.simulatedDevices || 0) / 3));
 
       return {
         isMobile,
         label: isMobile ? 'Móvil' : 'PC / Laptop',
-        minThreads: isMobile || slow ? 1 : 2,
-        maxThreads: slow ? 2 : (isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3)),
+        minThreads: (isMobile || slow ? 1 : 2) + (prefs.simulatedDevices > 0 ? 1 : 0),
+        maxThreads: (slow ? 2 : (isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3))) + extraThreads,
         uploadChunkBytes: isMobile ? (1024 * 1024) : (3 * 1024 * 1024),
-        uploadThreads: isMobile ? 2 : 3,
+        uploadThreads: (isMobile ? 2 : 3) + (prefs.simulatedDevices >= 4 ? 1 : 0),
         durationSec: prefs.durationSec || 8
       };
     }
@@ -1509,6 +1542,14 @@
 
     function getPingNode() {
       return PING_ENDPOINTS.find(p => p.id === prefs.serverId) || PING_ENDPOINTS[0];
+    }
+
+    function getUploadUrl() {
+      if (UPLOAD_ENDPOINTS.length) {
+        const match = UPLOAD_ENDPOINTS.find(u => u.id.includes(prefs.serverId));
+        return (match || UPLOAD_ENDPOINTS[0]).url;
+      }
+      return CFG.uploadUrl || SRV_CFG.uploadUrl || `${BACKEND_URL}/upload`;
     }
 
     function fmtSpeed(mbps) {
@@ -1523,12 +1564,13 @@
       return mbps.toFixed(2);
     }
 
-    function pingBandLabel(ms) {
-      if (typeof ms !== 'number' || !Number.isFinite(ms)) return 'ms (0–30 excel.)';
-      if (ms <= 30) return 'ms • Excelente';
-      if (ms <= 60) return 'ms • Buena';
-      if (ms <= 100) return 'ms • Aceptable';
-      return 'ms • Alta (+100)';
+    function calcJitterFromRtts(rtts) {
+      if (!Array.isArray(rtts) || rtts.length < 2) return 0;
+      let sum = 0;
+      for (let i = 1; i < rtts.length; i++) {
+        sum += Math.abs(rtts[i] - rtts[i - 1]);
+      }
+      return Number((sum / (rtts.length - 1)).toFixed(1));
     }
 
     const GAUGE_TICKS = [0, 1, 5, 10, 25, 50, 100, 250, 500, 1000];
@@ -1615,11 +1657,11 @@
     function updateHeaderAndFooter() {
       const dev = detectDevice();
       const node = getDlNode();
+      const simTag = prefs.simulatedDevices > 0 ? ` • Sim:${prefs.simulatedDevices} eq` : '';
       document.getElementById('serverHeaderTitle').textContent = geoInfo.isp;
-      document.getElementById('serverNodeSub').textContent = `${node.name} (${geoInfo.region})`;
+      document.getElementById('serverNodeSub').textContent = `${node.name} • ${geoInfo.region}${simTag}`;
+      document.getElementById('serverIpChip').textContent = geoInfo.ip ? `IP: ${geoInfo.ip}` : 'IP: --';
       document.getElementById('deviceHeaderBadge').textContent = dev.label;
-      document.getElementById('headerPingText').textContent =
-        lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '-- ms';
       document.getElementById('stabilityCardVal').textContent =
         lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}` : '--';
     }
@@ -1706,49 +1748,8 @@
     }
     window.addEventListener('online', () => refreshIsp(true));
 
-    async function measureIdlePing(count, signal) {
-      const pingNode = getPingNode();
-      const rtts = [];
-      let sent = 0;
-      let lost = 0;
-
-      for (let i = 0; i < count; i++) {
-        if (signal.aborted) break;
-        sent++;
-        const t0 = performance.now();
-        const pCtrl = new AbortController();
-        const timer = setTimeout(() => pCtrl.abort(), 1700);
-        const onAbort = () => pCtrl.abort();
-        signal.addEventListener('abort', onAbort, { once: true });
-
-        try {
-          const res = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}p=${Date.now()}_${i}_${Math.random()}`, {
-            cache: 'no-store',
-            signal: pCtrl.signal
-          });
-          clearTimeout(timer);
-          signal.removeEventListener('abort', onAbort);
-          const ms = performance.now() - t0;
-          if (res.ok && ms > 0 && ms < 1700) rtts.push(ms);
-          else lost++;
-        } catch {
-          clearTimeout(timer);
-          signal.removeEventListener('abort', onAbort);
-          if (!signal.aborted) lost++;
-        }
-      }
-
-      const lossPct = sent > 0 ? Number(((lost / sent) * 100).toFixed(1)) : 0;
-      if (!rtts.length) return { avg: 0, jitter: '0.0', lossPct };
-
-      const avg = Math.round(rtts.reduce((a, b) => a + b, 0) / rtts.length);
-      let jSum = 0;
-      for (let i = 1; i < rtts.length; i++) jSum += Math.abs(rtts[i] - rtts[i - 1]);
-      const jitter = rtts.length > 1 ? (jSum / (rtts.length - 1)).toFixed(1) : '0.0';
-      return { avg, jitter, lossPct };
-    }
-
-    async function runDownload(durationMs, signal) {
+    // Todas las métricas se capturan activamente bajo carga de bajada y subida
+    async function runDownloadUnderLoad(durationMs, signal) {
       const dev = detectDevice();
       const dlNode = getDlNode();
       const pingNode = getPingNode();
@@ -1770,12 +1771,12 @@
               signal
             });
             const ms = performance.now() - t0;
-            if (r.ok && ms > 0 && ms < 2400) loadedRtts.push(ms);
+            if (r.ok && ms > 0 && ms < 2600) loadedRtts.push(ms);
             else pLost++;
           } catch {
             if (!signal.aborted) pLost++;
           }
-          await new Promise(r => setTimeout(r, 450));
+          await new Promise(r => setTimeout(r, 380));
         }
       })();
 
@@ -1796,7 +1797,7 @@
               totalBytes += value.byteLength;
             }
           } catch {
-            await new Promise(r => setTimeout(r, 150));
+            await new Promise(r => setTimeout(r, 140));
           }
         }
       }
@@ -1827,7 +1828,7 @@
               threads++;
             }
           }
-          document.getElementById('progressBar').style.width = `${Math.min(55, 10 + (sec / (durationMs / 1000)) * 45)}%`;
+          document.getElementById('progressBar').style.width = `${Math.min(55, 8 + (sec / (durationMs / 1000)) * 47)}%`;
         }, 240);
       });
 
@@ -1848,12 +1849,20 @@
         stability = Math.max(15, Math.min(99, Math.round((1 - cv) * 100)));
       }
 
-      return { mbps: finalMbps, loadedPing: loadedAvg, stability, pSent, pLost };
+      return {
+        mbps: finalMbps,
+        loadedPing: loadedAvg,
+        rtts: loadedRtts,
+        stability,
+        pSent,
+        pLost
+      };
     }
 
-    async function runUpload(durationMs, signal) {
+    async function runUploadUnderLoad(durationMs, signal) {
       const dev = detectDevice();
       const pingNode = getPingNode();
+      const uploadUrl = getUploadUrl();
       const payload = new Uint8Array(dev.uploadChunkBytes);
       let uploaded = 0;
       let anyOk = false;
@@ -1872,19 +1881,19 @@
               signal
             });
             const ms = performance.now() - t0;
-            if (r.ok && ms > 0 && ms < 2400) loadedRtts.push(ms);
+            if (r.ok && ms > 0 && ms < 2600) loadedRtts.push(ms);
             else pLost++;
           } catch {
             if (!signal.aborted) pLost++;
           }
-          await new Promise(r => setTimeout(r, 450));
+          await new Promise(r => setTimeout(r, 380));
         }
       })();
 
       async function worker() {
         while (!signal.aborted && performance.now() - tStart < durationMs) {
           try {
-            const res = await fetch(`${BACKEND_URL}/upload?u=${Date.now()}_${Math.random()}`, {
+            const res = await fetch(`${uploadUrl}${uploadUrl.includes('?') ? '&' : '?'}u=${Date.now()}_${Math.random()}`, {
               method: 'POST',
               body: payload,
               headers: { 'Content-Type': 'application/octet-stream' },
@@ -1924,11 +1933,73 @@
         : null;
 
       if (!anyOk || uploaded === 0) {
-        return { mbps: null, loadedPing: loadedAvg, pSent, pLost };
+        return { mbps: null, loadedPing: loadedAvg, rtts: loadedRtts, pSent, pLost };
       }
 
       const secFinal = Math.max(0.5, (performance.now() - tStart) / 1000);
-      return { mbps: (uploaded * 8) / (secFinal * 1_000_000), loadedPing: loadedAvg, pSent, pLost };
+      return {
+        mbps: (uploaded * 8) / (secFinal * 1_000_000),
+        loadedPing: loadedAvg,
+        rtts: loadedRtts,
+        pSent,
+        pLost
+      };
+    }
+
+    async function runSingleLoadCycle(cycleIdx, totalCycles, signal) {
+      const dev = detectDevice();
+      const simOverhead = getSimulatedLoadMbps();
+
+      dlSeries = [];
+      ulSeries = [];
+      updateSparkline('dlSparkPath', []);
+      updateSparkline('ulSparkPath', []);
+      setGaugeProgress(0);
+
+      const repSuffix = totalCycles > 1 ? ` (${cycleIdx}/${totalCycles})` : '';
+      document.getElementById('phaseLabel').textContent = `Bajada${repSuffix}`;
+      document.getElementById('gaugeState').className = 'gauge-state';
+      document.getElementById('gaugeState').textContent = `Midiendo bajo carga${repSuffix}...`;
+      document.getElementById('dlCardVal').textContent = '--';
+      document.getElementById('ulCardVal').textContent = '—';
+      document.getElementById('progressBar').style.width = '6%';
+
+      const dlRes = await runDownloadUnderLoad(dev.durationSec * 1000, signal);
+      if (signal.aborted) return null;
+
+      const dlNet = Math.max(0.5, dlRes.mbps - simOverhead * 0.65);
+      document.getElementById('dlCardVal').textContent = fmtSpeed(dlNet);
+      document.getElementById('gaugeValue').textContent = fmtGauge(dlNet);
+      setGaugeProgress(dlNet);
+
+      document.getElementById('phaseLabel').textContent = `Subida${repSuffix}`;
+      document.getElementById('gaugeState').textContent = `Subida bajo carga${repSuffix}...`;
+      const ulRes = await runUploadUnderLoad(Math.max(4, dev.durationSec - 2) * 1000, signal);
+      if (signal.aborted) return null;
+
+      const ulNet = ulRes.mbps !== null ? Math.max(0.3, ulRes.mbps - simOverhead * 0.25) : null;
+
+      const allLoadedRtts = [...(dlRes.rtts || []), ...(ulRes.rtts || [])];
+      const pingLoadAvg = allLoadedRtts.length
+        ? Math.round(allLoadedRtts.reduce((a, b) => a + b, 0) / allLoadedRtts.length)
+        : (dlRes.loadedPing || ulRes.loadedPing || 0);
+
+      const jitterLoad = calcJitterFromRtts(allLoadedRtts);
+      const totalSent = (dlRes.pSent || 0) + (ulRes.pSent || 0);
+      const totalLost = (dlRes.pLost || 0) + (ulRes.pLost || 0);
+      const lossLoadPct = totalSent > 0 ? Number(((totalLost / totalSent) * 100).toFixed(1)) : 0;
+
+      const simPenalty = Math.min(25, prefs.simulatedDevices * 2);
+      const stabilityLoad = Math.max(15, Math.min(99, (dlRes.stability || 90) - simPenalty));
+
+      return {
+        downloadMbps: Number(dlNet.toFixed(1)),
+        uploadMbps: ulNet !== null ? Number(ulNet.toFixed(1)) : null,
+        pingMs: pingLoadAvg || null,
+        jitterMs: jitterLoad,
+        packetLossPct: lossLoadPct,
+        stabilityPct: stabilityLoad
+      };
     }
 
     async function startTest() {
@@ -1939,95 +2010,67 @@
       isRunning = true;
       abortCtrl = new AbortController();
       const { signal } = abortCtrl;
-      const dev = detectDevice();
-
-      dlSeries = [];
-      ulSeries = [];
-      updateSparkline('dlSparkPath', []);
-      updateSparkline('ulSparkPath', []);
-      setGaugeProgress(0);
-
-      const ispPromise = refreshIsp(true);
+      const totalCycles = Math.max(1, Math.min(5, parseInt(prefs.repeatCount, 10) || 1));
 
       document.getElementById('actionTestBtn').textContent = 'Detener prueba';
       document.getElementById('statusDot').className = 'dot running';
-      document.getElementById('phaseLabel').textContent = 'Latencia';
-      document.getElementById('gaugeValue').textContent = '0.00';
-      document.getElementById('gaugeState').className = 'gauge-state';
-      document.getElementById('gaugeState').textContent = 'Midiendo ping...';
-      document.getElementById('dlCardVal').textContent = '--';
-      document.getElementById('ulCardVal').textContent = '—';
-      document.getElementById('stabilityCardVal').textContent = '--';
-      document.getElementById('progressBar').style.width = '6%';
+
+      const ispPromise = refreshIsp(true);
 
       try {
-        const pingRes = await measureIdlePing(8, signal);
-        if (signal.aborted) return;
+        const results = [];
+        for (let i = 1; i <= totalCycles; i++) {
+          if (signal.aborted) return;
+          const res = await runSingleLoadCycle(i, totalCycles, signal);
+          if (signal.aborted || !res) return;
+          results.push(res);
 
-        document.getElementById('pingCardVal').textContent = pingRes.avg ? `${pingRes.avg}` : '--';
-        document.getElementById('pingCardSub').textContent = pingBandLabel(pingRes.avg);
-        document.getElementById('jitterCardVal').textContent = pingRes.jitter;
-        document.getElementById('lossCardVal').textContent = `${pingRes.lossPct}`;
-        document.getElementById('headerPingText').textContent = `${pingRes.avg} ms`;
-
-        document.getElementById('phaseLabel').textContent = 'Bajada';
-        document.getElementById('gaugeState').textContent = 'Midiendo descarga...';
-        const dlRes = await runDownload(dev.durationSec * 1000, signal);
-        if (signal.aborted) return;
-
-        const downLoaded = dlRes.loadedPing || pingRes.avg;
-        document.getElementById('dlCardVal').textContent = fmtSpeed(dlRes.mbps);
-        document.getElementById('stabilityCardVal').textContent = `${dlRes.stability}`;
-        document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
-        setGaugeProgress(dlRes.mbps);
-
-        document.getElementById('phaseLabel').textContent = 'Subida';
-        document.getElementById('gaugeState').textContent = 'Midiendo subida...';
-        const ulRes = await runUpload(Math.max(4, dev.durationSec - 2) * 1000, signal);
-        if (signal.aborted) return;
+          saveHistory({
+            date: new Date().toLocaleString(),
+            isp: geoInfo.isp,
+            download: `${fmtSpeed(res.downloadMbps)} Mbps`,
+            upload: res.uploadMbps !== null ? `${fmtSpeed(res.uploadMbps)} Mbps` : 'N/D',
+            ping: `${res.pingMs ?? '--'} ms`,
+            loss: `${res.packetLossPct}%`
+          });
+        }
 
         await ispPromise;
 
-        const upLoaded = ulRes.loadedPing || pingRes.avg;
-        const totalSent = 8 + (dlRes.pSent || 0) + (ulRes.pSent || 0);
-        const totalLost = Math.round((pingRes.lossPct / 100) * 8) + (dlRes.pLost || 0) + (ulRes.pLost || 0);
-        const lossPct = totalSent > 0 ? Number(((totalLost / totalSent) * 100).toFixed(1)) : pingRes.lossPct;
+        const avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+        const dlAvg = Number(avg(results.map(r => r.downloadMbps).filter(v => typeof v === 'number')).toFixed(1));
+        const ulVals = results.map(r => r.uploadMbps).filter(v => typeof v === 'number');
+        const ulAvg = ulVals.length ? Number(avg(ulVals).toFixed(1)) : null;
+        const pingAvg = Math.round(avg(results.map(r => r.pingMs).filter(v => typeof v === 'number')) || 0) || null;
+        const jitterAvg = Number(avg(results.map(r => r.jitterMs).filter(v => typeof v === 'number')).toFixed(1));
+        const lossAvg = Number(avg(results.map(r => r.packetLossPct).filter(v => typeof v === 'number')).toFixed(1));
+        const stabAvg = Math.round(avg(results.map(r => r.stabilityPct).filter(v => typeof v === 'number')) || 85);
 
         lastMetrics = {
-          downloadMbps: Number(dlRes.mbps.toFixed(1)),
-          uploadMbps: ulRes.mbps !== null ? Number(ulRes.mbps.toFixed(1)) : null,
-          pingMs: pingRes.avg || null,
-          downLoadedPingMs: downLoaded,
-          upLoadedPingMs: upLoaded,
-          jitterMs: pingRes.jitter,
-          packetLossPct: lossPct,
-          stabilityPct: dlRes.stability
+          downloadMbps: dlAvg,
+          uploadMbps: ulAvg,
+          pingMs: pingAvg,
+          jitterMs: jitterAvg,
+          packetLossPct: lossAvg,
+          stabilityPct: stabAvg
         };
 
-        document.getElementById('ulCardVal').textContent = ulRes.mbps !== null ? fmtSpeed(ulRes.mbps) : 'N/D';
-        document.getElementById('pingCardVal').textContent = `${pingRes.avg}`;
-        document.getElementById('pingCardSub').textContent = `${pingBandLabel(pingRes.avg)} (B:${downLoaded}/S:${upLoaded})`;
-        document.getElementById('stabilityCardVal').textContent = `${dlRes.stability}`;
-        document.getElementById('lossCardVal').textContent = `${lossPct}`;
-        document.getElementById('lossCardSub').textContent = lossPct >= 1 ? '% • Afecta voz/video' : '% • Sin cortes';
+        document.getElementById('dlCardVal').textContent = fmtSpeed(dlAvg);
+        document.getElementById('ulCardVal').textContent = ulAvg !== null ? fmtSpeed(ulAvg) : 'N/D';
+        document.getElementById('pingCardVal').textContent = pingAvg !== null ? `${pingAvg}` : '--';
+        document.getElementById('jitterCardVal').textContent = `${jitterAvg}`;
+        document.getElementById('stabilityCardVal').textContent = `${stabAvg}`;
+        document.getElementById('lossCardVal').textContent = `${lossAvg}`;
         document.getElementById('progressBar').style.width = '100%';
         document.getElementById('phaseLabel').textContent = 'Listo';
         document.getElementById('statusDot').className = 'dot done';
-        document.getElementById('gaugeState').textContent = 'Completado';
-        document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
-        setGaugeProgress(dlRes.mbps);
+        document.getElementById('gaugeState').textContent = totalCycles > 1 ? `Prom. ${totalCycles} pruebas` : 'Completado';
+        document.getElementById('gaugeValue').textContent = fmtGauge(dlAvg);
+        setGaugeProgress(dlAvg);
 
         updateHeaderAndFooter();
         renderAccordionInsights();
         renderQuiz();
-        saveHistory({
-          date: new Date().toLocaleString(),
-          isp: geoInfo.isp,
-          download: `${fmtSpeed(dlRes.mbps)} Mbps`,
-          upload: ulRes.mbps !== null ? `${fmtSpeed(ulRes.mbps)} Mbps` : 'N/D',
-          ping: `${pingRes.avg}/${downLoaded}/${upLoaded} ms`,
-          loss: `${lossPct}%`
-        });
         renderBenchmark();
         postBenchmarkServer();
       } catch {
@@ -2055,25 +2098,6 @@
     }
 
     document.getElementById('actionTestBtn').addEventListener('click', stopOrRestart);
-
-    document.getElementById('shareResultBtn').addEventListener('click', async () => {
-      const dl = lastMetrics.downloadMbps !== null ? `${lastMetrics.downloadMbps} Mbps` : '--';
-      const ul = lastMetrics.uploadMbps !== null ? `${lastMetrics.uploadMbps} Mbps` : '--';
-      const pg = lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '--';
-      const stab = lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}%` : '--';
-      const text = `VTEST (${geoInfo.isp}) — Bajada: ${dl} | Subida: ${ul} | Ping: ${pg} | Jitter: ${lastMetrics.jitterMs ?? '--'} ms | Constancia: ${stab} | Loss: ${lastMetrics.packetLossPct ?? '--'}%`;
-      try {
-        if (navigator.share) {
-          await navigator.share({ title: 'Resultado VTEST', text });
-        } else if (navigator.clipboard) {
-          await navigator.clipboard.writeText(text);
-          document.getElementById('shareResultLabel').textContent = '¡Copiado!';
-          setTimeout(() => {
-            document.getElementById('shareResultLabel').textContent = 'Compartir resultado';
-          }, 1800);
-        }
-      } catch {}
-    });
 
     function getQuizResult() {
       const sOpt = QUIZ_STEPS[0].options[quizAnswers[QUIZ_STEPS[0].id]];
@@ -2158,7 +2182,10 @@
       const ul = lastMetrics.uploadMbps;
       const stab = lastMetrics.stabilityPct || 85;
       const loss = lastMetrics.packetLossPct || 0;
-      const effMbps = dl > 0 ? dl * 0.75 * Math.max(0.55, Math.min(1, stab / 100)) : 50;
+      const simOverhead = getSimulatedLoadMbps();
+      const effMbps = dl > 0
+        ? Math.max(5, (dl - simOverhead) * 0.75 * Math.max(0.55, Math.min(1, stab / 100)))
+        : 50;
 
       const actGrid = document.getElementById('activitiesGrid');
       if (actGrid) {
@@ -2204,7 +2231,7 @@
       const devNote = document.getElementById('devicesNote');
       if (devNote) {
         devNote.textContent = dl > 0
-          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (considerando uso simultáneo y constancia de red).`
+          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (concurrencia simulada: ${prefs.simulatedDevices} eq / ${simOverhead} Mbps).`
           : 'Completa una prueba en Test para actualizar el cálculo con tu velocidad actual.';
       }
 
@@ -2251,7 +2278,7 @@
     function saveHistory(item) {
       const list = JSON.parse(localStorage.getItem('vtest_wa_hist') || '[]');
       list.unshift(item);
-      localStorage.setItem('vtest_wa_hist', JSON.stringify(list.slice(0, 15)));
+      localStorage.setItem('vtest_wa_hist', JSON.stringify(list.slice(0, 20)));
       renderHistory();
     }
 
@@ -2317,43 +2344,77 @@
       } catch {}
     }
 
+    function getTop3Providers(metric) {
+      const key = metric === 'download' ? 'downloadAvg' : (metric === 'upload' ? 'uploadAvg' : 'pingAvg');
+      const fromServer = Array.isArray(serverComparison?.topProviders) ? serverComparison.topProviders : [];
+
+      const candidates = [];
+      if (geoInfo.isp && geoInfo.isp !== 'Detectando ISP...') {
+        candidates.push({
+          name: `${geoInfo.isp} (Tu red)`,
+          val: lastMetrics[metric === 'download' ? 'downloadMbps' : (metric === 'upload' ? 'uploadMbps' : 'pingMs')]
+        });
+      }
+
+      fromServer.forEach(p => {
+        if (p && p.isp) {
+          candidates.push({
+            name: p.isp,
+            val: typeof p[key] === 'number' ? p[key] : (typeof p.downloadAvg === 'number' ? p.downloadAvg : null)
+          });
+        }
+      });
+
+      const fallbackPool = metric === 'ping'
+        ? [
+            { name: 'VNET Fibra', val: 14 },
+            { name: 'Proveedor Regional A', val: 26 },
+            { name: 'Proveedor Regional B', val: 42 }
+          ]
+        : [
+            { name: 'VNET Fibra', val: metric === 'upload' ? 320 : 480 },
+            { name: 'Proveedor Regional A', val: metric === 'upload' ? 140 : 210 },
+            { name: 'Proveedor Regional B', val: metric === 'upload' ? 75 : 115 }
+          ];
+
+      fallbackPool.forEach(item => {
+        if (!candidates.some(c => c.name.toLowerCase().includes(item.name.toLowerCase()))) {
+          candidates.push(item);
+        }
+      });
+
+      const valid = candidates.filter(c => typeof c.val === 'number' && Number.isFinite(c.val));
+      valid.sort((a, b) => metric === 'ping' ? (a.val - b.val) : (b.val - a.val));
+      return valid.slice(0, 3);
+    }
+
     function renderBenchmark() {
       const m = activeBenchMetric;
       const unit = m === 'ping' ? 'ms' : 'Mbps';
-      const cur = m === 'download' ? lastMetrics.downloadMbps : (m === 'upload' ? lastMetrics.uploadMbps : lastMetrics.pingMs);
+      const top3 = getTop3Providers(m);
+      const maxV = Math.max(10, ...top3.map(x => x.val || 0));
 
-      const localAvg = serverComparison?.otherUsersLocal
-        ? serverComparison.otherUsersLocal[m === 'download' ? 'downloadAvg' : (m === 'upload' ? 'uploadAvg' : 'pingAvg')]
-        : null;
-      const natAvg = serverComparison?.otherUsersNational
-        ? serverComparison.otherUsersNational[m === 'download' ? 'downloadAvg' : (m === 'upload' ? 'uploadAvg' : 'pingAvg')]
-        : null;
+      document.getElementById('benchScopeText').textContent = `Top 3 • ${geoInfo.region}`;
 
-      const maxV = Math.max(10, cur || 0, localAvg || 0, natAvg || 0);
-      document.getElementById('benchScopeText').textContent = `ISP: ${geoInfo.isp}`;
+      document.getElementById('benchBars').innerHTML = top3.length
+        ? top3.map((item, idx) => {
+            const pct = maxV > 0 ? Math.max(6, Math.min(100, (item.val / maxV) * 100)) : 0;
+            const cls = idx === 0 ? '' : (idx === 1 ? 'ul' : 'muted');
+            return `
+              <div class="bar-item">
+                <div class="bar-head">
+                  <span>#${idx + 1} ${item.name}</span>
+                  <strong>${item.val} ${unit}</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%;"></div></div>
+              </div>
+            `;
+          }).join('')
+        : '<div class="mini-info-sub">Ejecuta una prueba para comparar proveedores.</div>';
 
-      const rows = [
-        { label: 'Tu prueba actual', val: cur, cls: '' },
-        { label: `Otros en ${geoInfo.region}`, val: localAvg, cls: 'ul' },
-        { label: `Otros en ${geoInfo.countryCode}`, val: natAvg, cls: 'muted' }
-      ];
-
-      document.getElementById('benchBars').innerHTML = rows.map(item => {
-        const pct = typeof item.val === 'number' && maxV > 0 ? Math.max(4, Math.min(100, (item.val / maxV) * 100)) : 0;
-        return `
-          <div class="bar-item">
-            <div class="bar-head">
-              <span>${item.label}</span>
-              <strong>${typeof item.val === 'number' ? `${item.val} ${unit}` : '--'}</strong>
-            </div>
-            <div class="bar-track"><div class="bar-fill ${item.cls}" style="width:${pct}%;"></div></div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('benchSummaryLine').textContent = serverComparison
+      document.getElementById('benchSummaryLine').textContent = serverComparison?.counts
         ? `Muestras — Zona: ${serverComparison.counts.localUsersTests} • País: ${serverComparison.counts.nationalUsersTests}`
-        : 'Completa una prueba para sincronizar con otros usuarios de VTEST.';
+        : `Comparativa Top 3 (${m === 'ping' ? 'menor latencia primero' : 'mayor rendimiento primero'}).`;
     }
 
     document.querySelectorAll('.bench-tab').forEach(b => {
@@ -2392,6 +2453,18 @@
       applyTheme(cur === 'dark' ? 'light' : 'dark');
     });
 
+    function updateSimSummaryLabel() {
+      const eq = Math.max(0, parseInt(document.getElementById('simDevicesInput')?.value, 10) || 0);
+      const mbps = Math.max(1, parseInt(document.getElementById('mbpsPerDeviceInput')?.value, 10) || 18);
+      const el = document.getElementById('simLoadSummary');
+      if (el) {
+        el.textContent = `Carga simulada activa: ${eq * mbps} Mbps (${eq} equipos × ${mbps} Mbps).`;
+      }
+    }
+
+    document.getElementById('simDevicesInput')?.addEventListener('input', updateSimSummaryLabel);
+    document.getElementById('mbpsPerDeviceInput')?.addEventListener('input', updateSimSummaryLabel);
+
     function syncPrefsUI() {
       const sel = document.getElementById('serverSelect');
       if (sel) {
@@ -2400,25 +2473,45 @@
         sel.value = valid ? prefs.serverId : CDN_NODES[0].id;
         prefs.serverId = sel.value;
       }
+      const repEl = document.getElementById('repeatCountSelect');
+      if (repEl) repEl.value = String(prefs.repeatCount || 1);
+
+      const simEqEl = document.getElementById('simDevicesInput');
+      if (simEqEl) simEqEl.value = String(prefs.simulatedDevices ?? 2);
+
+      const mbpsEqEl = document.getElementById('mbpsPerDeviceInput');
+      if (mbpsEqEl) mbpsEqEl.value = String(prefs.mbpsPerDevice ?? 18);
+
       const autoEl = document.getElementById('cfgAutoStart');
       if (autoEl) autoEl.checked = Boolean(prefs.autoStart);
+
+      updateSimSummaryLabel();
       updateHeaderAndFooter();
     }
 
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
+      const repeatCount = Math.max(1, Math.min(5, parseInt(document.getElementById('repeatCountSelect').value, 10) || 1));
+      const simulatedDevices = Math.max(0, Math.min(30, parseInt(document.getElementById('simDevicesInput').value, 10) || 0));
+      const mbpsPerDevice = Math.max(1, Math.min(200, parseInt(document.getElementById('mbpsPerDeviceInput').value, 10) || 18));
+
       prefs = {
         durationSec: DEFAULT_PREFS.durationSec,
         serverId: document.getElementById('serverSelect').value || CDN_NODES[0].id,
-        autoStart: document.getElementById('cfgAutoStart').checked
+        autoStart: document.getElementById('cfgAutoStart').checked,
+        repeatCount,
+        simulatedDevices,
+        mbpsPerDevice
       };
       localStorage.setItem('vtest_wa_prefs', JSON.stringify(prefs));
       syncPrefsUI();
+      renderAccordionInsights();
     });
 
     document.getElementById('resetCfgBtn').addEventListener('click', () => {
       prefs = { ...DEFAULT_PREFS };
       localStorage.removeItem('vtest_wa_prefs');
       syncPrefsUI();
+      renderAccordionInsights();
     });
 
     document.getElementById('exportCsvBtn').addEventListener('click', () => {
