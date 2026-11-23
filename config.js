@@ -26,7 +26,7 @@ window.VNET_CONFIG = {
     },
     {
       id: 'render',
-      name: 'Render',
+      name: 'Servidor VNET Render',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
@@ -40,7 +40,7 @@ window.VNET_CONFIG = {
     },
     {
       id: 'render',
-      name: 'Render',
+      name: 'Servidor VNET Render',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/ping'
     }
@@ -48,7 +48,7 @@ window.VNET_CONFIG = {
   uploadEndpoints: [
     {
       id: 'render_upload',
-      name: 'Render (Upload)',
+      name: 'Servidor VNET Render (Upload)',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/upload'
     }
@@ -106,8 +106,8 @@ window.VNET_CONFIG = {
     }
   ],
   deviceTypes: [
-    { label: 'Celulares / Tablets', loadMbps: 12 },
-    { label: 'PC / Laptops', loadMbps: 25 },
+    { label: 'Celulares / Tablets', loadMbps: 10 },
+    { label: 'PC / Laptops', loadMbps: 22 },
     { label: 'Smart TV / Streaming', loadMbps: 25 },
     { label: 'Consolas', loadMbps: 30 }
   ],
