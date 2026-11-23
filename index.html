@@ -1477,8 +1477,8 @@
       { id: 'online_gaming', title: 'Juegos en línea y descargas', minMbps: 50, idealMbps: 150, deviceLoadMbps: 30, planRef: 'VNET600', planDevices: 12, okText: 'Buen margen para descargas y respuesta estable.', lowText: 'Descargas lentas o retraso bajo carga compartida.' }
     ];
     const FALLBACK_DEVICE_TYPES = [
-      { label: 'Celulares / Tablets', loadMbps: 12 },
-      { label: 'PC / Laptops', loadMbps: 25 },
+      { label: 'Celulares / Tablets', loadMbps: 10 },
+      { label: 'PC / Laptops', loadMbps: 22 },
       { label: 'Smart TV / Streaming', loadMbps: 25 },
       { label: 'Consolas', loadMbps: 30 }
     ];
@@ -2370,16 +2370,25 @@
       });
     }
 
+    function getDeviceLoadReference(dt) {
+      const lbl = String(dt?.label || '').toLowerCase();
+      if (lbl.includes('celular') || lbl.includes('tablet')) return dt.loadMbps || 10;
+      if (lbl.includes('pc') || lbl.includes('laptop')) return dt.loadMbps || 22;
+      if (lbl.includes('tv') || lbl.includes('streaming')) return dt.loadMbps || 25;
+      if (lbl.includes('consola')) return dt.loadMbps || 30;
+      return Math.max(1, dt?.loadMbps || 15);
+    }
+
     function estimateSimultaneousDevices(usableMbps, perDevMbps, hasMeasured) {
       const safePerDev = Math.max(1, perDevMbps || 15);
       const safeUsable = Math.max(0, usableMbps || 0);
       if (safeUsable < safePerDev) return hasMeasured ? 0 : 1;
 
-      // Factor de concurrencia escalonado: no todos los equipos demandan su pico máximo al mismo tiempo
+      // Factor de concurrencia escalonado con piso de 0.60 para evitar saturación simultánea
       let count = 0;
       let remaining = safeUsable;
       while (count < 40) {
-        const concurrencyFactor = count === 0 ? 1.0 : Math.max(0.55, 1 - count * 0.045);
+        const concurrencyFactor = count === 0 ? 1.0 : Math.max(0.60, 1 - count * 0.04);
         const needed = safePerDev * concurrencyFactor;
         if (remaining >= needed) {
           remaining -= needed;
@@ -2440,7 +2449,7 @@
       const devGrid = document.getElementById('devicesGrid');
       if (devGrid) {
         devGrid.innerHTML = DEVICE_TYPES.map(dt => {
-          const perDev = Math.max(1, dt.loadMbps || 15);
+          const perDev = getDeviceLoadReference(dt);
           const estCount = estimateSimultaneousDevices(usableMbps, perDev, hasMeasuredDl);
 
           return `
