@@ -1455,15 +1455,15 @@
     const BACKEND_URL = CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
 
     const FALLBACK_CDN_NODES = [
-      { id: 'cloudflare', name: 'Cloudflare', location: 'Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
-      { id: 'render', name: 'Servidor VNET Render', location: 'Cloud Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
+      { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
+      { id: 'render', name: 'Servidor VNET Render', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
     ];
     const FALLBACK_PING_ENDPOINTS = [
-      { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
-      { id: 'render', name: 'Servidor VNET Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+      { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=100' },
+      { id: 'render', name: 'Servidor VNET Render', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
     ];
     const FALLBACK_UPLOAD_ENDPOINTS = [
-      { id: 'render_upload', name: 'Servidor VNET Render (Upload)', url: 'https://vtest-backend-d4nr.onrender.com/upload' }
+      { id: 'render_upload', name: 'Servidor VNET Render (Upload)', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/upload' }
     ];
     const FALLBACK_PLANS = [
       { id: 'vnet400', name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400, recommendedDevices: 8 },
@@ -2370,18 +2370,43 @@
       });
     }
 
+    function estimateSimultaneousDevices(usableMbps, perDevMbps, hasMeasured) {
+      const safePerDev = Math.max(1, perDevMbps || 15);
+      const safeUsable = Math.max(0, usableMbps || 0);
+      if (safeUsable < safePerDev) return hasMeasured ? 0 : 1;
+
+      // Factor de concurrencia escalonado: no todos los equipos demandan su pico máximo al mismo tiempo
+      let count = 0;
+      let remaining = safeUsable;
+      while (count < 40) {
+        const concurrencyFactor = count === 0 ? 1.0 : Math.max(0.55, 1 - count * 0.045);
+        const needed = safePerDev * concurrencyFactor;
+        if (remaining >= needed) {
+          remaining -= needed;
+          count++;
+        } else {
+          break;
+        }
+      }
+      return hasMeasured ? count : Math.max(1, count);
+    }
+
     function renderAccordionInsights() {
       const hasMeasuredDl = typeof lastMetrics.downloadMbps === 'number' && Number.isFinite(lastMetrics.downloadMbps) && lastMetrics.downloadMbps > 0;
       const baseMbps = hasMeasuredDl ? lastMetrics.downloadMbps : 50;
       const ul = lastMetrics.uploadMbps;
       const stab = typeof lastMetrics.stabilityPct === 'number' ? lastMetrics.stabilityPct : 85;
       const loss = typeof lastMetrics.packetLossPct === 'number' ? lastMetrics.packetLossPct : 0;
+      const ping = typeof lastMetrics.pingMs === 'number' ? lastMetrics.pingMs : 25;
+      const jitter = typeof lastMetrics.jitterMs === 'number' ? lastMetrics.jitterMs : 5;
       const simLoadMbps = getSimulatedLoadMbps();
 
       const stabFactor = Math.max(0.5, Math.min(1, stab / 100));
       const lossFactor = loss >= 2 ? 0.75 : (loss >= 1 ? 0.88 : 1);
-      const overheadFactor = 0.75;
-      const usableMbps = baseMbps * overheadFactor * stabFactor * lossFactor;
+      const latencyFactor = ping > 120 ? 0.82 : (ping > 80 ? 0.9 : 1);
+      const jitterFactor = jitter >= 25 ? 0.88 : (jitter >= 15 ? 0.94 : 1);
+      const overheadFactor = 0.78;
+      const usableMbps = baseMbps * overheadFactor * stabFactor * lossFactor * latencyFactor * jitterFactor;
 
       const actGrid = document.getElementById('activitiesGrid');
       if (actGrid) {
@@ -2416,9 +2441,7 @@
       if (devGrid) {
         devGrid.innerHTML = DEVICE_TYPES.map(dt => {
           const perDev = Math.max(1, dt.loadMbps || 15);
-          const estCount = hasMeasuredDl
-            ? Math.max(0, Math.floor(usableMbps / perDev))
-            : Math.max(1, Math.floor(usableMbps / perDev));
+          const estCount = estimateSimultaneousDevices(usableMbps, perDev, hasMeasuredDl);
 
           return `
             <div class="mini-info-card">
@@ -2432,7 +2455,7 @@
       const devNote = document.getElementById('devicesNote');
       if (devNote) {
         devNote.textContent = hasMeasuredDl
-          ? `Margen útil: ~${Math.round(usableMbps)} Mbps (base ajustada: ${baseMbps} Mbps • carga simulada: ${simLoadMbps} Mbps en ${prefs.simulatedDevices} eq • constancia: ${stab}%).`
+          ? `Margen útil: ~${Math.round(usableMbps)} Mbps (base: ${baseMbps} Mbps • sim: ${simLoadMbps} Mbps en ${prefs.simulatedDevices} eq • constancia: ${stab}% • ping: ${ping} ms • loss: ${loss}%).`
           : `Estimación de referencia (${prefs.simulatedDevices} eq simulados = ${simLoadMbps} Mbps). Ejecuta la prueba para usar tu velocidad real.`;
       }
 
