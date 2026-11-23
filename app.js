@@ -236,9 +236,11 @@
     serverId: CDN_NODES[0].id,
     autoStart: true,
     repeatCount: 1,
-    simulatedDevices: 2,
+    simulatedDevices: 0,
     mbpsPerDevice: 18
-  }, CFG.defaults || {});
+  }, CFG.defaults || {}, {
+    simulatedDevices: typeof CFG.defaults?.simulatedDevices === 'number' ? CFG.defaults.simulatedDevices : 0
+  });
 
   let prefs = loadPrefs();
   let isRunning = false;
@@ -277,7 +279,8 @@
 
   function loadPrefs() {
     try {
-      const merged = { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem('vtest_wa_prefs')) || {}) };
+      const saved = JSON.parse(localStorage.getItem('vtest_wa_prefs')) || {};
+      const merged = { ...DEFAULT_PREFS, ...saved };
       merged.repeatCount = Math.max(1, Math.min(5, parseInt(merged.repeatCount, 10) || 1));
       merged.simulatedDevices = Math.max(0, Math.min(30, parseInt(merged.simulatedDevices, 10) || 0));
       merged.mbpsPerDevice = Math.max(1, Math.min(200, parseInt(merged.mbpsPerDevice, 10) || 18));
@@ -289,6 +292,7 @@
 
   function getSimulatedLoadMbps() {
     const eq = Math.max(0, parseInt(prefs.simulatedDevices, 10) || 0);
+    if (eq <= 0) return 0;
     const perEq = Math.max(1, parseInt(prefs.mbpsPerDevice, 10) || 18);
     return eq * perEq;
   }
@@ -300,15 +304,16 @@
     const cores = navigator.hardwareConcurrency || 4;
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     const slow = Boolean(conn && (conn.saveData || ['2g', 'slow-2g', '3g'].includes(String(conn.effectiveType || '').toLowerCase())));
-    const extraThreads = Math.min(3, Math.floor((prefs.simulatedDevices || 0) / 3));
+    const simEq = Math.max(0, parseInt(prefs.simulatedDevices, 10) || 0);
+    const extraThreads = simEq > 0 ? Math.min(3, Math.floor(simEq / 3)) : 0;
 
     return {
       isMobile,
       label: isMobile ? t('deviceMobile') : t('deviceDesktop'),
-      minThreads: (isMobile || slow ? 1 : 2) + (prefs.simulatedDevices > 0 ? 1 : 0),
+      minThreads: (isMobile || slow ? 1 : 2) + (simEq > 0 ? 1 : 0),
       maxThreads: (slow ? 2 : (isMobile ? (cores >= 6 ? 3 : 2) : (cores >= 4 ? 4 : 3))) + extraThreads,
       uploadChunkBytes: isMobile ? (1024 * 1024) : (3 * 1024 * 1024),
-      uploadThreads: (isMobile ? 2 : 3) + (prefs.simulatedDevices >= 4 ? 1 : 0),
+      uploadThreads: (isMobile ? 2 : 3) + (simEq >= 4 ? 1 : 0),
       durationSec: prefs.durationSec || 8
     };
   }
@@ -893,7 +898,7 @@
     const dlRes = await runDownloadUnderLoad(dev.durationSec * 1000, signal);
     if (signal.aborted) return null;
 
-    const dlAvailable = Math.max(0, dlRes.mbps - simLoadMbps);
+    const dlAvailable = simLoadMbps > 0 ? Math.max(0, dlRes.mbps - simLoadMbps) : dlRes.mbps;
     setText('dlCardVal', fmtSpeed(dlAvailable));
     setText('gaugeValue', fmtGauge(dlAvailable));
     setGaugeProgress(dlAvailable);
@@ -904,20 +909,28 @@
     const ulRes = await runUploadUnderLoad(Math.max(4, dev.durationSec - 2) * 1000, signal);
     if (signal.aborted) return null;
 
-    const ulAvailable = ulRes.mbps !== null ? Math.max(0, ulRes.mbps - simLoadMbps * 0.5) : null;
+    const ulAvailable = ulRes.mbps !== null
+      ? (simLoadMbps > 0 ? Math.max(0, ulRes.mbps - simLoadMbps * 0.5) : ulRes.mbps)
+      : null;
     const allLoadedRtts = [...(dlRes.rtts || []), ...(ulRes.rtts || [])];
     const basePing = allLoadedRtts.length
       ? Math.round(allLoadedRtts.reduce((a, b) => a + b, 0) / allLoadedRtts.length)
       : (dlRes.loadedPing || ulRes.loadedPing || 0);
 
-    const loadRatio = dlRes.mbps > 0 ? Math.min(1.5, simLoadMbps / dlRes.mbps) : (simLoadMbps > 0 ? 0.5 : 0);
-    const pingWithSim = basePing > 0 ? Math.round(basePing * (1 + loadRatio * 0.25)) : null;
+    const loadRatio = simLoadMbps > 0
+      ? (dlRes.mbps > 0 ? Math.min(1.5, simLoadMbps / dlRes.mbps) : 0.5)
+      : 0;
+    const pingWithSim = basePing > 0
+      ? (loadRatio > 0 ? Math.round(basePing * (1 + loadRatio * 0.25)) : basePing)
+      : null;
     const baseJitter = calcJitterFromRtts(allLoadedRtts);
-    const jitterWithSim = Number((baseJitter * (1 + loadRatio * 0.3)).toFixed(1));
+    const jitterWithSim = loadRatio > 0
+      ? Number((baseJitter * (1 + loadRatio * 0.3)).toFixed(1))
+      : baseJitter;
     const totalSent = (dlRes.pSent || 0) + (ulRes.pSent || 0);
     const totalLost = (dlRes.pLost || 0) + (ulRes.pLost || 0);
     const lossLoadPct = totalSent > 0 ? Number(((totalLost / totalSent) * 100).toFixed(1)) : 0;
-    const simPenalty = Math.min(35, Math.round(loadRatio * 20));
+    const simPenalty = loadRatio > 0 ? Math.min(35, Math.round(loadRatio * 20)) : 0;
     const stabilityLoad = Math.max(10, Math.min(99, (dlRes.stability || 90) - simPenalty));
 
     return {
@@ -1424,7 +1437,7 @@
     if (repEl) repEl.value = String(prefs.repeatCount || 1);
 
     const simEqEl = document.getElementById('simDevicesInput');
-    if (simEqEl) simEqEl.value = String(prefs.simulatedDevices ?? 2);
+    if (simEqEl) simEqEl.value = String(prefs.simulatedDevices ?? 0);
 
     const mbpsEqEl = document.getElementById('mbpsPerDeviceInput');
     if (mbpsEqEl) mbpsEqEl.value = String(prefs.mbpsPerDevice ?? 18);
