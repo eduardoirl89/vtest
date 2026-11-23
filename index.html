@@ -241,10 +241,10 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 8px 12px;
+      padding: 9px 12px;
       box-shadow: var(--shadow-card);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 8px;
@@ -252,9 +252,10 @@
 
     .server-left {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 9px;
       min-width: 0;
+      flex: 1;
     }
 
     .globe-badge {
@@ -268,31 +269,35 @@
       justify-content: center;
       flex-shrink: 0;
       font-size: 0.85rem;
+      margin-top: 1px;
     }
 
-    .server-title {
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: var(--text-main);
+    .entity-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .entity-line {
+      font-size: 0.78rem;
+      color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .server-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+    .entity-line strong {
+      color: var(--text-main);
+      font-weight: 700;
     }
 
     .server-right-meta {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 3px;
+      gap: 4px;
       flex-shrink: 0;
     }
 
@@ -998,7 +1003,7 @@
       }
 
       .server-header-card {
-        padding: 12px 18px;
+        padding: 13px 18px;
         border-radius: 14px;
         margin-bottom: 12px;
       }
@@ -1009,12 +1014,8 @@
         font-size: 1.05rem;
       }
 
-      .server-title {
-        font-size: 1.02rem;
-      }
-
-      .server-sub {
-        font-size: 0.82rem;
+      .entity-line {
+        font-size: 0.9rem;
       }
 
       .ip-chip, .device-badge-inline {
@@ -1171,11 +1172,10 @@
         <div class="server-header-card">
           <div class="server-left">
             <div class="globe-badge">🌐</div>
-            <div style="min-width:0;">
-              <div class="server-title" id="serverHeaderTitle">Detectando ISP...</div>
-              <div class="server-sub">
-                <span id="serverNodeSub">Cloudflare</span>
-              </div>
+            <div class="entity-lines">
+              <div class="entity-line" id="providerLine">Proveedor: <strong>Detectando ISP...</strong></div>
+              <div class="entity-line" id="serverLine">Servidor: <strong>Cloudflare</strong></div>
+              <div class="entity-line" id="clientLine">Cliente: <strong>Equipo</strong></div>
             </div>
           </div>
           <div class="server-right-meta">
@@ -1455,8 +1455,8 @@
     const BACKEND_URL = CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
 
     const FALLBACK_CDN_NODES = [
-      { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
-      { id: 'render', name: 'Servidor VNET Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
+      { id: 'cloudflare', name: 'Cloudflare', location: 'Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
+      { id: 'render', name: 'Servidor VNET Render', location: 'Cloud Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
     ];
     const FALLBACK_PING_ENDPOINTS = [
       { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
@@ -1845,9 +1845,13 @@
     function updateHeaderAndFooter() {
       const dev = detectDevice();
       const node = getDlNode();
-      const gpsSuffix = gpsLocationLabel ? ` • GPS: ${gpsLocationLabel}` : '';
-      document.getElementById('serverHeaderTitle').textContent = netInfo.isp;
-      document.getElementById('serverNodeSub').textContent = `${node.name}${gpsSuffix}`;
+      const locText = gpsLocationLabel || 'Ubicación no activa';
+      const srvLoc = node.location || 'Nodo de prueba';
+
+      document.getElementById('providerLine').innerHTML = `Proveedor: <strong>${netInfo.isp}, ${locText}</strong>`;
+      document.getElementById('serverLine').innerHTML = `Servidor: <strong>${node.name}, ${srvLoc}</strong>`;
+      document.getElementById('clientLine').innerHTML = `Cliente: <strong>${dev.label}, ${locText}</strong>`;
+
       document.getElementById('serverIpChip').textContent = netInfo.ip ? `IP: ${netInfo.ip}` : 'IP: --';
       document.getElementById('deviceHeaderBadge').textContent = dev.label;
       document.getElementById('stabilityCardVal').textContent =
@@ -2367,34 +2371,39 @@
     }
 
     function renderAccordionInsights() {
-      const dl = lastMetrics.downloadMbps || 0;
+      const hasMeasuredDl = typeof lastMetrics.downloadMbps === 'number' && Number.isFinite(lastMetrics.downloadMbps) && lastMetrics.downloadMbps > 0;
+      const baseMbps = hasMeasuredDl ? lastMetrics.downloadMbps : 50;
       const ul = lastMetrics.uploadMbps;
-      const stab = lastMetrics.stabilityPct || 85;
-      const loss = lastMetrics.packetLossPct || 0;
-      const simOverhead = getSimulatedLoadMbps();
-      const netMbps = dl > 0 ? Math.max(0, dl - simOverhead) : 50;
-      const stabFactor = Math.max(0.55, Math.min(1, stab / 100));
-      const effMbps = netMbps * 0.75 * stabFactor;
+      const stab = typeof lastMetrics.stabilityPct === 'number' ? lastMetrics.stabilityPct : 85;
+      const loss = typeof lastMetrics.packetLossPct === 'number' ? lastMetrics.packetLossPct : 0;
+      const simLoadMbps = getSimulatedLoadMbps();
+
+      const stabFactor = Math.max(0.5, Math.min(1, stab / 100));
+      const lossFactor = loss >= 2 ? 0.75 : (loss >= 1 ? 0.88 : 1);
+      const overheadFactor = 0.75;
+      const usableMbps = baseMbps * overheadFactor * stabFactor * lossFactor;
 
       const actGrid = document.getElementById('activitiesGrid');
       if (actGrid) {
         actGrid.innerHTML = USE_CASES.map(uc => {
-          let score = dl > 0 ? 1 : 3;
-          if (dl > 0) {
-            if (netMbps >= uc.idealMbps) score = 5;
-            else if (netMbps >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
-            else if (netMbps >= uc.minMbps) score = 3;
-            else if (netMbps >= uc.minMbps * 0.5) score = 2;
+          let score = hasMeasuredDl ? 1 : 3;
+          if (hasMeasuredDl) {
+            if (usableMbps >= uc.idealMbps) score = 5;
+            else if (usableMbps >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
+            else if (usableMbps >= uc.minMbps) score = 3;
+            else if (usableMbps >= uc.minMbps * 0.5) score = 2;
             if (loss >= 1) score = Math.max(1, score - 1);
             if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
           }
 
           const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
-          const label = dl > 0 ? (score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado')) : 'Referencia inicial';
+          const label = hasMeasuredDl
+            ? (score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado'))
+            : 'Referencia inicial';
 
           return `
             <div class="mini-info-card">
-              <div class="mini-info-title">${uc.title} ${dl > 0 ? `(${score}/5)` : ''}</div>
+              <div class="mini-info-title">${uc.title} ${hasMeasuredDl ? `(${score}/5)` : ''}</div>
               <div class="${cls}">${label}</div>
               <div class="mini-info-sub" style="margin-top:4px;">${score >= 3 ? uc.okText : uc.lowText}</div>
               <div class="mini-info-sub" style="margin-top:5px;">Plan ref.: <strong>${uc.planRef || 'VNET400'}</strong></div>
@@ -2407,12 +2416,14 @@
       if (devGrid) {
         devGrid.innerHTML = DEVICE_TYPES.map(dt => {
           const perDev = Math.max(1, dt.loadMbps || 15);
-          const rawDevices = Math.floor(effMbps / perDev);
-          const nowCount = dl > 0 ? Math.max(0, rawDevices) : Math.max(1, rawDevices);
+          const estCount = hasMeasuredDl
+            ? Math.max(0, Math.floor(usableMbps / perDev))
+            : Math.max(1, Math.floor(usableMbps / perDev));
+
           return `
             <div class="mini-info-card">
               <div class="mini-info-title">${dt.label}</div>
-              <div class="mini-info-sub">Estimados: <strong>~${nowCount}</strong> (~${perDev} Mbps/eq)</div>
+              <div class="mini-info-sub">Simultáneos estimados: <strong>~${estCount}</strong> (${perDev} Mbps/eq)</div>
             </div>
           `;
         }).join('');
@@ -2420,9 +2431,9 @@
 
       const devNote = document.getElementById('devicesNote');
       if (devNote) {
-        devNote.textContent = dl > 0
-          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (tras descontar ${simOverhead} Mbps de concurrencia y aplicar ${stab}% de constancia).`
-          : 'Completa una prueba en Test para actualizar el cálculo con tu velocidad actual.';
+        devNote.textContent = hasMeasuredDl
+          ? `Margen útil: ~${Math.round(usableMbps)} Mbps (base ajustada: ${baseMbps} Mbps • carga simulada: ${simLoadMbps} Mbps en ${prefs.simulatedDevices} eq • constancia: ${stab}%).`
+          : `Estimación de referencia (${prefs.simulatedDevices} eq simulados = ${simLoadMbps} Mbps). Ejecuta la prueba para usar tu velocidad real.`;
       }
 
       const refBody = document.getElementById('refTableBody');
