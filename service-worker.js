@@ -1,10 +1,13 @@
-const CACHE_NAME = 'vtest-pwa-v1.0.0';
+const CACHE_NAME = 'vtest-pwa-v1.1.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json',
+  './styles.css',
+  './app.js',
+  './content.json',
   './servers.js',
-  './config.js'
+  './config.js',
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -32,7 +35,7 @@ function isBypassedUrl(urlObj) {
   const host = urlObj.hostname.toLowerCase();
   const path = urlObj.pathname.toLowerCase();
 
-  if (
+  return (
     host.includes('speed.cloudflare.com') ||
     path.includes('/__down') ||
     path.includes('/download') ||
@@ -42,10 +45,7 @@ function isBypassedUrl(urlObj) {
     host.includes('ipwho.is') ||
     host.includes('ipapi.co') ||
     host.includes('nominatim.openstreetmap.org')
-  ) {
-    return true;
-  }
-  return false;
+  );
 }
 
 self.addEventListener('fetch', (event) => {
@@ -59,9 +59,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (isBypassedUrl(urlObj)) {
-    return;
-  }
+  if (isBypassedUrl(urlObj)) return;
 
   if (urlObj.origin === self.location.origin) {
     event.respondWith(
