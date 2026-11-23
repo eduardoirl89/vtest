@@ -178,9 +178,9 @@ window.VNET_CONFIG = {
 
   links: {
     website: 'https://vnet.com.ve',
-    whatsapp: 'https://wa.me/588008638000',
-    facebook: 'https://www.facebook.com/vnetvenezuela',
-    instagram: 'https://www.instagram.com/vnetvenezuela'
+    whatsapp: 'https://wa.me/584122593059',
+    facebook: 'https://www.facebook.com/61566969571570/',
+    instagram: 'https://www.instagram.com/vnet_ve/'
   },
 
   faq: [
@@ -190,23 +190,4 @@ window.VNET_CONFIG = {
     },
     {
       q: '2. ¿Cómo se interpreta la latencia (ping), el jitter y la pérdida de paquetes?',
-      a: 'Como referencia general: 0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms suele mostrar retrasos en tiempo real. El jitter indica variación en esos tiempos (a mayor jitter, más cortes en voz, video o juegos) y una pérdida de paquetes desde 1% ya puede provocar microcortes.'
-    },
-    {
-      q: '3. ¿Qué son la fibra óptica, NAP, ONT/ONU, router y velocidad simétrica?',
-      a: 'La fibra óptica transmite datos mediante pulsos de luz con alta estabilidad y baja latencia. El NAP (Network Access Point) distribuye la señal FTTH mediante splitter óptico; la ONT/ONU convierte la señal óptica para conectarse con la OLT y el router; el router gestiona LAN/WAN, IP y Wi-Fi; y la velocidad simétrica ofrece igual capacidad de descarga y subida.'
-    },
-    {
-      q: '4. ¿Cómo se alinean los planes VNET400, VNET600 y VNET1GIGA con el cuestionario?',
-      a: 'El cuestionario estima tus necesidades según el escenario de uso, cantidad de personas y coincidencia diaria, sugiriendo VNET400 (hasta 400 Mbps), VNET600 (hasta 600 Mbps) o VNET1GIGA (hasta 1 Gbps).'
-    },
-    {
-      q: '5. ¿Por qué conviene hacer al menos 3 mediciones consecutivas y en distintos horarios?',
-      a: 'Repetir la prueba al menos tres veces seguidas y en diferentes momentos del día ayuda a obtener un promedio más fiable y a detectar variaciones por congestión o uso compartido.'
-    },
-    {
-      q: '6. ¿Cómo influyen el dispositivo, el cable Ethernet, el Wi-Fi o una VPN?',
-      a: 'El cable Ethernet da mayor precisión; el Wi-Fi depende de distancia, paredes, interferencias y del router; los equipos antiguos o saturados pueden limitar la lectura; y una VPN o servidor lejano aumenta la latencia y puede reducir la velocidad.'
-    }
-  ]
-};
+      a: 'Como referencia general: 0–30 ms es excelente, 30–60 ms buena, 60–
