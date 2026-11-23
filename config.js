@@ -15,7 +15,7 @@ window.VNET_CONFIG = {
     serverId: 'cloudflare',
     autoStart: true,
     repeatCount: 1,
-    simulatedDevices: 2,
+    simulatedDevices: 0,
     mbpsPerDevice: 18
   },
   plans: [
