@@ -122,7 +122,7 @@
         options: [
           { badge: '🏠', label: 'Hogar (streaming, redes y tareas)', basePerPerson: 22 },
           { badge: '💻', label: 'Home office y videollamadas', basePerPerson: 34 },
-          { badge: '🏪', "label": 'Comercio / negocio', basePerPerson: 32 },
+          { badge: '🏪', label: 'Comercio / negocio', basePerPerson: 32 },
           { badge: '🎮', label: 'Gaming y descargas pesadas', basePerPerson: 44 }
         ]
       },
@@ -169,7 +169,7 @@
       { title: '🔌 Prioriza cable Ethernet', desc: 'Medir por cable ofrece mayor precisión y estabilidad que el Wi-Fi.' },
       { title: '📶 Usa Wi-Fi 5 GHz y cerca del router', desc: 'El test mide el enlace hacia el servidor, no la cobertura Wi-Fi ni el cableado interno.' },
       { title: '🔁 Haz al menos 3 pruebas seguidas', desc: 'Repite al menos tres veces en distintos horarios y evalúa ping, jitter y pérdida.' },
-      { "title": '⏸️ Pausa descargas y evita VPN', "desc": 'Cierra descargas o streaming activos y desactiva VPN para no alterar la ruta.' }
+      { title: '⏸️ Pausa descargas y evita VPN', desc: 'Cierra descargas o streaming activos y desactiva VPN para no alterar la ruta.' }
     ],
     faq: [
       { q: '1. ¿Qué mide y qué no mide un test de velocidad?', a: 'Mide descarga, subida, latencia (ping), jitter y estabilidad hacia un servidor; no mide la cobertura Wi-Fi real, el router, el cableado ni las interferencias internas.' },
@@ -184,7 +184,7 @@
       ],
       throughput: [
         { name: 'VNET Fibra (Ref.)', dl: 450, ul: 300 },
-        { name: 'Proveedor Regional A (Ref.)", dl: 200, ul: 120 },
+        { name: 'Proveedor Regional A (Ref.)', dl: 200, ul: 120 },
         { name: 'Proveedor Regional B (Ref.)', dl: 110, ul: 60 }
       ]
     }
