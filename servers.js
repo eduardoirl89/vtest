@@ -10,7 +10,7 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Render',
+      name: 'Servidor VNET Render',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
@@ -24,7 +24,7 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Render',
+      name: 'Servidor VNET Render',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/ping'
     }
@@ -32,7 +32,7 @@ window.VTEST_SERVERS = {
   uploadEndpoints: [
     {
       id: 'render_upload',
-      name: 'Render (Upload)',
+      name: 'Servidor VNET Render (Upload)',
       location: 'Nube Render',
       url: 'https://vtest-backend-d4nr.onrender.com/upload'
     }
