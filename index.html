@@ -458,37 +458,43 @@
 
     .pjl-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
       margin-bottom: 14px;
+    }
+
+    @media (max-width: 560px) {
+      .pjl-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     .pjl-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 12px 10px;
+      padding: 12px 8px;
       box-shadow: var(--shadow-card);
       text-align: center;
       min-width: 0;
     }
 
     .pjl-label {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
 
     .pjl-val {
-      font-size: clamp(1.1rem, 4vw, 1.38rem);
+      font-size: clamp(1.02rem, 3.6vw, 1.32rem);
       font-weight: 800;
       color: var(--text-main);
       font-variant-numeric: tabular-nums;
     }
 
     .pjl-sub {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -1081,17 +1087,22 @@
           <div class="pjl-card">
             <div class="pjl-label">Ping</div>
             <div class="pjl-val" id="pingCardVal">--</div>
-            <div class="pjl-sub" id="pingCardSub">ms (R/B/S)</div>
+            <div class="pjl-sub" id="pingCardSub">ms (0–30 excel.)</div>
           </div>
           <div class="pjl-card">
             <div class="pjl-label">Jitter</div>
             <div class="pjl-val" id="jitterCardVal">--</div>
-            <div class="pjl-sub" id="jitterCardSub">ms</div>
+            <div class="pjl-sub" id="jitterCardSub">ms (variación)</div>
+          </div>
+          <div class="pjl-card">
+            <div class="pjl-label">Constancia</div>
+            <div class="pjl-val" id="stabilityCardVal">--</div>
+            <div class="pjl-sub" id="stabilityCardSub">% flujo</div>
           </div>
           <div class="pjl-card">
             <div class="pjl-label">Loss</div>
             <div class="pjl-val" id="lossCardVal">--</div>
-            <div class="pjl-sub" id="lossCardSub">%</div>
+            <div class="pjl-sub" id="lossCardSub">% (&lt;1% ideal)</div>
           </div>
         </div>
 
@@ -1103,8 +1114,8 @@
           <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
         </div>
 
-        <div class="meta-footer-line" id="dataUsageFooter">
-          Datos usados: <strong>0.0 MB</strong> • Constancia: <strong>--</strong>
+        <div class="meta-footer-line" id="guideReminderFooter">
+          Tip VNET: haz al menos 3 pruebas seguidas y mide por cable Ethernet cuando sea posible.
         </div>
       </section>
 
@@ -1174,7 +1185,7 @@
 
           <div class="acc-card">
             <div class="acc-header" data-acc="bodyFaq">
-              <span>❓ Preguntas y respuestas</span>
+              <span>❓ Preguntas y glosario VNET</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyFaq">
@@ -1248,14 +1259,14 @@
       </section>
 
       <div class="social-row">
-        <a id="linkWeb" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">🌐 Web</a>
-        <a id="linkWa" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">💬 WhatsApp</a>
-        <a id="linkFb" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">Facebook</a>
-        <a id="linkIg" href="#" target="_blank" rel="noopener noreferrer" class="social-chip">Instagram</a>
+        <a id="linkWeb" href="https://vnet.com.ve" target="_blank" rel="noopener noreferrer" class="social-chip">🌐 Web</a>
+        <a id="linkWa" href="https://wa.me/588008638000" target="_blank" rel="noopener noreferrer" class="social-chip">💬 WhatsApp</a>
+        <a id="linkFb" href="https://www.facebook.com/vnetvenezuela" target="_blank" rel="noopener noreferrer" class="social-chip">Facebook</a>
+        <a id="linkIg" href="https://www.instagram.com/vnetvenezuela" target="_blank" rel="noopener noreferrer" class="social-chip">Instagram</a>
       </div>
 
       <div class="powered-box">
-        Powered by <a id="poweredLink" href="#" target="_blank" rel="noopener noreferrer"><span id="poweredName">VNET</span></a>
+        Powered by <a id="poweredLink" href="https://vnet.com.ve" target="_blank" rel="noopener noreferrer"><span id="poweredName">VNET</span></a>
       </div>
     </main>
 
@@ -1334,7 +1345,6 @@
     let prefs = loadPrefs();
     let isRunning = false;
     let abortCtrl = null;
-    let bytesUsed = 0;
     let dlSeries = [];
     let ulSeries = [];
     let quizAnswers = {};
@@ -1362,7 +1372,6 @@
       stabilityPct: null
     };
 
-    // Registro Service Worker e instalación PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js').catch(() => {});
@@ -1378,7 +1387,7 @@
       } else if (deferredInstallPrompt) {
         note.textContent = 'Listo para instalar en tu pantalla de inicio o escritorio.';
       } else {
-        note.textContent = 'En Chrome/Edge o Safari móvil puedes instalarla desde el menú del navegador ("Instalar aplicación" o "Añadir a pantalla de inicio").';
+        note.textContent = 'En Android/Windows usa el menú del navegador para instalar como app; en iPhone/iPad usa Compartir -> Añadir a pantalla de inicio.';
       }
     }
 
@@ -1470,6 +1479,14 @@
       return mbps.toFixed(2);
     }
 
+    function pingBandLabel(ms) {
+      if (typeof ms !== 'number' || !Number.isFinite(ms)) return 'ms (0–30 excel.)';
+      if (ms <= 30) return 'ms • Excelente';
+      if (ms <= 60) return 'ms • Buena';
+      if (ms <= 100) return 'ms • Aceptable';
+      return 'ms • Alta (+100)';
+    }
+
     const GAUGE_TICKS = [0, 1, 5, 10, 25, 50, 100, 250, 500, 1000];
     const GAUGE_CX = 180;
     const GAUGE_CY = 135;
@@ -1559,11 +1576,8 @@
       document.getElementById('deviceHeaderBadge').textContent = dev.label;
       document.getElementById('headerPingText').textContent =
         lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '-- ms';
-
-      const mb = (bytesUsed / (1024 * 1024)).toFixed(1);
-      const stab = lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}%` : '--';
-      document.getElementById('dataUsageFooter').innerHTML =
-        `Datos usados: <strong>${mb} MB</strong> • Constancia: <strong>${stab}</strong>`;
+      document.getElementById('stabilityCardVal').textContent =
+        lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}` : '--';
     }
 
     async function fetchWithTimeout(url, ms = 3200) {
@@ -1736,7 +1750,6 @@
                 break;
               }
               totalBytes += value.byteLength;
-              bytesUsed += value.byteLength;
             }
           } catch {
             await new Promise(r => setTimeout(r, 150));
@@ -1764,7 +1777,6 @@
             document.getElementById('dlCardVal').textContent = fmtSpeed(curMbps);
             setGaugeProgress(curMbps);
             updateSparkline('dlSparkPath', dlSeries);
-            updateHeaderAndFooter();
 
             if (curMbps > 45 && threads < dev.maxThreads) {
               workers.push(worker());
@@ -1837,7 +1849,6 @@
             if (res.ok) {
               anyOk = true;
               uploaded += payload.byteLength;
-              bytesUsed += payload.byteLength;
             } else break;
           } catch {
             break;
@@ -1858,7 +1869,6 @@
           document.getElementById('gaugeValue').textContent = fmtGauge(curUl);
           setGaugeProgress(curUl);
           updateSparkline('ulSparkPath', ulSeries);
-          updateHeaderAndFooter();
         }
       }, 280);
 
@@ -1887,7 +1897,6 @@
       const { signal } = abortCtrl;
       const dev = detectDevice();
 
-      bytesUsed = 0;
       dlSeries = [];
       ulSeries = [];
       updateSparkline('dlSparkPath', []);
@@ -1904,6 +1913,7 @@
       document.getElementById('gaugeState').textContent = 'Midiendo ping...';
       document.getElementById('dlCardVal').textContent = '--';
       document.getElementById('ulCardVal').textContent = '—';
+      document.getElementById('stabilityCardVal').textContent = '--';
       document.getElementById('progressBar').style.width = '6%';
 
       try {
@@ -1911,22 +1921,24 @@
         if (signal.aborted) return;
 
         document.getElementById('pingCardVal').textContent = pingRes.avg ? `${pingRes.avg}` : '--';
+        document.getElementById('pingCardSub').textContent = pingBandLabel(pingRes.avg);
         document.getElementById('jitterCardVal').textContent = pingRes.jitter;
         document.getElementById('lossCardVal').textContent = `${pingRes.lossPct}`;
         document.getElementById('headerPingText').textContent = `${pingRes.avg} ms`;
 
         document.getElementById('phaseLabel').textContent = 'Bajada';
-        document.getElementById('gaugeState').textContent = 'Testing download...';
+        document.getElementById('gaugeState').textContent = 'Midiendo descarga...';
         const dlRes = await runDownload(dev.durationSec * 1000, signal);
         if (signal.aborted) return;
 
         const downLoaded = dlRes.loadedPing || pingRes.avg;
         document.getElementById('dlCardVal').textContent = fmtSpeed(dlRes.mbps);
+        document.getElementById('stabilityCardVal').textContent = `${dlRes.stability}`;
         document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
         setGaugeProgress(dlRes.mbps);
 
         document.getElementById('phaseLabel').textContent = 'Subida';
-        document.getElementById('gaugeState').textContent = 'Testing upload...';
+        document.getElementById('gaugeState').textContent = 'Midiendo subida...';
         const ulRes = await runUpload(Math.max(4, dev.durationSec - 2) * 1000, signal);
         if (signal.aborted) return;
 
@@ -1950,12 +1962,14 @@
 
         document.getElementById('ulCardVal').textContent = ulRes.mbps !== null ? fmtSpeed(ulRes.mbps) : 'N/D';
         document.getElementById('pingCardVal').textContent = `${pingRes.avg}`;
-        document.getElementById('pingCardSub').textContent = `ms (B:${downLoaded} / S:${upLoaded})`;
+        document.getElementById('pingCardSub').textContent = `${pingBandLabel(pingRes.avg)} (B:${downLoaded}/S:${upLoaded})`;
+        document.getElementById('stabilityCardVal').textContent = `${dlRes.stability}`;
         document.getElementById('lossCardVal').textContent = `${lossPct}`;
+        document.getElementById('lossCardSub').textContent = lossPct >= 1 ? '% • Afecta voz/video' : '% • Sin cortes';
         document.getElementById('progressBar').style.width = '100%';
         document.getElementById('phaseLabel').textContent = 'Listo';
         document.getElementById('statusDot').className = 'dot done';
-        document.getElementById('gaugeState').textContent = 'Done';
+        document.getElementById('gaugeState').textContent = 'Completado';
         document.getElementById('gaugeValue').textContent = fmtGauge(dlRes.mbps);
         setGaugeProgress(dlRes.mbps);
 
@@ -1989,7 +2003,7 @@
         isRunning = false;
         document.getElementById('statusDot').className = 'dot';
         document.getElementById('phaseLabel').textContent = 'Detenido';
-        document.getElementById('gaugeState').textContent = 'Stopped';
+        document.getElementById('gaugeState').textContent = 'Detenido';
         document.getElementById('actionTestBtn').textContent = 'Iniciar prueba';
       } else {
         startTest();
@@ -2002,7 +2016,8 @@
       const dl = lastMetrics.downloadMbps !== null ? `${lastMetrics.downloadMbps} Mbps` : '--';
       const ul = lastMetrics.uploadMbps !== null ? `${lastMetrics.uploadMbps} Mbps` : '--';
       const pg = lastMetrics.pingMs !== null ? `${lastMetrics.pingMs} ms` : '--';
-      const text = `VTEST (${geoInfo.isp}) — Bajada: ${dl} | Subida: ${ul} | Ping: ${pg} | Loss: ${lastMetrics.packetLossPct ?? '--'}%`;
+      const stab = lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}%` : '--';
+      const text = `VTEST (${geoInfo.isp}) — Bajada: ${dl} | Subida: ${ul} | Ping: ${pg} | Jitter: ${lastMetrics.jitterMs ?? '--'} ms | Constancia: ${stab} | Loss: ${lastMetrics.packetLossPct ?? '--'}%`;
       try {
         if (navigator.share) {
           await navigator.share({ title: 'Resultado VTEST', text });
@@ -2110,7 +2125,7 @@
         else if (dl >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
         else if (dl >= uc.minMbps) score = 3;
         else if (dl >= uc.minMbps * 0.5) score = 2;
-        if (loss >= 2) score = Math.max(1, score - 1);
+        if (loss >= 1) score = Math.max(1, score - 1);
         if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
 
         const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
@@ -2353,17 +2368,32 @@
       renderHistory();
     });
 
+    function isValidHttpUrl(u) {
+      if (!u || typeof u !== 'string') return false;
+      try {
+        const parsed = new URL(u.trim());
+        return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+      } catch {
+        return false;
+      }
+    }
+
     function initLinks() {
       document.getElementById('brandName').textContent = CFG.brandName || 'VTEST';
       document.getElementById('poweredName').textContent = CFG.poweredByName || 'VNET';
       const l = CFG.links || {};
-      if (l.website) {
-        document.getElementById('linkWeb').href = l.website;
-        document.getElementById('poweredLink').href = l.website;
-      }
-      if (l.whatsapp) document.getElementById('linkWa').href = l.whatsapp;
-      if (l.facebook) document.getElementById('linkFb').href = l.facebook;
-      if (l.instagram) document.getElementById('linkIg').href = l.instagram;
+      const map = [
+        ['linkWeb', l.website, 'https://vnet.com.ve'],
+        ['poweredLink', l.website, 'https://vnet.com.ve'],
+        ['linkWa', l.whatsapp, 'https://wa.me/588008638000'],
+        ['linkFb', l.facebook, 'https://www.facebook.com/vnetvenezuela'],
+        ['linkIg', l.instagram, 'https://www.instagram.com/vnetvenezuela']
+      ];
+      map.forEach(([id, val, fallback]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.href = isValidHttpUrl(val) ? val.trim() : fallback;
+      });
     }
 
     initGauge();
