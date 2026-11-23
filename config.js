@@ -1,47 +1,63 @@
-const SRV = window.VTEST_SERVERS || {};
-
 window.VNET_CONFIG = {
   brandName: 'VTEST',
   poweredByName: 'VNET',
-  brandLogoUrl: '',
   backendUrl: 'https://vtest-backend-d4nr.onrender.com',
-
+  uploadUrl: 'https://vtest-backend-d4nr.onrender.com/upload',
+  links: {
+    website: 'https://vnet.com.ve',
+    whatsapp: 'https://wa.me/584122593059',
+    facebook: 'https://www.facebook.com/61566969571570/',
+    instagram: 'https://www.instagram.com/vnet_ve/'
+  },
   defaults: {
     durationSec: 8,
-    serverId: (SRV.cdnNodes && SRV.cdnNodes[0] && SRV.cdnNodes[0].id) || 'cloudflare',
+    serverId: 'cloudflare',
     autoStart: true,
     repeatCount: 1,
     simulatedDevices: 2,
     mbpsPerDevice: 18
   },
-
-  plans: [
+  cdnNodes: [
     {
-      id: 'vnet400',
-      name: 'VNET400',
-      label: 'Hasta 400 Mbps',
-      mbps: 400,
-      recommendedDevices: 8,
-      summary: 'Hasta 400 Mbps • Ideal para hogares con varias personas, streaming HD/4K, videollamadas y uso diario compartido'
+      id: 'cloudflare',
+      name: 'Cloudflare',
+      location: 'Red Edge Global',
+      url: 'https://speed.cloudflare.com/__down?bytes=25000000'
     },
     {
-      id: 'vnet600',
-      name: 'VNET600',
-      label: 'Hasta 600 Mbps',
-      mbps: 600,
-      recommendedDevices: 12,
-      summary: 'Hasta 600 Mbps • Pensado para mayor coincidencia de equipos, descargas pesadas, teletrabajo y juegos en línea'
-    },
-    {
-      id: 'vnet1giga',
-      name: 'VNET1GIGA',
-      label: 'Hasta 1 Gbps',
-      mbps: 1000,
-      recommendedDevices: 20,
-      summary: 'Hasta 1 Gbps (1000 Mbps) • Máxima capacidad para alta concurrencia, múltiples pantallas, nube y uso intensivo'
+      id: 'render',
+      name: 'Render',
+      location: 'Nube Render',
+      url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
     }
   ],
-
+  pingEndpoints: [
+    {
+      id: 'cloudflare',
+      name: 'Cloudflare',
+      location: 'Red Edge Global',
+      url: 'https://speed.cloudflare.com/__down?bytes=100'
+    },
+    {
+      id: 'render',
+      name: 'Render',
+      location: 'Nube Render',
+      url: 'https://vtest-backend-d4nr.onrender.com/ping'
+    }
+  ],
+  uploadEndpoints: [
+    {
+      id: 'render_upload',
+      name: 'Render (Upload)',
+      location: 'Nube Render',
+      url: 'https://vtest-backend-d4nr.onrender.com/upload'
+    }
+  ],
+  plans: [
+    { id: 'vnet400', name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400, recommendedDevices: 8 },
+    { id: 'vnet600', name: 'VNET600', label: 'Hasta 600 Mbps', mbps: 600, recommendedDevices: 12 },
+    { id: 'vnet1giga', name: 'VNET1GIGA', label: 'Hasta 1 Gbps', mbps: 1000, recommendedDevices: 20 }
+  ],
   useCases: [
     {
       id: 'web_browsing',
@@ -51,10 +67,8 @@ window.VNET_CONFIG = {
       deviceLoadMbps: 10,
       planRef: 'VNET400',
       planDevices: 8,
-      featuredDevices: ['Celular', 'Laptop', 'Tablet'],
-      usageHint: 'Carga rápida de páginas, mensajería, fotos y videos cortos.',
-      okText: 'Páginas, redes y mensajería cargan con rapidez.',
-      lowText: 'Puede haber demoras al abrir sitios pesados o cargar medios.'
+      okText: 'Páginas y redes cargan con rapidez.',
+      lowText: 'Puede haber demoras al abrir sitios pesados.'
     },
     {
       id: 'video_streaming',
@@ -64,10 +78,8 @@ window.VNET_CONFIG = {
       deviceLoadMbps: 25,
       planRef: 'VNET400',
       planDevices: 8,
-      featuredDevices: ['Smart TV', 'TV Box', 'Tablet'],
-      usageHint: 'Reproducción fluida sin cortes ni caídas de resolución.',
-      okText: 'Soporta reproducción fluida y buen inicio de video.',
-      lowText: 'Puede bajar la calidad de imagen o pausar en horas pico.'
+      okText: 'Reproducción fluida sin cortes.',
+      lowText: 'Puede bajar la calidad o pausar en horas pico.'
     },
     {
       id: 'video_conferencing',
@@ -78,10 +90,8 @@ window.VNET_CONFIG = {
       deviceLoadMbps: 20,
       planRef: 'VNET600',
       planDevices: 12,
-      featuredDevices: ['Laptop', 'PC Escritorio', 'Celular'],
-      usageHint: 'Voz y cámara estables, envío de archivos y apps en la nube.',
-      okText: 'Buen respaldo para reuniones, cámara y envío de archivos.',
-      lowText: 'Riesgo de cortes de audio/video o demora al subir archivos.'
+      okText: 'Buen respaldo para reuniones y envío de archivos.',
+      lowText: 'Riesgo de cortes en audio/video o subida lenta.'
     },
     {
       id: 'online_gaming',
@@ -91,106 +101,40 @@ window.VNET_CONFIG = {
       deviceLoadMbps: 30,
       planRef: 'VNET600',
       planDevices: 12,
-      featuredDevices: ['PC Gamer', 'Consola', 'Laptop'],
-      usageHint: 'Menor espera de respuesta y descargas de juegos más rápidas.',
       okText: 'Buen margen para descargas y respuesta estable.',
-      lowText: 'Descargas lentas o retraso si otros equipos descargan a la vez.'
+      lowText: 'Descargas lentas o retraso bajo carga compartida.'
     }
   ],
-
   deviceTypes: [
     { label: 'Celulares / Tablets', loadMbps: 12 },
     { label: 'PC / Laptops', loadMbps: 25 },
     { label: 'Smart TV / Streaming', loadMbps: 25 },
     { label: 'Consolas', loadMbps: 30 }
   ],
-
   activityReferenceTable: [
-    {
-      activity: 'Navegación web, redes sociales y mensajería',
-      devices: '1 a 6+ equipos',
-      recommended: '15–60 Mbps (cubierto desde VNET400)'
-    },
-    {
-      activity: 'Streaming HD / 4K simultáneo',
-      devices: '1 a 5+ pantallas',
-      recommended: '25–150 Mbps (cubierto desde VNET400)'
-    },
-    {
-      activity: 'Videollamadas, clases y teletrabajo',
-      devices: '1 a 6+ puestos',
-      recommended: '25–120 Mbps (VNET400 / VNET600 según concurrencia)'
-    },
-    {
-      activity: 'Juegos en línea, descargas y respaldo en la nube',
-      devices: '2 a 8+ equipos',
-      recommended: '60–300+ Mbps (VNET600 / VNET1GIGA en alta carga)'
-    }
+    { activity: 'Navegación web, redes sociales y mensajería', recommended: '15–60 Mbps (VNET400)' },
+    { activity: 'Streaming HD / 4K simultáneo', recommended: '25–150 Mbps (VNET400)' },
+    { activity: 'Videollamadas, clases y teletrabajo', recommended: '25–120 Mbps (VNET400 / VNET600)' },
+    { activity: 'Juegos en línea y descargas', recommended: '60–300+ Mbps (VNET600 / VNET1GIGA)' }
   ],
-
   testTips: [
-    {
-      title: '🔌 Prioriza cable Ethernet',
-      desc: 'Si mides desde una PC o laptop, el cable Ethernet ofrece una medición más precisa y estable que el Wi-Fi.'
-    },
-    {
-      title: '📶 Usa Wi-Fi 5 GHz y cerca del router',
-      desc: 'Un speed test mide el enlace hacia el servidor, no la cobertura Wi-Fi real, el router, el cableado ni las interferencias de tu red interna.'
-    },
-    {
-      title: '🔁 Haz al menos 3 pruebas seguidas',
-      desc: 'Realiza un mínimo de tres mediciones consecutivas en distintos momentos del día y evalúa latencia, jitter y pérdida de paquetes, no solo los megas.'
-    },
-    {
-      title: '⏸️ Prepara la red antes de medir',
-      desc: 'Cierra apps que consuman ancho de banda, pausa streaming y descargas, desconecta equipos sin uso y evita VPN o servidores lejanos.'
-    },
-    {
-      title: '📡 Fibra óptica vs. inalámbrico y móvil',
-      desc: 'La fibra óptica brinda mediciones más consistentes por su baja latencia y ausencia de interferencias; las redes inalámbricas y móviles varían por distancia, obstáculos, clima o saturación.'
-    },
-    {
-      title: '⚖️ Bajada, subida y simetría',
-      desc: 'La descarga pesa en navegación y streaming; la subida importa en videollamadas, envío de archivos, nube y juegos. Una conexión simétrica equilibra ambos sentidos.'
-    }
+    { title: '🔌 Prioriza cable Ethernet', desc: 'Medir por cable ofrece mayor precisión y estabilidad que el Wi-Fi.' },
+    { title: '📶 Usa Wi-Fi 5 GHz y cerca del router', desc: 'El test mide el enlace hacia el servidor, no la cobertura Wi-Fi ni el cableado interno.' },
+    { title: '🔁 Haz al menos 3 pruebas seguidas', desc: 'Repite al menos tres veces en distintos horarios y evalúa ping, jitter y pérdida.' },
+    { title: '⏸️ Pausa descargas y evita VPN', desc: 'Cierra descargas o streaming activos y desactiva VPN para no alterar la ruta.' }
   ],
-
-  cdnNodes: Array.isArray(SRV.cdnNodes) ? SRV.cdnNodes : [],
-  pingEndpoints: Array.isArray(SRV.pingEndpoints) ? SRV.pingEndpoints : [],
-  uploadEndpoints: Array.isArray(SRV.uploadEndpoints) ? SRV.uploadEndpoints : [],
-  uploadUrl: SRV.uploadUrl || 'https://vtest-backend-d4nr.onrender.com/upload',
-
-  links: {
-    website: 'https://vnet.com.ve',
-    whatsapp: 'https://wa.me/584122593059',
-    facebook: 'https://www.facebook.com/61566969571570/',
-    instagram: 'https://www.instagram.com/vnet_ve/'
-  },
-
   faq: [
     {
-      q: '1. ¿Qué mide realmente un test de velocidad y qué no mide?',
-      a: 'Mide velocidad de descarga, subida, latencia (ping), jitter y estabilidad del flujo hacia un servidor. No mide la cobertura Wi-Fi real del hogar, la congestión interna, la capacidad del router, la calidad del cableado ni las interferencias locales.'
+      q: '1. ¿Qué mide y qué no mide un test de velocidad?',
+      a: 'Mide descarga, subida, latencia (ping), jitter y estabilidad hacia un servidor; no mide la cobertura Wi-Fi real, el router, el cableado ni las interferencias internas.'
     },
     {
-      q: '2. ¿Cómo se interpreta la latencia (ping), el jitter y la pérdida de paquetes?',
-      a: 'Como referencia general: 0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms suele mostrar retrasos en tiempo real. El jitter indica variación en esos tiempos (a mayor jitter, más cortes en voz, video o juegos) y una pérdida de paquetes desde 1% ya puede provocar microcortes.'
+      q: '2. ¿Cómo leer la latencia, el jitter y la pérdida de paquetes?',
+      a: '0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms muestra retrasos en tiempo real. Jitter bajo da mayor estabilidad y desde 1% de pérdida ya puede haber cortes.'
     },
     {
-      q: '3. ¿Qué son la fibra óptica, NAP, ONT/ONU, router y velocidad simétrica?',
-      a: 'La fibra óptica transmite datos mediante pulsos de luz con alta estabilidad y baja latencia. El NAP (Network Access Point) distribuye la señal FTTH mediante splitter óptico; la ONT/ONU convierte la señal óptica para conectarse con la OLT y el router; el router gestiona LAN/WAN, IP y Wi-Fi; y la velocidad simétrica ofrece igual capacidad de descarga y subida.'
-    },
-    {
-      q: '4. ¿Cómo se alinean los planes VNET400, VNET600 y VNET1GIGA con el cuestionario?',
-      a: 'El cuestionario estima tus necesidades según el escenario de uso, cantidad de personas y coincidencia diaria, sugiriendo VNET400 (hasta 400 Mbps), VNET600 (hasta 600 Mbps) o VNET1GIGA (hasta 1 Gbps).'
-    },
-    {
-      q: '5. ¿Por qué conviene hacer al menos 3 mediciones consecutivas y en distintos horarios?',
-      a: 'Repetir la prueba al menos tres veces seguidas y en diferentes momentos del día ayuda a obtener un promedio más fiable y a detectar variaciones por congestión o uso compartido.'
-    },
-    {
-      q: '6. ¿Cómo influyen el dispositivo, el cable Ethernet, el Wi-Fi o una VPN?',
-      a: 'El cable Ethernet da mayor precisión; el Wi-Fi depende de distancia, paredes, interferencias y del router; los equipos antiguos o saturados pueden limitar la lectura; y una VPN o servidor lejano aumenta la latencia y puede reducir la velocidad.'
+      q: '3. ¿Qué significan fibra óptica, NAP, ONT/ONU y velocidad simétrica?',
+      a: 'La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala descarga y subida.'
     }
   ]
 };
