@@ -395,9 +395,10 @@
     .gauge-state {
       font-size: 0.76rem;
       font-weight: 700;
-      color: var(--dl-color);
+      color: var(--gauge-fill);
       margin-top: 2px;
       min-height: 16px;
+      transition: color 0.2s ease;
     }
 
     .gauge-state.warn {
@@ -418,7 +419,7 @@
       height: 100%;
       width: 0%;
       background: var(--gauge-fill);
-      transition: width 0.2s ease;
+      transition: width 0.2s ease, background-color 0.2s ease;
     }
 
     .du-grid {
@@ -493,26 +494,23 @@
     }
 
     .pjl-label {
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--text-muted);
       margin-bottom: 2px;
     }
 
     .pjl-val {
-      font-size: clamp(0.92rem, 3.2vw, 1.12rem);
+      font-size: clamp(0.95rem, 3.2vw, 1.15rem);
       font-weight: 800;
       color: var(--text-main);
       font-variant-numeric: tabular-nums;
     }
 
     .pjl-sub {
-      font-size: 0.62rem;
+      font-size: 0.64rem;
       color: var(--text-muted);
       margin-top: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .primary-action-pill {
@@ -522,7 +520,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-main);
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: var(--shadow-card);
@@ -942,35 +940,179 @@
       color: var(--nav-active-text);
     }
 
+    /* Escala ampliada para pantallas laptop / escritorio */
     @media (min-width: 900px) {
+      body {
+        font-size: 16px;
+      }
+
       .app-shell {
-        padding-bottom: 16px;
-        padding-left: 104px;
+        padding-bottom: 24px;
+        padding-left: 120px;
+      }
+
+      .topbar {
+        padding: 11px 24px;
+      }
+
+      .brand-name {
+        font-size: 1.32rem;
+      }
+
+      .brand-pill {
+        font-size: 0.7rem;
+        padding: 3px 9px;
       }
 
       .bottom-nav {
-        top: 50px;
+        top: 56px;
         bottom: 0;
         left: 0;
         right: auto;
-        width: 104px;
+        width: 120px;
         border-top: none;
         border-right: 1px solid var(--border);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        gap: 8px;
-        padding: 16px 8px;
+        gap: 12px;
+        padding: 20px 10px;
       }
 
       .nav-btn {
         width: 100%;
-        padding: 8px 4px;
+        padding: 10px 6px;
+        font-size: 0.78rem;
+        gap: 4px;
+      }
+
+      .nav-icon-wrap {
+        width: 46px;
+        height: 28px;
+        font-size: 1.05rem;
       }
 
       .main-container {
-        max-width: 780px;
-        padding: 12px 20px 20px;
+        max-width: 920px;
+        padding: 18px 28px 28px;
+      }
+
+      .server-header-card {
+        padding: 12px 18px;
+        border-radius: 14px;
+        margin-bottom: 12px;
+      }
+
+      .globe-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 1.05rem;
+      }
+
+      .server-title {
+        font-size: 1.02rem;
+      }
+
+      .server-sub {
+        font-size: 0.82rem;
+      }
+
+      .ip-chip, .device-badge-inline {
+        font-size: 0.78rem;
+        padding: 3px 10px;
+      }
+
+      .gauge-card {
+        padding: 14px 18px 16px;
+        border-radius: 18px;
+        margin-bottom: 12px;
+      }
+
+      .gauge-wrap {
+        max-width: 340px;
+      }
+
+      .gauge-value {
+        font-size: 2.85rem;
+      }
+
+      .gauge-unit {
+        font-size: 0.9rem;
+      }
+
+      .gauge-state {
+        font-size: 0.92rem;
+      }
+
+      .progress-mini {
+        max-width: 340px;
+        height: 4px;
+      }
+
+      .du-grid {
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .du-card {
+        padding: 13px 16px 12px;
+        border-radius: 14px;
+      }
+
+      .du-head {
+        font-size: 0.76rem;
+      }
+
+      .du-num {
+        font-size: 1.75rem;
+      }
+
+      .du-unit {
+        font-size: 0.8rem;
+      }
+
+      .sparkline-svg {
+        height: 28px;
+      }
+
+      .pjl-grid {
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .pjl-card {
+        padding: 12px 10px;
+        border-radius: 14px;
+      }
+
+      .pjl-label {
+        font-size: 0.82rem;
+      }
+
+      .pjl-val {
+        font-size: 1.32rem;
+      }
+
+      .pjl-sub {
+        font-size: 0.74rem;
+      }
+
+      .primary-action-pill {
+        padding: 12px 18px;
+        font-size: 0.98rem;
+      }
+
+      .section-heading, .panel-title {
+        font-size: 1.08rem;
+      }
+
+      .acc-header {
+        font-size: 0.98rem;
+        padding: 14px 18px;
+      }
+
+      table {
+        font-size: 0.88rem;
       }
     }
 
@@ -1086,24 +1228,24 @@
 
         <div class="pjl-grid">
           <div class="pjl-card">
-            <div class="pjl-label">Ping (carga)</div>
+            <div class="pjl-label">Ping</div>
             <div class="pjl-val" id="pingCardVal">--</div>
-            <div class="pjl-sub" id="pingCardSub">ms • bajo carga</div>
+            <div class="pjl-sub">ms</div>
           </div>
           <div class="pjl-card">
-            <div class="pjl-label">Jitter (carga)</div>
+            <div class="pjl-label">Jitter</div>
             <div class="pjl-val" id="jitterCardVal">--</div>
-            <div class="pjl-sub" id="jitterCardSub">ms • bajo carga</div>
+            <div class="pjl-sub">ms</div>
           </div>
           <div class="pjl-card">
             <div class="pjl-label">Constancia</div>
             <div class="pjl-val" id="stabilityCardVal">--</div>
-            <div class="pjl-sub" id="stabilityCardSub">% • bajo carga</div>
+            <div class="pjl-sub">%</div>
           </div>
           <div class="pjl-card">
-            <div class="pjl-label">Loss (carga)</div>
+            <div class="pjl-label">Loss</div>
             <div class="pjl-val" id="lossCardVal">--</div>
-            <div class="pjl-sub" id="lossCardSub">% • bajo carga</div>
+            <div class="pjl-sub">%</div>
           </div>
         </div>
 
@@ -1155,7 +1297,6 @@
                 <thead>
                   <tr>
                     <th>Actividad</th>
-                    <th>Equipos</th>
                     <th>Recomendado</th>
                   </tr>
                 </thead>
@@ -1220,7 +1361,7 @@
             <div class="field-row">
               <label for="mbpsPerDeviceInput">Consumo simulado por dispositivo (Mbps)</label>
               <input type="number" id="mbpsPerDeviceInput" min="1" max="200" step="1" value="18" />
-              <span class="mini-info-sub" id="simLoadSummary">Carga simulada activa: 36 Mbps (2 equipos × 18 Mbps).</span>
+              <span class="mini-info-sub" id="simLoadSummary">Carga simulada: 36 Mbps (2 eq × 18 Mbps).</span>
             </div>
 
             <label class="check-row">
@@ -1237,8 +1378,8 @@
 
           <div class="panel-card">
             <div class="panel-title">
-              <span>📊 Benchmarking — Top 3 proveedores</span>
-              <span class="mini-info-sub" id="benchScopeText">ISP: Detectando...</span>
+              <span>📊 Benchmarking — Tu mejor red</span>
+              <span class="mini-info-sub" id="benchScopeText">Top 3</span>
             </div>
             <div class="bench-tabs">
               <button type="button" class="bench-tab active" data-metric="download">Bajada</button>
@@ -1342,10 +1483,10 @@
       { label: 'Consolas', loadMbps: 30 }
     ];
     const FALLBACK_REF_TABLE = [
-      { activity: 'Navegación web, redes sociales y mensajería', devices: '1 a 6+ equipos', recommended: '15–60 Mbps (VNET400)' },
-      { activity: 'Streaming HD / 4K simultáneo', devices: '1 a 5+ pantallas', recommended: '25–150 Mbps (VNET400)' },
-      { activity: 'Videollamadas, clases y teletrabajo', devices: '1 a 6+ puestos', recommended: '25–120 Mbps (VNET400 / VNET600)' },
-      { activity: 'Juegos en línea y descargas', devices: '2 a 8+ equipos', recommended: '60–300+ Mbps (VNET600 / VNET1GIGA)' }
+      { activity: 'Navegación web, redes sociales y mensajería', recommended: '15–60 Mbps (VNET400)' },
+      { activity: 'Streaming HD / 4K simultáneo', recommended: '25–150 Mbps (VNET400)' },
+      { activity: 'Videollamadas, clases y teletrabajo', recommended: '25–120 Mbps (VNET400 / VNET600)' },
+      { activity: 'Juegos en línea y descargas', recommended: '60–300+ Mbps (VNET600 / VNET1GIGA)' }
     ];
     const FALLBACK_TEST_TIPS = [
       { title: '🔌 Prioriza cable Ethernet', desc: 'Medir por cable ofrece mayor precisión y estabilidad que el Wi-Fi.' },
@@ -1430,12 +1571,11 @@
     let activeBenchMetric = 'download';
     let serverComparison = null;
     let deferredInstallPrompt = null;
+    let gpsLocationLabel = '';
 
-    let geoInfo = {
+    let netInfo = {
       ip: '',
       isp: 'Detectando ISP...',
-      region: 'No especificada',
-      city: 'No especificada',
       countryCode: 'VE'
     };
 
@@ -1452,6 +1592,52 @@
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js').catch(() => {});
       });
+    }
+
+    function setGaugePhaseColor(phase) {
+      const color = phase === 'upload' ? 'var(--ul-color)' : 'var(--dl-color)';
+      document.documentElement.style.setProperty('--gauge-fill', color);
+    }
+
+    function requestGpsLocation() {
+      if (!('geolocation' in navigator) || typeof navigator.geolocation.getCurrentPosition !== 'function') {
+        gpsLocationLabel = '';
+        updateHeaderAndFooter();
+        renderBenchmark();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const lat = pos.coords.latitude.toFixed(4);
+          const lon = pos.coords.longitude.toFixed(4);
+          gpsLocationLabel = `${lat}, ${lon}`;
+          try {
+            const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=10`, {
+              cache: 'no-store'
+            });
+            if (r.ok) {
+              const data = await r.json();
+              const addr = data.address || {};
+              const city = addr.city || addr.town || addr.municipality || addr.state || '';
+              const state = addr.state || '';
+              if (city && state && city !== state) {
+                gpsLocationLabel = `${city}, ${state}`;
+              } else if (city || state) {
+                gpsLocationLabel = city || state;
+              }
+            }
+          } catch {}
+          updateHeaderAndFooter();
+          renderBenchmark();
+        },
+        () => {
+          gpsLocationLabel = '';
+          updateHeaderAndFooter();
+          renderBenchmark();
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 60000 }
+      );
     }
 
     function updatePwaNote() {
@@ -1513,7 +1699,9 @@
     }
 
     function getSimulatedLoadMbps() {
-      return (prefs.simulatedDevices || 0) * (prefs.mbpsPerDevice || 18);
+      const eq = Math.max(0, parseInt(prefs.simulatedDevices, 10) || 0);
+      const perEq = Math.max(1, parseInt(prefs.mbpsPerDevice, 10) || 18);
+      return eq * perEq;
     }
 
     function detectDevice() {
@@ -1657,10 +1845,10 @@
     function updateHeaderAndFooter() {
       const dev = detectDevice();
       const node = getDlNode();
-      const simTag = prefs.simulatedDevices > 0 ? ` • Sim:${prefs.simulatedDevices} eq` : '';
-      document.getElementById('serverHeaderTitle').textContent = geoInfo.isp;
-      document.getElementById('serverNodeSub').textContent = `${node.name} • ${geoInfo.region}${simTag}`;
-      document.getElementById('serverIpChip').textContent = geoInfo.ip ? `IP: ${geoInfo.ip}` : 'IP: --';
+      const gpsSuffix = gpsLocationLabel ? ` • GPS: ${gpsLocationLabel}` : '';
+      document.getElementById('serverHeaderTitle').textContent = netInfo.isp;
+      document.getElementById('serverNodeSub').textContent = `${node.name}${gpsSuffix}`;
+      document.getElementById('serverIpChip').textContent = netInfo.ip ? `IP: ${netInfo.ip}` : 'IP: --';
       document.getElementById('deviceHeaderBadge').textContent = dev.label;
       document.getElementById('stabilityCardVal').textContent =
         lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}` : '--';
@@ -1680,7 +1868,7 @@
 
     async function refreshIsp(force = false) {
       if (force) {
-        geoInfo.isp = 'Detectando ISP...';
+        netInfo.isp = 'Detectando ISP...';
         updateHeaderAndFooter();
       }
       const q = `_t=${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
@@ -1690,11 +1878,9 @@
         const d = await fetchWithTimeout(`https://ipwho.is/?${q}`);
         if (d && d.success !== false && d.connection) {
           const isp = d.connection.isp || d.connection.org || 'Red no identificada';
-          geoInfo = {
+          netInfo = {
             ip: d.ip || '',
             isp: String(isp).trim(),
-            region: (d.region || d.city || 'No especificada').trim(),
-            city: (d.city || 'No especificada').trim(),
             countryCode: (d.country_code || 'VE').trim().toUpperCase()
           };
           ok = true;
@@ -1705,11 +1891,9 @@
         try {
           const d = await fetchWithTimeout(`https://ipapi.co/json/?${q}`);
           if (d && (d.org || d.asn)) {
-            geoInfo = {
+            netInfo = {
               ip: d.ip || '',
               isp: String(d.org || d.asn).trim(),
-              region: (d.region || d.city || 'No especificada').trim(),
-              city: (d.city || 'No especificada').trim(),
               countryCode: (d.country_code || 'VE').trim().toUpperCase()
             };
             ok = true;
@@ -1721,11 +1905,9 @@
         try {
           const d = await fetchWithTimeout(`${BACKEND_URL}/api/client-ip?${q}`, 3800);
           if (d && d.ok && d.isp) {
-            geoInfo = {
+            netInfo = {
               ip: d.ip || '',
               isp: d.isp,
-              region: d.region || 'No especificada',
-              city: d.city || 'No especificada',
               countryCode: d.countryCode || 'VE'
             };
             ok = true;
@@ -1734,7 +1916,7 @@
       }
 
       if (!ok) {
-        geoInfo.isp = 'Red no identificada';
+        netInfo.isp = 'Red no identificada';
       }
 
       updateHeaderAndFooter();
@@ -1748,7 +1930,6 @@
     }
     window.addEventListener('online', () => refreshIsp(true));
 
-    // Todas las métricas se capturan activamente bajo carga de bajada y subida
     async function runDownloadUnderLoad(durationMs, signal) {
       const dev = detectDevice();
       const dlNode = getDlNode();
@@ -1948,18 +2129,19 @@
 
     async function runSingleLoadCycle(cycleIdx, totalCycles, signal) {
       const dev = detectDevice();
-      const simOverhead = getSimulatedLoadMbps();
+      const simLoadMbps = getSimulatedLoadMbps();
 
       dlSeries = [];
       ulSeries = [];
       updateSparkline('dlSparkPath', []);
       updateSparkline('ulSparkPath', []);
       setGaugeProgress(0);
+      setGaugePhaseColor('download');
 
       const repSuffix = totalCycles > 1 ? ` (${cycleIdx}/${totalCycles})` : '';
       document.getElementById('phaseLabel').textContent = `Bajada${repSuffix}`;
       document.getElementById('gaugeState').className = 'gauge-state';
-      document.getElementById('gaugeState').textContent = `Midiendo bajo carga${repSuffix}...`;
+      document.getElementById('gaugeState').textContent = `Midiendo descarga${repSuffix}...`;
       document.getElementById('dlCardVal').textContent = '--';
       document.getElementById('ulCardVal').textContent = '—';
       document.getElementById('progressBar').style.width = '6%';
@@ -1967,36 +2149,42 @@
       const dlRes = await runDownloadUnderLoad(dev.durationSec * 1000, signal);
       if (signal.aborted) return null;
 
-      const dlNet = Math.max(0.5, dlRes.mbps - simOverhead * 0.65);
-      document.getElementById('dlCardVal').textContent = fmtSpeed(dlNet);
-      document.getElementById('gaugeValue').textContent = fmtGauge(dlNet);
-      setGaugeProgress(dlNet);
+      const dlAvailable = Math.max(0, dlRes.mbps - simLoadMbps);
+      document.getElementById('dlCardVal').textContent = fmtSpeed(dlAvailable);
+      document.getElementById('gaugeValue').textContent = fmtGauge(dlAvailable);
+      setGaugeProgress(dlAvailable);
 
+      setGaugePhaseColor('upload');
       document.getElementById('phaseLabel').textContent = `Subida${repSuffix}`;
-      document.getElementById('gaugeState').textContent = `Subida bajo carga${repSuffix}...`;
+      document.getElementById('gaugeState').textContent = `Midiendo subida${repSuffix}...`;
       const ulRes = await runUploadUnderLoad(Math.max(4, dev.durationSec - 2) * 1000, signal);
       if (signal.aborted) return null;
 
-      const ulNet = ulRes.mbps !== null ? Math.max(0.3, ulRes.mbps - simOverhead * 0.25) : null;
+      const ulAvailable = ulRes.mbps !== null ? Math.max(0, ulRes.mbps - simLoadMbps * 0.5) : null;
 
       const allLoadedRtts = [...(dlRes.rtts || []), ...(ulRes.rtts || [])];
-      const pingLoadAvg = allLoadedRtts.length
+      const basePing = allLoadedRtts.length
         ? Math.round(allLoadedRtts.reduce((a, b) => a + b, 0) / allLoadedRtts.length)
         : (dlRes.loadedPing || ulRes.loadedPing || 0);
 
-      const jitterLoad = calcJitterFromRtts(allLoadedRtts);
+      const loadRatio = dlRes.mbps > 0 ? Math.min(1.5, simLoadMbps / dlRes.mbps) : (simLoadMbps > 0 ? 0.5 : 0);
+      const pingWithSim = basePing > 0 ? Math.round(basePing * (1 + loadRatio * 0.25)) : null;
+
+      const baseJitter = calcJitterFromRtts(allLoadedRtts);
+      const jitterWithSim = Number((baseJitter * (1 + loadRatio * 0.3)).toFixed(1));
+
       const totalSent = (dlRes.pSent || 0) + (ulRes.pSent || 0);
       const totalLost = (dlRes.pLost || 0) + (ulRes.pLost || 0);
       const lossLoadPct = totalSent > 0 ? Number(((totalLost / totalSent) * 100).toFixed(1)) : 0;
 
-      const simPenalty = Math.min(25, prefs.simulatedDevices * 2);
-      const stabilityLoad = Math.max(15, Math.min(99, (dlRes.stability || 90) - simPenalty));
+      const simPenalty = Math.min(35, Math.round(loadRatio * 20));
+      const stabilityLoad = Math.max(10, Math.min(99, (dlRes.stability || 90) - simPenalty));
 
       return {
-        downloadMbps: Number(dlNet.toFixed(1)),
-        uploadMbps: ulNet !== null ? Number(ulNet.toFixed(1)) : null,
-        pingMs: pingLoadAvg || null,
-        jitterMs: jitterLoad,
+        downloadMbps: Number(dlAvailable.toFixed(1)),
+        uploadMbps: ulAvailable !== null ? Number(ulAvailable.toFixed(1)) : null,
+        pingMs: pingWithSim,
+        jitterMs: jitterWithSim,
         packetLossPct: lossLoadPct,
         stabilityPct: stabilityLoad
       };
@@ -2027,7 +2215,7 @@
 
           saveHistory({
             date: new Date().toLocaleString(),
-            isp: geoInfo.isp,
+            isp: netInfo.isp,
             download: `${fmtSpeed(res.downloadMbps)} Mbps`,
             upload: res.uploadMbps !== null ? `${fmtSpeed(res.uploadMbps)} Mbps` : 'N/D',
             ping: `${res.pingMs ?? '--'} ms`,
@@ -2055,6 +2243,7 @@
           stabilityPct: stabAvg
         };
 
+        setGaugePhaseColor('download');
         document.getElementById('dlCardVal').textContent = fmtSpeed(dlAvg);
         document.getElementById('ulCardVal').textContent = ulAvg !== null ? fmtSpeed(ulAvg) : 'N/D';
         document.getElementById('pingCardVal').textContent = pingAvg !== null ? `${pingAvg}` : '--';
@@ -2183,33 +2372,32 @@
       const stab = lastMetrics.stabilityPct || 85;
       const loss = lastMetrics.packetLossPct || 0;
       const simOverhead = getSimulatedLoadMbps();
-      const effMbps = dl > 0
-        ? Math.max(5, (dl - simOverhead) * 0.75 * Math.max(0.55, Math.min(1, stab / 100)))
-        : 50;
+      const netMbps = dl > 0 ? Math.max(0, dl - simOverhead) : 50;
+      const stabFactor = Math.max(0.55, Math.min(1, stab / 100));
+      const effMbps = netMbps * 0.75 * stabFactor;
 
       const actGrid = document.getElementById('activitiesGrid');
       if (actGrid) {
         actGrid.innerHTML = USE_CASES.map(uc => {
           let score = dl > 0 ? 1 : 3;
           if (dl > 0) {
-            if (dl >= uc.idealMbps) score = 5;
-            else if (dl >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
-            else if (dl >= uc.minMbps) score = 3;
-            else if (dl >= uc.minMbps * 0.5) score = 2;
+            if (netMbps >= uc.idealMbps) score = 5;
+            else if (netMbps >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
+            else if (netMbps >= uc.minMbps) score = 3;
+            else if (netMbps >= uc.minMbps * 0.5) score = 2;
             if (loss >= 1) score = Math.max(1, score - 1);
             if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
           }
 
           const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
           const label = dl > 0 ? (score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado')) : 'Referencia inicial';
-          const estDev = Math.max(1, Math.min(uc.planDevices || 8, Math.floor(effMbps / Math.max(1, uc.deviceLoadMbps || 15))));
 
           return `
             <div class="mini-info-card">
               <div class="mini-info-title">${uc.title} ${dl > 0 ? `(${score}/5)` : ''}</div>
               <div class="${cls}">${label}</div>
               <div class="mini-info-sub" style="margin-top:4px;">${score >= 3 ? uc.okText : uc.lowText}</div>
-              <div class="mini-info-sub" style="margin-top:5px;">~${estDev} equipos • Plan ref.: <strong>${uc.planRef || 'VNET400'}</strong></div>
+              <div class="mini-info-sub" style="margin-top:5px;">Plan ref.: <strong>${uc.planRef || 'VNET400'}</strong></div>
             </div>
           `;
         }).join('');
@@ -2218,11 +2406,13 @@
       const devGrid = document.getElementById('devicesGrid');
       if (devGrid) {
         devGrid.innerHTML = DEVICE_TYPES.map(dt => {
-          const nowCount = Math.max(1, Math.floor(effMbps / Math.max(1, dt.loadMbps || 15)));
+          const perDev = Math.max(1, dt.loadMbps || 15);
+          const rawDevices = Math.floor(effMbps / perDev);
+          const nowCount = dl > 0 ? Math.max(0, rawDevices) : Math.max(1, rawDevices);
           return `
             <div class="mini-info-card">
               <div class="mini-info-title">${dt.label}</div>
-              <div class="mini-info-sub">Estimados: <strong>~${nowCount}</strong> (~${dt.loadMbps} Mbps/eq)</div>
+              <div class="mini-info-sub">Estimados: <strong>~${nowCount}</strong> (~${perDev} Mbps/eq)</div>
             </div>
           `;
         }).join('');
@@ -2231,7 +2421,7 @@
       const devNote = document.getElementById('devicesNote');
       if (devNote) {
         devNote.textContent = dl > 0
-          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (concurrencia simulada: ${prefs.simulatedDevices} eq / ${simOverhead} Mbps).`
+          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (tras descontar ${simOverhead} Mbps de concurrencia y aplicar ${stab}% de constancia).`
           : 'Completa una prueba en Test para actualizar el cálculo con tu velocidad actual.';
       }
 
@@ -2240,7 +2430,6 @@
         refBody.innerHTML = REF_TABLE.map(r => `
           <tr>
             <td><strong>${r.activity}</strong></td>
-            <td>${r.devices}</td>
             <td>${r.recommended}</td>
           </tr>
         `).join('');
@@ -2302,9 +2491,8 @@
     async function fetchBenchmarkServer() {
       try {
         const q = new URLSearchParams({
-          isp: geoInfo.isp,
-          region: geoInfo.region,
-          countryCode: geoInfo.countryCode,
+          isp: netInfo.isp,
+          countryCode: netInfo.countryCode,
           t: String(Date.now())
         });
         const r = await fetch(`${BACKEND_URL}/api/benchmark?${q.toString()}`, { cache: 'no-store' });
@@ -2324,10 +2512,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            isp: geoInfo.isp,
-            region: geoInfo.region,
-            city: geoInfo.city,
-            countryCode: geoInfo.countryCode,
+            isp: netInfo.isp,
+            countryCode: netInfo.countryCode,
+            gpsLocation: gpsLocationLabel || undefined,
             deviceType: detectDevice().label,
             downloadMbps: lastMetrics.downloadMbps,
             uploadMbps: lastMetrics.uploadMbps,
@@ -2344,48 +2531,67 @@
       } catch {}
     }
 
+    function normalizeProviderName(name) {
+      return String(name || '').toLowerCase().replace(/\(tu red\)/gi, '').trim();
+    }
+
     function getTop3Providers(metric) {
       const key = metric === 'download' ? 'downloadAvg' : (metric === 'upload' ? 'uploadAvg' : 'pingAvg');
       const fromServer = Array.isArray(serverComparison?.topProviders) ? serverComparison.topProviders : [];
+      const currentVal = lastMetrics[metric === 'download' ? 'downloadMbps' : (metric === 'upload' ? 'uploadMbps' : 'pingMs')];
+      const hasCurrentIsp = Boolean(netInfo.isp && netInfo.isp !== 'Detectando ISP...' && netInfo.isp !== 'Red no identificada');
 
-      const candidates = [];
-      if (geoInfo.isp && geoInfo.isp !== 'Detectando ISP...') {
-        candidates.push({
-          name: `${geoInfo.isp} (Tu red)`,
-          val: lastMetrics[metric === 'download' ? 'downloadMbps' : (metric === 'upload' ? 'uploadMbps' : 'pingMs')]
+      const entries = [];
+      const seen = new Set();
+
+      function addEntry(rawName, val, isCurrentUser = false) {
+        if (typeof val !== 'number' || !Number.isFinite(val)) return;
+        const cleanKey = normalizeProviderName(rawName);
+        if (!cleanKey || seen.has(cleanKey)) return;
+        seen.add(cleanKey);
+        entries.push({
+          name: isCurrentUser ? `${rawName} (Tu red)` : rawName,
+          val,
+          isCurrentUser
         });
       }
 
       fromServer.forEach(p => {
-        if (p && p.isp) {
-          candidates.push({
-            name: p.isp,
-            val: typeof p[key] === 'number' ? p[key] : (typeof p.downloadAvg === 'number' ? p.downloadAvg : null)
-          });
+        if (!p || !p.isp) return;
+        const serverVal = typeof p[key] === 'number'
+          ? p[key]
+          : (metric === 'download' && typeof p.downloadAvg === 'number' ? p.downloadAvg : null);
+        const matchesUserIsp = hasCurrentIsp && normalizeProviderName(p.isp) === normalizeProviderName(netInfo.isp);
+        if (matchesUserIsp && typeof currentVal === 'number') {
+          addEntry(netInfo.isp, currentVal, true);
+        } else {
+          addEntry(p.isp, serverVal, false);
         }
       });
+
+      if (hasCurrentIsp && typeof currentVal === 'number') {
+        addEntry(netInfo.isp, currentVal, true);
+      }
 
       const fallbackPool = metric === 'ping'
         ? [
-            { name: 'VNET Fibra', val: 14 },
-            { name: 'Proveedor Regional A', val: 26 },
-            { name: 'Proveedor Regional B', val: 42 }
+            { name: 'VNET Fibra (Ref.)', val: 16 },
+            { name: 'Proveedor Regional A (Ref.)', val: 28 },
+            { name: 'Proveedor Regional B (Ref.)', val: 45 }
           ]
         : [
-            { name: 'VNET Fibra', val: metric === 'upload' ? 320 : 480 },
-            { name: 'Proveedor Regional A', val: metric === 'upload' ? 140 : 210 },
-            { name: 'Proveedor Regional B', val: metric === 'upload' ? 75 : 115 }
+            { name: 'VNET Fibra (Ref.)', val: metric === 'upload' ? 300 : 450 },
+            { name: 'Proveedor Regional A (Ref.)', val: metric === 'upload' ? 120 : 200 },
+            { name: 'Proveedor Regional B (Ref.)', val: metric === 'upload' ? 60 : 110 }
           ];
 
-      fallbackPool.forEach(item => {
-        if (!candidates.some(c => c.name.toLowerCase().includes(item.name.toLowerCase()))) {
-          candidates.push(item);
-        }
-      });
+      for (const fb of fallbackPool) {
+        if (entries.length >= 3) break;
+        addEntry(fb.name, fb.val, false);
+      }
 
-      const valid = candidates.filter(c => typeof c.val === 'number' && Number.isFinite(c.val));
-      valid.sort((a, b) => metric === 'ping' ? (a.val - b.val) : (b.val - a.val));
-      return valid.slice(0, 3);
+      entries.sort((a, b) => metric === 'ping' ? (a.val - b.val) : (b.val - a.val));
+      return entries.slice(0, 3);
     }
 
     function renderBenchmark() {
@@ -2394,16 +2600,17 @@
       const top3 = getTop3Providers(m);
       const maxV = Math.max(10, ...top3.map(x => x.val || 0));
 
-      document.getElementById('benchScopeText').textContent = `Top 3 • ${geoInfo.region}`;
+      document.getElementById('benchScopeText').textContent = gpsLocationLabel ? `GPS: ${gpsLocationLabel}` : 'Top 3';
 
       document.getElementById('benchBars').innerHTML = top3.length
         ? top3.map((item, idx) => {
             const pct = maxV > 0 ? Math.max(6, Math.min(100, (item.val / maxV) * 100)) : 0;
             const cls = idx === 0 ? '' : (idx === 1 ? 'ul' : 'muted');
+            const badge = item.isCurrentUser ? ' • Actual' : '';
             return `
               <div class="bar-item">
                 <div class="bar-head">
-                  <span>#${idx + 1} ${item.name}</span>
+                  <span>#${idx + 1} ${item.name}${badge}</span>
                   <strong>${item.val} ${unit}</strong>
                 </div>
                 <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%;"></div></div>
@@ -2412,9 +2619,10 @@
           }).join('')
         : '<div class="mini-info-sub">Ejecuta una prueba para comparar proveedores.</div>';
 
-      document.getElementById('benchSummaryLine').textContent = serverComparison?.counts
-        ? `Muestras — Zona: ${serverComparison.counts.localUsersTests} • País: ${serverComparison.counts.nationalUsersTests}`
-        : `Comparativa Top 3 (${m === 'ping' ? 'menor latencia primero' : 'mayor rendimiento primero'}).`;
+      const hasServerData = Array.isArray(serverComparison?.topProviders) && serverComparison.topProviders.length > 0;
+      document.getElementById('benchSummaryLine').textContent = hasServerData
+        ? `Ordenado por ${m === 'ping' ? 'menor latencia' : 'mayor velocidad'}.`
+        : `Mostrando referencias (Ref.) donde aún no hay muestras del servidor.`;
     }
 
     document.querySelectorAll('.bench-tab').forEach(b => {
@@ -2454,11 +2662,15 @@
     });
 
     function updateSimSummaryLabel() {
-      const eq = Math.max(0, parseInt(document.getElementById('simDevicesInput')?.value, 10) || 0);
-      const mbps = Math.max(1, parseInt(document.getElementById('mbpsPerDeviceInput')?.value, 10) || 18);
+      const eq = Math.max(0, Math.min(30, parseInt(document.getElementById('simDevicesInput')?.value, 10) || 0));
+      const mbps = Math.max(1, Math.min(200, parseInt(document.getElementById('mbpsPerDeviceInput')?.value, 10) || 18));
       const el = document.getElementById('simLoadSummary');
       if (el) {
-        el.textContent = `Carga simulada activa: ${eq * mbps} Mbps (${eq} equipos × ${mbps} Mbps).`;
+        const totalSim = eq * mbps;
+        const afterText = typeof lastMetrics.downloadMbps === 'number'
+          ? ` • Restante estimado: ${Math.max(0, Number((lastMetrics.downloadMbps - totalSim).toFixed(1)))} Mbps`
+          : '';
+        el.textContent = `Carga simulada: ${totalSim} Mbps (${eq} eq × ${mbps} Mbps)${afterText}.`;
       }
     }
 
@@ -2568,6 +2780,7 @@
     renderHistory();
     renderBenchmark();
     updatePwaNote();
+    requestGpsLocation();
 
     fetch(`${BACKEND_URL}/ping?wake=${Date.now()}`, { cache: 'no-store' }).catch(() => {});
     if (prefs.autoStart) {
