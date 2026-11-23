@@ -35,9 +35,10 @@
       --quiz-text: #ffffff;
       --quiz-muted: #cbd5e1;
       --quiz-accent: #3b82f6;
-      --quiz-card-bg: #ffffff;
+      --quiz-card-bg: #f8fafc;
       --quiz-card-text: #0f172a;
-      --shadow-card: 0 2px 10px rgba(15, 23, 42, 0.04);
+      --quiz-card-border: #cbd5e1;
+      --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.04);
     }
 
     html[data-theme="dark"] {
@@ -60,13 +61,14 @@
       --nav-active-text: #a78bfa;
       --btn-primary-bg: #f8fafc;
       --btn-primary-text: #070a12;
-      --quiz-surface: #091229;
-      --quiz-text: #ffffff;
-      --quiz-muted: #cbd5e1;
+      --quiz-surface: #0c1324;
+      --quiz-text: #f8fafc;
+      --quiz-muted: #94a3b8;
       --quiz-accent: #60a5fa;
-      --quiz-card-bg: #ffffff;
-      --quiz-card-text: #0f172a;
-      --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
+      --quiz-card-bg: #161f33;
+      --quiz-card-text: #f8fafc;
+      --quiz-card-border: #27354f;
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -84,7 +86,7 @@
       background-color: var(--bg);
       color: var(--text-main);
       min-height: 100vh;
-      line-height: 1.45;
+      line-height: 1.35;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
@@ -92,7 +94,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 84px;
+      padding-bottom: 68px;
     }
 
     .topbar {
@@ -101,32 +103,32 @@
       z-index: 30;
       background: var(--bg);
       border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .brand-name {
-      font-size: 1.25rem;
+      font-size: 1.12rem;
       font-weight: 800;
       letter-spacing: -0.4px;
     }
 
     .brand-pill {
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 999px;
       background: var(--nav-active-pill);
       color: var(--nav-active-text);
@@ -135,19 +137,19 @@
     .topbar-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .install-pill-btn {
       display: none;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: 999px;
       border: 1px solid var(--dl-color);
       background: rgba(20, 184, 166, 0.14);
       color: var(--dl-color);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
@@ -158,21 +160,21 @@
     }
 
     .live-pill {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 5px 10px;
+      padding: 4px 9px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       white-space: nowrap;
     }
 
     .dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--text-muted);
     }
@@ -192,8 +194,8 @@
     }
 
     .icon-btn {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 1px solid var(--border);
       background: var(--surface);
@@ -202,7 +204,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       transition: border-color 0.15s ease, transform 0.15s ease;
     }
 
@@ -215,7 +217,7 @@
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 14px 14px 20px;
+      padding: 8px 12px 12px;
       flex: 1;
     }
 
@@ -229,33 +231,34 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(3px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Compacto en Pestaña Test */
     .server-header-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px 16px;
+      border-radius: 12px;
+      padding: 8px 12px;
       box-shadow: var(--shadow-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .server-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
       min-width: 0;
     }
 
     .globe-badge {
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: rgba(20, 184, 166, 0.14);
       color: var(--dl-color);
@@ -263,10 +266,11 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      font-size: 0.85rem;
     }
 
     .server-title {
-      font-size: 0.94rem;
+      font-size: 0.86rem;
       font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
@@ -275,11 +279,11 @@
     }
 
     .server-sub {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -289,9 +293,9 @@
     }
 
     .device-badge-inline {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 999px;
       background: var(--surface-alt);
       color: var(--text-muted);
@@ -301,10 +305,10 @@
     .gauge-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px 14px 16px;
+      border-radius: 14px;
+      padding: 8px 10px 10px;
       box-shadow: var(--shadow-card);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -313,8 +317,8 @@
     .gauge-wrap {
       position: relative;
       width: 100%;
-      max-width: 360px;
-      aspect-ratio: 360 / 245;
+      max-width: 270px;
+      aspect-ratio: 360 / 220;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -342,7 +346,7 @@
     }
 
     .gauge-tick-label {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
       fill: var(--text-muted);
       user-select: none;
@@ -350,7 +354,7 @@
 
     .gauge-center {
       position: absolute;
-      top: 52%;
+      top: 54%;
       left: 50%;
       transform: translate(-50%, -42%);
       text-align: center;
@@ -358,27 +362,27 @@
     }
 
     .gauge-value {
-      font-size: clamp(2.3rem, 8vw, 3.25rem);
+      font-size: clamp(1.75rem, 6vw, 2.35rem);
       font-weight: 800;
-      letter-spacing: -1.5px;
+      letter-spacing: -1px;
       line-height: 1.05;
       color: var(--text-main);
       font-variant-numeric: tabular-nums;
     }
 
     .gauge-unit {
-      font-size: 0.9rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
       font-weight: 600;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .gauge-state {
-      font-size: 0.86rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--dl-color);
-      margin-top: 4px;
-      min-height: 20px;
+      margin-top: 2px;
+      min-height: 16px;
     }
 
     .gauge-state.warn {
@@ -387,12 +391,12 @@
 
     .progress-mini {
       width: 100%;
-      max-width: 320px;
-      height: 4px;
+      max-width: 260px;
+      height: 3px;
       background: var(--surface-alt);
       border-radius: 999px;
       overflow: hidden;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .progress-mini-fill {
@@ -405,15 +409,15 @@
     .du-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
 
     .du-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 15px 12px;
+      border-radius: 12px;
+      padding: 9px 11px 8px;
       box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
@@ -424,111 +428,108 @@
     .du-head {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.72rem;
+      gap: 5px;
+      font-size: 0.66rem;
       font-weight: 800;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 2px;
     }
 
     .du-head.dl { color: var(--dl-color); }
     .du-head.ul { color: var(--ul-color); }
 
     .du-num {
-      font-size: clamp(1.5rem, 5vw, 1.95rem);
+      font-size: clamp(1.2rem, 4.2vw, 1.55rem);
       font-weight: 800;
       color: var(--text-main);
-      line-height: 1.1;
+      line-height: 1.08;
       font-variant-numeric: tabular-nums;
     }
 
     .du-unit {
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 2px;
-      margin-bottom: 8px;
+      margin-top: 1px;
+      margin-bottom: 4px;
     }
 
     .sparkline-svg {
       width: 100%;
-      height: 36px;
+      height: 22px;
       display: block;
     }
 
     .pjl-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    @media (max-width: 560px) {
-      .pjl-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      gap: 6px;
+      margin-bottom: 8px;
     }
 
     .pjl-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 8px;
+      border-radius: 11px;
+      padding: 8px 6px;
       box-shadow: var(--shadow-card);
       text-align: center;
       min-width: 0;
     }
 
     .pjl-label {
-      font-size: 0.76rem;
+      font-size: 0.68rem;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .pjl-val {
-      font-size: clamp(1.02rem, 3.6vw, 1.32rem);
+      font-size: clamp(0.92rem, 3.2vw, 1.12rem);
       font-weight: 800;
       color: var(--text-main);
       font-variant-numeric: tabular-nums;
     }
 
     .pjl-sub {
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .test-actions-stack {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
     .share-link-btn {
       background: transparent;
       border: none;
       color: var(--ul-color);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 3px 8px;
       margin: 0 auto;
     }
 
     .primary-action-pill {
       width: 100%;
-      padding: 13px 18px;
+      padding: 9px 14px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.86rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: var(--shadow-card);
@@ -542,15 +543,16 @@
 
     .meta-footer-line {
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
+    /* Resto de vistas */
     .section-heading {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -560,73 +562,74 @@
     .acc-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .acc-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 12px;
       box-shadow: var(--shadow-card);
       overflow: hidden;
     }
 
     .acc-header {
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 0.94rem;
+      font-size: 0.9rem;
       user-select: none;
     }
 
     .acc-body {
       display: none;
-      padding: 0 16px 16px;
+      padding: 0 14px 14px;
       border-top: 1px solid var(--border);
     }
 
     .acc-body.open {
       display: block;
-      padding-top: 14px;
+      padding-top: 12px;
     }
 
     .cards-2col {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px;
     }
 
     .mini-info-card {
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px;
+      padding: 10px;
     }
 
     .mini-info-title {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .mini-info-sub {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
-    .rating-good { color: var(--ping-color); font-weight: 700; font-size: 0.82rem; }
-    .rating-ok { color: var(--warn); font-weight: 700; font-size: 0.82rem; }
-    .rating-poor { color: var(--bad); font-weight: 700; font-size: 0.82rem; }
+    .rating-good { color: var(--ping-color); font-weight: 700; font-size: 0.78rem; }
+    .rating-ok { color: var(--warn); font-weight: 700; font-size: 0.78rem; }
+    .rating-poor { color: var(--bad); font-weight: 700; font-size: 0.78rem; }
 
     .quiz-card {
       background: var(--quiz-surface);
       color: var(--quiz-text);
-      border-radius: 18px;
-      padding: 20px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
       text-align: center;
       box-shadow: var(--shadow-card);
     }
@@ -635,12 +638,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--quiz-muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .quiz-highlight {
@@ -649,31 +652,31 @@
     }
 
     .quiz-q {
-      font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+      font-size: clamp(1rem, 3.2vw, 1.25rem);
       font-weight: 800;
       max-width: 560px;
-      margin: 0 auto 18px;
+      margin: 0 auto 14px;
     }
 
     .quiz-options {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: 8px;
       max-width: 560px;
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
     }
 
     .quiz-opt {
       background: var(--quiz-card-bg);
       color: var(--quiz-card-text);
-      border: 2px solid transparent;
+      border: 1.5px solid var(--quiz-card-border);
       border-radius: 12px;
-      padding: 14px 10px;
+      padding: 12px 10px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: transform 0.14s ease, border-color 0.14s ease;
     }
 
@@ -688,35 +691,36 @@
     }
 
     .quiz-opt-badge {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 800;
-      color: #2563eb;
+      color: var(--quiz-accent);
     }
 
     .quiz-opt-label {
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 700;
       line-height: 1.25;
+      color: var(--quiz-card-text);
     }
 
     .settings-stack {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .panel-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 14px;
       box-shadow: var(--shadow-card);
     }
 
     .panel-title {
-      font-size: 0.96rem;
+      font-size: 0.92rem;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -727,31 +731,32 @@
     .field-row {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 5px;
+      margin-bottom: 10px;
     }
 
     .field-row label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       font-weight: 600;
     }
 
     select {
-      padding: 9px 12px;
+      width: 100%;
+      padding: 8px 10px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.86rem;
     }
 
     .check-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.86rem;
-      margin-bottom: 8px;
+      font-size: 0.84rem;
+      margin-bottom: 6px;
       cursor: pointer;
     }
 
@@ -759,16 +764,16 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .btn-sm {
-      padding: 7px 13px;
+      padding: 6px 12px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text-main);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -783,16 +788,16 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .bench-tab {
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text-main);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -804,18 +809,18 @@
     }
 
     .bar-item {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .bar-head {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
+      font-size: 0.78rem;
+      margin-bottom: 3px;
     }
 
     .bar-track {
-      height: 8px;
+      height: 7px;
       border-radius: 999px;
       background: var(--surface-alt);
       overflow: hidden;
@@ -834,49 +839,49 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
     th, td {
       text-align: left;
-      padding: 8px 6px;
+      padding: 7px 5px;
       border-bottom: 1px solid var(--border);
     }
 
     th {
       color: var(--text-muted);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
     }
 
     .faq-item {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .faq-q {
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       font-weight: 700;
       margin-bottom: 2px;
     }
 
     .faq-a {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
     .social-row {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-top: 14px;
+      gap: 8px;
+      margin-top: 8px;
       flex-wrap: wrap;
     }
 
     .social-chip {
       text-decoration: none;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 6px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -885,8 +890,8 @@
 
     .powered-box {
       text-align: center;
-      margin-top: 16px;
-      font-size: 0.78rem;
+      margin-top: 6px;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
@@ -906,7 +911,7 @@
       border-top: 1px solid var(--border);
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+      padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
     }
 
     .nav-btn {
@@ -917,18 +922,18 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 5px 4px;
-      border-radius: 12px;
+      gap: 2px;
+      padding: 3px 2px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       transition: all 0.15s ease;
     }
 
     .nav-icon-wrap {
-      width: 44px;
-      height: 26px;
+      width: 38px;
+      height: 22px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
@@ -947,33 +952,33 @@
 
     @media (min-width: 900px) {
       .app-shell {
-        padding-bottom: 24px;
-        padding-left: 112px;
+        padding-bottom: 16px;
+        padding-left: 104px;
       }
 
       .bottom-nav {
-        top: 61px;
+        top: 50px;
         bottom: 0;
         left: 0;
         right: auto;
-        width: 112px;
+        width: 104px;
         border-top: none;
         border-right: 1px solid var(--border);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        gap: 10px;
-        padding: 20px 10px;
+        gap: 8px;
+        padding: 16px 8px;
       }
 
       .nav-btn {
         width: 100%;
-        padding: 10px 6px;
+        padding: 8px 4px;
       }
 
       .main-container {
-        max-width: 820px;
-        padding: 20px 24px 32px;
+        max-width: 780px;
+        padding: 12px 20px 20px;
       }
     }
 
@@ -993,7 +998,7 @@
         gap: 8px;
         padding: 4px 0;
         border-bottom: 1px dashed var(--border);
-        font-size: 0.78rem;
+        font-size: 0.76rem;
       }
       #historyTable td:last-child { border-bottom: none; }
       #historyTable td::before {
@@ -1043,7 +1048,7 @@
 
         <div class="gauge-card">
           <div class="gauge-wrap">
-            <svg class="gauge-svg" viewBox="0 0 360 245" aria-hidden="true">
+            <svg class="gauge-svg" viewBox="0 0 360 220" aria-hidden="true">
               <path id="gaugeTrackPath" class="gauge-track-arc"></path>
               <path id="gaugeFillPath" class="gauge-fill-arc"></path>
               <g id="gaugeTicksGroup"></g>
@@ -1066,8 +1071,8 @@
               <div class="du-num" id="dlCardVal">--</div>
               <div class="du-unit">Mbps</div>
             </div>
-            <svg class="sparkline-svg" id="dlSparkline" viewBox="0 0 160 36" preserveAspectRatio="none">
-              <path id="dlSparkPath" fill="none" stroke="var(--dl-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
+            <svg class="sparkline-svg" id="dlSparkline" viewBox="0 0 160 24" preserveAspectRatio="none">
+              <path id="dlSparkPath" fill="none" stroke="var(--dl-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
             </svg>
           </div>
 
@@ -1077,8 +1082,8 @@
               <div class="du-num" id="ulCardVal">—</div>
               <div class="du-unit">Mbps</div>
             </div>
-            <svg class="sparkline-svg" id="ulSparkline" viewBox="0 0 160 36" preserveAspectRatio="none">
-              <path id="ulSparkPath" fill="none" stroke="var(--ul-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
+            <svg class="sparkline-svg" id="ulSparkline" viewBox="0 0 160 24" preserveAspectRatio="none">
+              <path id="ulSparkPath" fill="none" stroke="var(--ul-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d=""></path>
             </svg>
           </div>
         </div>
@@ -1148,9 +1153,9 @@
               <span>📱 Dispositivos simultáneos estimados</span>
               <span>▼</span>
             </div>
-            <div class="acc-body" id="bodyDevices">
+            <div class="acc-body open" id="bodyDevices">
               <div class="cards-2col" id="devicesGrid"></div>
-              <div class="mini-info-sub" id="devicesNote" style="margin-top:10px;"></div>
+              <div class="mini-info-sub" id="devicesNote" style="margin-top:8px;"></div>
             </div>
           </div>
 
@@ -1159,7 +1164,7 @@
               <span>📋 Tabla de referencia por actividad</span>
               <span>▼</span>
             </div>
-            <div class="acc-body" id="bodyRefTable">
+            <div class="acc-body open" id="bodyRefTable">
               <table>
                 <thead>
                   <tr>
@@ -1178,7 +1183,7 @@
               <span>💡 Sugerencias para obtener una medición precisa</span>
               <span>▼</span>
             </div>
-            <div class="acc-body" id="bodyTips">
+            <div class="acc-body open" id="bodyTips">
               <div class="cards-2col" id="tipsGrid"></div>
             </div>
           </div>
@@ -1188,7 +1193,7 @@
               <span>❓ Preguntas y glosario VNET</span>
               <span>▼</span>
             </div>
-            <div class="acc-body" id="bodyFaq">
+            <div class="acc-body open" id="bodyFaq">
               <div id="faqList"></div>
             </div>
           </div>
@@ -1204,7 +1209,10 @@
             </div>
             <div class="field-row">
               <label for="serverSelect">Servidor predeterminado</label>
-              <select id="serverSelect"></select>
+              <select id="serverSelect">
+                <option value="cloudflare">Cloudflare</option>
+                <option value="render">Servidor VNET Render</option>
+              </select>
               <span class="mini-info-sub">Los canales y bloques de prueba se ajustan automáticamente según tu equipo.</span>
             </div>
             <label class="check-row">
@@ -1294,18 +1302,62 @@
   <script>
     const CFG = window.VNET_CONFIG || {};
     const BACKEND_URL = CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
-    const CDN_NODES = Array.isArray(CFG.cdnNodes) ? CFG.cdnNodes : [];
-    const PING_ENDPOINTS = Array.isArray(CFG.pingEndpoints) ? CFG.pingEndpoints : [];
-    const PLANS = Array.isArray(CFG.plans) ? CFG.plans : [];
-    const USE_CASES = Array.isArray(CFG.useCases) ? CFG.useCases : [];
-    const DEVICE_TYPES = Array.isArray(CFG.deviceTypes) ? CFG.deviceTypes : [];
-    const REF_TABLE = Array.isArray(CFG.activityReferenceTable) ? CFG.activityReferenceTable : [];
-    const TEST_TIPS = Array.isArray(CFG.testTips) ? CFG.testTips : [];
-    const FAQ_LIST = Array.isArray(CFG.faq) ? CFG.faq : [];
+
+    const FALLBACK_CDN_NODES = [
+      { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
+      { id: 'render', name: 'Servidor VNET Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
+    ];
+    const FALLBACK_PING_ENDPOINTS = [
+      { id: 'cloudflare', name: 'Cloudflare', url: 'https://speed.cloudflare.com/__down?bytes=100' },
+      { id: 'render', name: 'Servidor VNET Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+    ];
+    const FALLBACK_PLANS = [
+      { id: 'vnet400', name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400, recommendedDevices: 8 },
+      { id: 'vnet600', name: 'VNET600', label: 'Hasta 600 Mbps', mbps: 600, recommendedDevices: 12 },
+      { id: 'vnet1giga', name: 'VNET1GIGA', label: 'Hasta 1 Gbps', mbps: 1000, recommendedDevices: 20 }
+    ];
+    const FALLBACK_USE_CASES = [
+      { id: 'web_browsing', title: 'Navegación y redes sociales', minMbps: 15, idealMbps: 50, deviceLoadMbps: 10, planRef: 'VNET400', planDevices: 8, okText: 'Páginas y redes cargan con rapidez.', lowText: 'Puede haber demoras al abrir sitios pesados.' },
+      { id: 'video_streaming', title: 'Streaming HD y 4K', minMbps: 25, idealMbps: 100, deviceLoadMbps: 25, planRef: 'VNET400', planDevices: 8, okText: 'Reproducción fluida sin cortes.', lowText: 'Puede bajar la calidad o pausar en horas pico.' },
+      { id: 'video_conferencing', title: 'Videollamadas y trabajo remoto', minMbps: 25, idealMbps: 80, minUploadMbps: 8, deviceLoadMbps: 20, planRef: 'VNET600', planDevices: 12, okText: 'Buen respaldo para reuniones y envío de archivos.', lowText: 'Riesgo de cortes en audio/video o subida lenta.' },
+      { id: 'online_gaming', title: 'Juegos en línea y descargas', minMbps: 50, idealMbps: 150, deviceLoadMbps: 30, planRef: 'VNET600', planDevices: 12, okText: 'Buen margen para descargas y respuesta estable.', lowText: 'Descargas lentas o retraso bajo carga compartida.' }
+    ];
+    const FALLBACK_DEVICE_TYPES = [
+      { label: 'Celulares / Tablets', loadMbps: 12 },
+      { label: 'PC / Laptops', loadMbps: 25 },
+      { label: 'Smart TV / Streaming', loadMbps: 25 },
+      { label: 'Consolas', loadMbps: 30 }
+    ];
+    const FALLBACK_REF_TABLE = [
+      { activity: 'Navegación web, redes sociales y mensajería', devices: '1 a 6+ equipos', recommended: '15–60 Mbps (VNET400)' },
+      { activity: 'Streaming HD / 4K simultáneo', devices: '1 a 5+ pantallas', recommended: '25–150 Mbps (VNET400)' },
+      { activity: 'Videollamadas, clases y teletrabajo', devices: '1 a 6+ puestos', recommended: '25–120 Mbps (VNET400 / VNET600)' },
+      { activity: 'Juegos en línea y descargas', devices: '2 a 8+ equipos', recommended: '60–300+ Mbps (VNET600 / VNET1GIGA)' }
+    ];
+    const FALLBACK_TEST_TIPS = [
+      { title: '🔌 Prioriza cable Ethernet', desc: 'Medir por cable ofrece mayor precisión y estabilidad que el Wi-Fi.' },
+      { title: '📶 Usa Wi-Fi 5 GHz y cerca del router', desc: 'El test mide el enlace hacia el servidor, no la cobertura Wi-Fi ni el cableado interno.' },
+      { title: '🔁 Haz al menos 3 pruebas seguidas', desc: 'Repite al menos tres veces en distintos horarios y evalúa ping, jitter y pérdida.' },
+      { title: '⏸️ Pausa descargas y evita VPN', desc: 'Cierra descargas o streaming activos y desactiva VPN para no alterar la ruta.' }
+    ];
+    const FALLBACK_FAQ = [
+      { q: '1. ¿Qué mide y qué no mide un test de velocidad?', a: 'Mide descarga, subida, latencia (ping), jitter y estabilidad hacia un servidor; no mide la cobertura Wi-Fi real, el router, el cableado ni las interferencias internas.' },
+      { q: '2. ¿Cómo leer la latencia, el jitter y la pérdida de paquetes?', a: '0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms muestra retrasos en tiempo real. Jitter bajo da mayor estabilidad y desde 1% de pérdida ya puede haber cortes.' },
+      { q: '3. ¿Qué significan fibra óptica, NAP, ONT/ONU y velocidad simétrica?', a: 'La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala descarga y subida.' }
+    ];
+
+    const CDN_NODES = Array.isArray(CFG.cdnNodes) && CFG.cdnNodes.length ? CFG.cdnNodes : FALLBACK_CDN_NODES;
+    const PING_ENDPOINTS = Array.isArray(CFG.pingEndpoints) && CFG.pingEndpoints.length ? CFG.pingEndpoints : FALLBACK_PING_ENDPOINTS;
+    const PLANS = Array.isArray(CFG.plans) && CFG.plans.length ? CFG.plans : FALLBACK_PLANS;
+    const USE_CASES = Array.isArray(CFG.useCases) && CFG.useCases.length ? CFG.useCases : FALLBACK_USE_CASES;
+    const DEVICE_TYPES = Array.isArray(CFG.deviceTypes) && CFG.deviceTypes.length ? CFG.deviceTypes : FALLBACK_DEVICE_TYPES;
+    const REF_TABLE = Array.isArray(CFG.activityReferenceTable) && CFG.activityReferenceTable.length ? CFG.activityReferenceTable : FALLBACK_REF_TABLE;
+    const TEST_TIPS = Array.isArray(CFG.testTips) && CFG.testTips.length ? CFG.testTips : FALLBACK_TEST_TIPS;
+    const FAQ_LIST = Array.isArray(CFG.faq) && CFG.faq.length ? CFG.faq : FALLBACK_FAQ;
 
     const DEFAULT_PREFS = Object.assign({
       durationSec: 8,
-      serverId: 'cloudflare',
+      serverId: CDN_NODES[0].id,
       autoStart: true
     }, CFG.defaults || {});
 
@@ -1452,19 +1504,11 @@
     }
 
     function getDlNode() {
-      return CDN_NODES.find(n => n.id === prefs.serverId) || CDN_NODES[0] || {
-        id: 'cloudflare',
-        name: 'Cloudflare',
-        url: 'https://speed.cloudflare.com/__down?bytes=25000000'
-      };
+      return CDN_NODES.find(n => n.id === prefs.serverId) || CDN_NODES[0];
     }
 
     function getPingNode() {
-      return PING_ENDPOINTS.find(p => p.id === prefs.serverId) || PING_ENDPOINTS[0] || {
-        id: 'cloudflare',
-        name: 'Cloudflare',
-        url: 'https://speed.cloudflare.com/__down?bytes=100'
-      };
+      return PING_ENDPOINTS.find(p => p.id === prefs.serverId) || PING_ENDPOINTS[0];
     }
 
     function fmtSpeed(mbps) {
@@ -1489,8 +1533,8 @@
 
     const GAUGE_TICKS = [0, 1, 5, 10, 25, 50, 100, 250, 500, 1000];
     const GAUGE_CX = 180;
-    const GAUGE_CY = 135;
-    const GAUGE_R = 112;
+    const GAUGE_CY = 126;
+    const GAUGE_R = 104;
     const START_DEG = 140;
     const SWEEP_DEG = 260;
 
@@ -1538,7 +1582,7 @@
       ticksGroup.innerHTML = GAUGE_TICKS.map((val, i) => {
         const ratio = i / (GAUGE_TICKS.length - 1);
         const deg = START_DEG + ratio * SWEEP_DEG;
-        const pos = polarToCartesian(GAUGE_CX, GAUGE_CY, GAUGE_R + 24, deg);
+        const pos = polarToCartesian(GAUGE_CX, GAUGE_CY, GAUGE_R + 22, deg);
         return `<text x="${pos.x.toFixed(1)}" y="${(pos.y + 4).toFixed(1)}" text-anchor="middle" class="gauge-tick-label">${val}</text>`;
       }).join('');
     }
@@ -1559,10 +1603,10 @@
       }
       const maxVal = Math.max(...series, 10);
       const w = 160;
-      const h = 34;
+      const h = 22;
       const pts = series.map((v, idx) => {
         const x = series.length === 1 ? w : (idx / (series.length - 1)) * w;
-        const y = h - Math.max(3, Math.min(h - 3, (v / maxVal) * (h - 6)));
+        const y = h - Math.max(2, Math.min(h - 2, (v / maxVal) * (h - 4)));
         return `${x.toFixed(1)},${y.toFixed(1)}`;
       });
       el.setAttribute('d', `M ${pts.join(' L ')}`);
@@ -2057,14 +2101,14 @@
         stage.innerHTML = `
           <div class="quiz-meta"><span>Resultado del cuestionario</span></div>
           <div class="quiz-q">Recomendación para ${res.peopleLabel}</div>
-          <div class="quiz-opt-badge" style="font-size:2rem; color:#60a5fa; margin-bottom:6px;">${res.mbps} Mbps</div>
-          <div style="font-weight:700; margin-bottom:10px;">Plan sugerido: ${res.plan.name} (${res.plan.label})</div>
-          <p style="font-size:0.84rem; color:var(--quiz-muted); margin-bottom:16px;">
+          <div class="quiz-opt-badge" style="font-size:1.85rem; margin-bottom:6px;">${res.mbps} Mbps</div>
+          <div style="font-weight:700; margin-bottom:8px;">Plan sugerido: ${res.plan.name} (${res.plan.label})</div>
+          <p style="font-size:0.82rem; color:var(--quiz-muted); margin-bottom:14px;">
             ${lastMetrics.downloadMbps !== null ? `Tu bajada medida hoy es de ${lastMetrics.downloadMbps} Mbps.` : 'Ejecuta la prueba en Test para comparar con tu velocidad actual.'}
           </p>
           <button type="button" class="btn-sm primary" id="quizRestartBtn">Repetir cuestionario</button>
         `;
-        document.getElementById('quizRestartBtn').addEventListener('click', () => {
+        document.getElementById('quizRestartBtn')?.addEventListener('click', () => {
           quizAnswers = {};
           quizStep = 0;
           renderQuiz();
@@ -2103,13 +2147,10 @@
         });
       });
 
-      const backBtn = document.getElementById('quizBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => {
-          quizStep = Math.max(0, quizStep - 1);
-          renderQuiz();
-        });
-      }
+      document.getElementById('quizBackBtn')?.addEventListener('click', () => {
+        quizStep = Math.max(0, quizStep - 1);
+        renderQuiz();
+      });
     }
 
     function renderAccordionInsights() {
@@ -2117,65 +2158,86 @@
       const ul = lastMetrics.uploadMbps;
       const stab = lastMetrics.stabilityPct || 85;
       const loss = lastMetrics.packetLossPct || 0;
-      const effMbps = dl * 0.75 * Math.max(0.55, Math.min(1, stab / 100));
+      const effMbps = dl > 0 ? dl * 0.75 * Math.max(0.55, Math.min(1, stab / 100)) : 50;
 
-      document.getElementById('activitiesGrid').innerHTML = USE_CASES.map(uc => {
-        let score = 1;
-        if (dl >= uc.idealMbps) score = 5;
-        else if (dl >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
-        else if (dl >= uc.minMbps) score = 3;
-        else if (dl >= uc.minMbps * 0.5) score = 2;
-        if (loss >= 1) score = Math.max(1, score - 1);
-        if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
+      const actGrid = document.getElementById('activitiesGrid');
+      if (actGrid) {
+        actGrid.innerHTML = USE_CASES.map(uc => {
+          let score = dl > 0 ? 1 : 3;
+          if (dl > 0) {
+            if (dl >= uc.idealMbps) score = 5;
+            else if (dl >= (uc.minMbps + uc.idealMbps) * 0.5) score = 4;
+            else if (dl >= uc.minMbps) score = 3;
+            else if (dl >= uc.minMbps * 0.5) score = 2;
+            if (loss >= 1) score = Math.max(1, score - 1);
+            if (uc.id === 'video_conferencing' && ul !== null && ul < (uc.minUploadMbps || 5)) score = Math.max(1, score - 1);
+          }
 
-        const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
-        const label = score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado');
-        const estDev = Math.max(1, Math.min(uc.planDevices, Math.floor(effMbps / Math.max(1, uc.deviceLoadMbps))));
+          const cls = score >= 4 ? 'rating-good' : (score === 3 ? 'rating-ok' : 'rating-poor');
+          const label = dl > 0 ? (score >= 4 ? 'Óptimo / Bueno' : (score === 3 ? 'Aceptable' : 'Limitado')) : 'Referencia inicial';
+          const estDev = Math.max(1, Math.min(uc.planDevices || 8, Math.floor(effMbps / Math.max(1, uc.deviceLoadMbps || 15))));
 
-        return `
+          return `
+            <div class="mini-info-card">
+              <div class="mini-info-title">${uc.title} ${dl > 0 ? `(${score}/5)` : ''}</div>
+              <div class="${cls}">${label}</div>
+              <div class="mini-info-sub" style="margin-top:4px;">${score >= 3 ? uc.okText : uc.lowText}</div>
+              <div class="mini-info-sub" style="margin-top:5px;">~${estDev} equipos • Plan ref.: <strong>${uc.planRef || 'VNET400'}</strong></div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      const devGrid = document.getElementById('devicesGrid');
+      if (devGrid) {
+        devGrid.innerHTML = DEVICE_TYPES.map(dt => {
+          const nowCount = Math.max(1, Math.floor(effMbps / Math.max(1, dt.loadMbps || 15)));
+          return `
+            <div class="mini-info-card">
+              <div class="mini-info-title">${dt.label}</div>
+              <div class="mini-info-sub">Estimados: <strong>~${nowCount}</strong> (~${dt.loadMbps} Mbps/eq)</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      const devNote = document.getElementById('devicesNote');
+      if (devNote) {
+        devNote.textContent = dl > 0
+          ? `Margen útil estimado: ~${Math.round(effMbps)} Mbps (considerando uso simultáneo y constancia de red).`
+          : 'Completa una prueba en Test para actualizar el cálculo con tu velocidad actual.';
+      }
+
+      const refBody = document.getElementById('refTableBody');
+      if (refBody) {
+        refBody.innerHTML = REF_TABLE.map(r => `
+          <tr>
+            <td><strong>${r.activity}</strong></td>
+            <td>${r.devices}</td>
+            <td>${r.recommended}</td>
+          </tr>
+        `).join('');
+      }
+
+      const tipsGrid = document.getElementById('tipsGrid');
+      if (tipsGrid) {
+        tipsGrid.innerHTML = TEST_TIPS.map(t => `
           <div class="mini-info-card">
-            <div class="mini-info-title">${uc.title} (${score}/5)</div>
-            <div class="${cls}">${label}</div>
-            <div class="mini-info-sub" style="margin-top:4px;">${score >= 3 ? uc.okText : uc.lowText}</div>
-            <div class="mini-info-sub" style="margin-top:6px;">~${estDev} equipos • Plan ref.: <strong>${uc.planRef}</strong></div>
+            <div class="mini-info-title">${t.title}</div>
+            <div class="mini-info-sub">${t.desc}</div>
           </div>
-        `;
-      }).join('');
+        `).join('');
+      }
 
-      document.getElementById('devicesGrid').innerHTML = DEVICE_TYPES.map(dt => {
-        const nowCount = Math.max(1, Math.floor(effMbps / Math.max(1, dt.loadMbps)));
-        return `
-          <div class="mini-info-card">
-            <div class="mini-info-title">${dt.label}</div>
-            <div class="mini-info-sub">Estimados ahora: <strong>~${nowCount}</strong> (~${dt.loadMbps} Mbps/eq)</div>
+      const faqList = document.getElementById('faqList');
+      if (faqList) {
+        faqList.innerHTML = FAQ_LIST.map(f => `
+          <div class="faq-item">
+            <div class="faq-q">${f.q}</div>
+            <div class="faq-a">${f.a}</div>
           </div>
-        `;
-      }).join('');
-
-      document.getElementById('devicesNote').textContent =
-        `Margen útil estimado: ~${Math.round(effMbps)} Mbps (considerando uso simultáneo y constancia de red).`;
-
-      document.getElementById('refTableBody').innerHTML = REF_TABLE.map(r => `
-        <tr>
-          <td><strong>${r.activity}</strong></td>
-          <td>${r.devices}</td>
-          <td>${r.recommended}</td>
-        </tr>
-      `).join('');
-
-      document.getElementById('tipsGrid').innerHTML = TEST_TIPS.map(t => `
-        <div class="mini-info-card">
-          <div class="mini-info-title">${t.title}</div>
-          <div class="mini-info-sub">${t.desc}</div>
-        </div>
-      `).join('');
-
-      document.getElementById('faqList').innerHTML = FAQ_LIST.map(f => `
-        <div class="faq-item">
-          <div class="faq-q">${f.q}</div>
-          <div class="faq-a">${f.a}</div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     document.querySelectorAll('.acc-header').forEach(h => {
@@ -2310,6 +2372,9 @@
         btn.classList.add('active');
         document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
         document.getElementById(targetTab)?.classList.add('active');
+        if (targetTab === 'tab-settings') syncPrefsUI();
+        if (targetTab === 'tab-accordion') renderAccordionInsights();
+        if (targetTab === 'tab-quiz') renderQuiz();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
@@ -2329,16 +2394,21 @@
 
     function syncPrefsUI() {
       const sel = document.getElementById('serverSelect');
-      sel.innerHTML = CDN_NODES.map(n => `<option value="${n.id}">${n.name}</option>`).join('');
-      sel.value = CDN_NODES.some(n => n.id === prefs.serverId) ? prefs.serverId : (CDN_NODES[0]?.id || 'cloudflare');
-      document.getElementById('cfgAutoStart').checked = Boolean(prefs.autoStart);
+      if (sel) {
+        sel.innerHTML = CDN_NODES.map(n => `<option value="${n.id}">${n.name}</option>`).join('');
+        const valid = CDN_NODES.some(n => n.id === prefs.serverId);
+        sel.value = valid ? prefs.serverId : CDN_NODES[0].id;
+        prefs.serverId = sel.value;
+      }
+      const autoEl = document.getElementById('cfgAutoStart');
+      if (autoEl) autoEl.checked = Boolean(prefs.autoStart);
       updateHeaderAndFooter();
     }
 
     document.getElementById('saveCfgBtn').addEventListener('click', () => {
       prefs = {
         durationSec: DEFAULT_PREFS.durationSec,
-        serverId: document.getElementById('serverSelect').value || 'cloudflare',
+        serverId: document.getElementById('serverSelect').value || CDN_NODES[0].id,
         autoStart: document.getElementById('cfgAutoStart').checked
       };
       localStorage.setItem('vtest_wa_prefs', JSON.stringify(prefs));
