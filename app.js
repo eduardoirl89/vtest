@@ -179,7 +179,7 @@
     { id: 'worker', name: 'Servidor VNET Worker', location: 'Cloudflare Edge', url: `${BACKEND_URL}/download?mb=5` }
   ];
   const FALLBACK_PING_ENDPOINTS = [
-    { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=100' },
+    { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: `${BACKEND_URL}/ping` },
     { id: 'worker', name: 'Servidor VNET Worker', location: 'Cloudflare Edge', url: `${BACKEND_URL}/ping` }
   ];
   const FALLBACK_UPLOAD_ENDPOINTS = [
@@ -411,7 +411,7 @@
     setText('refColRecommended', t('refColRecommended'));
     setText('historyPanelTitle', t('historyTitle'));
     setText('exportCsvBtn', t('exportCsvBtn'));
-    setText('clearHistBtn', t('clearHistoryBtn'));
+    setText('clearHistBtn', t('clearHistBtn'));
     setText('histColDate', t('histColDate'));
     setText('histColIsp', t('histColIsp'));
     setText('histColDl', t('histColDl'));
@@ -636,16 +636,25 @@
 
   async function measureIdlePingAndJitter(signal) {
     const pingNode = getPingNode();
+    const baseUrl = pingNode?.url || `${BACKEND_URL}/ping`;
     const rtts = [];
     let sent = 0;
     let lost = 0;
 
-    for (let i = 0; i < 8; i++) {
+    // Calentamiento previo para establecer conexión/TLS sin contaminar la primera lectura
+    try {
+      await fetch(`${baseUrl}${baseUrl.includes('?') ? '&' : '?'}warmup=${Date.now()}`, {
+        cache: 'no-store',
+        signal
+      });
+    } catch {}
+
+    for (let i = 0; i < 10; i++) {
       if (signal.aborted) return { pingMs: null, jitterMs: 0, packetLossPct: 0 };
       sent++;
       const t0 = performance.now();
       try {
-        const r = await fetch(`${pingNode.url}${pingNode.url.includes('?') ? '&' : '?'}idle=${Date.now()}_${i}`, {
+        const r = await fetch(`${baseUrl}${baseUrl.includes('?') ? '&' : '?'}idle=${Date.now()}_${i}`, {
           cache: 'no-store',
           signal
         });
@@ -658,11 +667,17 @@
       } catch {
         if (!signal.aborted) lost++;
       }
-      await new Promise(resolve => setTimeout(resolve, 110));
+      await new Promise(resolve => setTimeout(resolve, 75));
     }
 
-    const pingMs = rtts.length ? Math.round(rtts.reduce((a, b) => a + b, 0) / rtts.length) : null;
-    const jitterMs = calcJitterFromRtts(rtts);
+    const filteredRtts = rtts.length >= 4
+      ? [...rtts].sort((a, b) => a - b).slice(0, rtts.length - 1)
+      : rtts;
+
+    const pingMs = filteredRtts.length
+      ? Math.round(filteredRtts.reduce((a, b) => a + b, 0) / filteredRtts.length)
+      : null;
+    const jitterMs = calcJitterFromRtts(filteredRtts);
     const packetLossPct = sent > 0 ? Number(((lost / sent) * 100).toFixed(1)) : 0;
     return { pingMs, jitterMs, packetLossPct };
   }
