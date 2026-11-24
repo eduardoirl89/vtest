@@ -246,7 +246,7 @@
       label: isMobile ? t('deviceMobile') : t('deviceDesktop'),
       minThreads: slow ? 2 : (isMobile ? 4 : 6),
       maxThreads: slow ? 3 : (isMobile ? (cores >= 6 ? 6 : 5) : (cores >= 4 ? 8 : 6)),
-      uploadChunkBytes: isMobile ? (3 * 1024 * 1024) : (8 * 1024 * 1024),
+      uploadChunkBytes: isMobile ? (2 * 1024 * 1024) : (4 * 1024 * 1024),
       uploadThreads: slow ? 2 : (isMobile ? 4 : 8),
       durationSec: DURATION_SEC
     };
@@ -278,6 +278,24 @@
   function fmtGauge(mbps) {
     if (typeof mbps !== 'number' || !Number.isFinite(mbps)) return '0.00';
     return mbps.toFixed(2);
+  }
+
+  function calcMedian(values) {
+    if (!Array.isArray(values) || !values.length) return null;
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    if (sorted.length % 2 === 0) {
+      return (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+    return sorted[mid];
+  }
+
+  function calcPercentile(values, p = 0.9) {
+    if (!Array.isArray(values) || !values.length) return 0;
+    const sorted = [...values].filter(v => typeof v === 'number' && Number.isFinite(v) && v >= 0).sort((a, b) => a - b);
+    if (!sorted.length) return 0;
+    const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * p) - 1));
+    return sorted[idx];
   }
 
   function calcJitterFromRtts(rtts) {
@@ -648,7 +666,7 @@
       });
     } catch {}
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       if (signal.aborted) return { pingMs: null, jitterMs: 0, packetLossPct: 0 };
       sent++;
       const t0 = performance.now();
@@ -669,14 +687,9 @@
       await new Promise(resolve => setTimeout(resolve, 75));
     }
 
-    const filteredRtts = rtts.length >= 4
-      ? [...rtts].sort((a, b) => a - b).slice(0, rtts.length - 1)
-      : rtts;
-
-    const pingMs = filteredRtts.length
-      ? Math.round(filteredRtts.reduce((a, b) => a + b, 0) / filteredRtts.length)
-      : null;
-    const jitterMs = calcJitterFromRtts(filteredRtts);
+    const medianRtt = calcMedian(rtts);
+    const pingMs = medianRtt !== null ? Math.round(medianRtt) : null;
+    const jitterMs = calcJitterFromRtts(rtts);
     const packetLossPct = sent > 0 ? Number(((lost / sent) * 100).toFixed(1)) : 0;
     return { pingMs, jitterMs, packetLossPct };
   }
@@ -686,6 +699,7 @@
     const dlNode = getDlNode();
     let totalBytes = 0;
     const samples = [];
+    let smoothMbps = 0;
     let threads = dev.minThreads;
     const tStart = performance.now();
 
@@ -724,12 +738,13 @@
         if (sec > 0.2) {
           const curMbps = (totalBytes * 8) / (sec * 1_000_000);
           samples.push(curMbps);
-          dlSeries.push(curMbps);
+          smoothMbps = smoothMbps > 0 ? (smoothMbps * 0.45 + curMbps * 0.55) : curMbps;
+          dlSeries.push(smoothMbps);
           if (dlSeries.length > 28) dlSeries.shift();
 
-          setText('gaugeValue', fmtGauge(curMbps));
-          setText('dlCardVal', fmtSpeed(curMbps));
-          setGaugeProgress(curMbps);
+          setText('gaugeValue', fmtGauge(smoothMbps));
+          setText('dlCardVal', fmtSpeed(smoothMbps));
+          setGaugeProgress(smoothMbps);
           updateSparkline('dlSparkPath', dlSeries);
 
           if (curMbps > 60 && threads < dev.maxThreads) {
@@ -745,7 +760,9 @@
     await Promise.allSettled(workers);
 
     const secFinal = Math.max(0.5, (performance.now() - tStart) / 1000);
-    const finalMbps = (totalBytes * 8) / (secFinal * 1_000_000);
+    const avgMbps = (totalBytes * 8) / (secFinal * 1_000_000);
+    const p90Mbps = samples.length ? calcPercentile(samples, 0.9) : avgMbps;
+    const finalMbps = p90Mbps > 0 ? p90Mbps : avgMbps;
 
     const steady = samples.slice(Math.floor(samples.length * 0.2));
     let stability = 95;
@@ -765,6 +782,8 @@
     const payload = new Uint8Array(dev.uploadChunkBytes);
     let uploaded = 0;
     let anyOk = false;
+    const ulSamples = [];
+    let smoothUl = 0;
     const tStart = performance.now();
 
     async function worker() {
@@ -794,11 +813,13 @@
       if (pBar) pBar.style.width = `${Math.min(98, 55 + (sec / (durationMs / 1000)) * 43)}%`;
       if (uploaded > 0 && sec > 0.2) {
         const curUl = (uploaded * 8) / (sec * 1_000_000);
-        ulSeries.push(curUl);
+        ulSamples.push(curUl);
+        smoothUl = smoothUl > 0 ? (smoothUl * 0.45 + curUl * 0.55) : curUl;
+        ulSeries.push(smoothUl);
         if (ulSeries.length > 28) ulSeries.shift();
-        setText('ulCardVal', fmtSpeed(curUl));
-        setText('gaugeValue', fmtGauge(curUl));
-        setGaugeProgress(curUl);
+        setText('ulCardVal', fmtSpeed(smoothUl));
+        setText('gaugeValue', fmtGauge(smoothUl));
+        setGaugeProgress(smoothUl);
         updateSparkline('ulSparkPath', ulSeries);
       }
     }, 240);
@@ -809,7 +830,9 @@
     if (!anyOk || uploaded === 0) return { mbps: null };
 
     const secFinal = Math.max(0.5, (performance.now() - tStart) / 1000);
-    return { mbps: (uploaded * 8) / (secFinal * 1_000_000) };
+    const avgUl = (uploaded * 8) / (secFinal * 1_000_000);
+    const p90Ul = ulSamples.length ? calcPercentile(ulSamples, 0.9) : avgUl;
+    return { mbps: p90Ul > 0 ? p90Ul : avgUl };
   }
 
   async function runSingleLoadCycle(cycleIdx, totalCycles, signal) {
