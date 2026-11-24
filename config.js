@@ -2,8 +2,8 @@ window.VNET_CONFIG = {
   brandName: 'VTEST',
   poweredByName: 'VNET',
   contentUrl: './content.json',
-  backendUrl: 'https://vtest-backend-d4nr.onrender.com',
-  uploadUrl: 'https://vtest-backend-d4nr.onrender.com/upload',
+  backendUrl: 'https://vtest-api.eduardoirl89.workers.dev',
+  uploadUrl: 'https://vtest-api.eduardoirl89.workers.dev/upload',
   links: {
     website: 'https://vnet.com.ve',
     whatsapp: 'https://wa.me/584122593059',
