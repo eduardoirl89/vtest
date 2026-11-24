@@ -222,13 +222,14 @@
   let quizStep = 0;
   let deferredInstallPrompt = null;
   let gpsLocationLabel = '';
+  let ipLocationLabel = '';
   let gaugeTotalLen = 0;
   let d1Records = [];
 
   let netInfo = {
     ip: '',
     isp: '',
-    countryCode: 'VE'
+    countryCode: ''
   };
 
   let lastMetrics = {
@@ -247,6 +248,29 @@
   const START_DEG = 140;
   const SWEEP_DEG = 260;
 
+  function getClientTimeZone() {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    } catch {
+      return 'UTC';
+    }
+  }
+
+  function formatClientLocalDate(dateInput = new Date()) {
+    const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(d.getTime())) return '--';
+    const tz = getClientTimeZone();
+    try {
+      return d.toLocaleString(navigator.language || undefined, { timeZone: tz });
+    } catch {
+      return d.toLocaleString();
+    }
+  }
+
+  function getActiveClientLocation() {
+    return gpsLocationLabel || ipLocationLabel || t('locationInactive');
+  }
+
   function detectDevice() {
     const ua = navigator.userAgent || '';
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
@@ -260,8 +284,8 @@
       label: isMobile ? t('deviceMobile') : t('deviceDesktop'),
       minThreads: slow ? 2 : (isMobile ? 4 : 6),
       maxThreads: slow ? 3 : (isMobile ? (cores >= 6 ? 6 : 5) : (cores >= 4 ? 8 : 6)),
-      uploadChunkBytes: isMobile ? (2 * 1024 * 1024) : (4 * 1024 * 1024),
-      uploadThreads: slow ? 2 : (isMobile ? 4 : 8),
+      uploadChunkBytes: isMobile ? (1 * 1024 * 1024) : (2 * 1024 * 1024),
+      uploadThreads: slow ? 2 : (isMobile ? 4 : 6),
       durationSec: DURATION_SEC
     };
   }
@@ -280,6 +304,15 @@
       return (cfUp || UPLOAD_ENDPOINTS[0]).url;
     }
     return CFG.uploadUrl || SRV_CFG.uploadUrl || `${BACKEND_URL}/upload`;
+  }
+
+  function getUploadCandidates() {
+    const list = [];
+    const primary = getUploadUrl();
+    if (primary) list.push(primary);
+    const workerUp = `${BACKEND_URL}/upload`;
+    if (!list.includes(workerUp)) list.push(workerUp);
+    return list;
   }
 
   function fmtSpeed(mbps) {
@@ -486,7 +519,7 @@
   function updateHeaderAndFooter() {
     const dev = detectDevice();
     const node = getDlNode();
-    const locText = gpsLocationLabel || t('locationInactive');
+    const locText = getActiveClientLocation();
     const srvLoc = node.location || t('serverDefaultLocation');
     const ispText = netInfo.isp || t('ispDetecting');
 
@@ -550,10 +583,11 @@
           if (r.ok) {
             const data = await r.json();
             const addr = data.address || {};
-            const city = addr.city || addr.town || addr.municipality || addr.state || '';
-            const state = addr.state || '';
-            if (city && state && city !== state) gpsLocationLabel = `${city}, ${state}`;
-            else if (city || state) gpsLocationLabel = city || state;
+            const city = addr.city || addr.town || addr.village || addr.municipality || addr.state || '';
+            const state = addr.state || addr.region || '';
+            const country = addr.country || '';
+            const parts = [city, state, country].filter((v, i, arr) => v && arr.indexOf(v) === i);
+            if (parts.length) gpsLocationLabel = parts.slice(0, 2).join(', ');
           }
         } catch {}
         updateHeaderAndFooter();
@@ -629,8 +663,10 @@
         netInfo = {
           ip: d.ip || '',
           isp: String(d.connection.isp || d.connection.org || t('ispUnknown')).trim(),
-          countryCode: (d.country_code || 'VE').trim().toUpperCase()
+          countryCode: (d.country_code || '').trim().toUpperCase()
         };
+        const locParts = [d.city, d.region, d.country].map(x => String(x || '').trim()).filter((v, i, arr) => v && arr.indexOf(v) === i);
+        if (locParts.length) ipLocationLabel = locParts.slice(0, 2).join(', ');
         ok = true;
       }
     } catch {}
@@ -642,8 +678,10 @@
           netInfo = {
             ip: d.ip || '',
             isp: String(d.org || d.asn).trim(),
-            countryCode: (d.country_code || 'VE').trim().toUpperCase()
+            countryCode: (d.country_code || '').trim().toUpperCase()
           };
+          const locParts = [d.city, d.region, d.country_name].map(x => String(x || '').trim()).filter((v, i, arr) => v && arr.indexOf(v) === i);
+          if (locParts.length) ipLocationLabel = locParts.slice(0, 2).join(', ');
           ok = true;
         }
       } catch {}
@@ -656,8 +694,10 @@
           netInfo = {
             ip: d.ip || '',
             isp: String(d.asOrganization || t('ispUnknown')).trim(),
-            countryCode: String(d.country || 'VE').trim().toUpperCase()
+            countryCode: String(d.country || '').trim().toUpperCase()
           };
+          const locParts = [d.city, d.region, d.country].map(x => String(x || '').trim()).filter((v, i, arr) => v && arr.indexOf(v) === i);
+          if (locParts.length) ipLocationLabel = locParts.slice(0, 2).join(', ');
           ok = true;
         }
       } catch {}
@@ -795,7 +835,8 @@
 
   async function runUploadUnderLoad(durationMs, signal) {
     const dev = detectDevice();
-    const uploadUrl = getUploadUrl();
+    const candidates = getUploadCandidates();
+    let activeUrl = candidates[0];
     const payload = new Uint8Array(dev.uploadChunkBytes);
     let uploaded = 0;
     let anyOk = false;
@@ -803,10 +844,28 @@
     let smoothUl = 0;
     const tStart = performance.now();
 
+    for (const url of candidates) {
+      if (signal.aborted) return { mbps: null };
+      try {
+        const probe = await fetch(`${url}${url.includes('?') ? '&' : '?'}probe=${Date.now()}`, {
+          method: 'POST',
+          body: new Uint8Array(64 * 1024),
+          headers: { 'Content-Type': 'application/octet-stream' },
+          signal
+        });
+        if (probe.ok) {
+          activeUrl = url;
+          anyOk = true;
+          uploaded += 64 * 1024;
+          break;
+        }
+      } catch {}
+    }
+
     async function worker() {
       while (!signal.aborted && performance.now() - tStart < durationMs) {
         try {
-          const res = await fetch(`${uploadUrl}${uploadUrl.includes('?') ? '&' : '?'}u=${Date.now()}_${Math.random()}`, {
+          const res = await fetch(`${activeUrl}${activeUrl.includes('?') ? '&' : '?'}u=${Date.now()}_${Math.random()}`, {
             method: 'POST',
             body: payload,
             headers: { 'Content-Type': 'application/octet-stream' },
@@ -815,9 +874,13 @@
           if (res.ok) {
             anyOk = true;
             uploaded += payload.byteLength;
-          } else break;
+          } else {
+            await new Promise(r => setTimeout(r, 120));
+          }
         } catch {
-          break;
+          if (!signal.aborted) {
+            await new Promise(r => setTimeout(r, 150));
+          }
         }
       }
     }
@@ -828,10 +891,10 @@
       const sec = (performance.now() - tStart) / 1000;
       const pBar = document.getElementById('progressBar');
       if (pBar) pBar.style.width = `${Math.min(98, 55 + (sec / (durationMs / 1000)) * 43)}%`;
-      if (uploaded > 0 && sec > 0.2) {
+      if (uploaded > 0 && sec > 0.15) {
         const curUl = (uploaded * 8) / (sec * 1_000_000);
         ulSamples.push(curUl);
-        smoothUl = smoothUl > 0 ? (smoothUl * 0.45 + curUl * 0.55) : curUl;
+        smoothUl = smoothUl > 0 ? (smoothUl * 0.4 + curUl * 0.6) : curUl;
         ulSeries.push(smoothUl);
         if (ulSeries.length > 28) ulSeries.shift();
         setText('ulCardVal', fmtSpeed(smoothUl));
@@ -839,7 +902,7 @@
         setGaugeProgress(smoothUl);
         updateSparkline('ulSparkPath', ulSeries);
       }
-    }, 240);
+    }, 200);
 
     await Promise.allSettled(workers);
     clearInterval(iv);
@@ -887,6 +950,9 @@
     setText('dlCardVal', fmtSpeed(dlRes.mbps));
     setText('gaugeValue', fmtGauge(dlRes.mbps));
     setGaugeProgress(dlRes.mbps);
+
+    await new Promise(resolve => setTimeout(resolve, 400));
+    if (signal.aborted) return null;
 
     setGaugePhaseColor('upload');
     setText('phaseLabel', `${t('phaseUpload')}${repSuffix}`);
@@ -948,12 +1014,13 @@
       setText('gaugeValue', fmtGauge(lastMetrics.downloadMbps));
       setGaugeProgress(lastMetrics.downloadMbps);
 
-      saveLocalDeviceRecord(lastMetrics);
+      const measuredAt = new Date().toISOString();
+      saveLocalDeviceRecord(lastMetrics, measuredAt);
       updateHeaderAndFooter();
       renderAccordionInsights();
       renderQuiz();
       renderHistory();
-      await postBenchmarkServer();
+      await postBenchmarkServer(measuredAt);
     } catch {
       if (!signal.aborted) {
         const gState = document.getElementById('gaugeState');
@@ -1205,11 +1272,14 @@
     }
   }
 
-  function saveLocalDeviceRecord(metrics) {
+  function saveLocalDeviceRecord(metrics, measuredAtIso = new Date().toISOString()) {
     const devLabel = detectDevice().label;
     const ispLabel = netInfo.isp || t('ispUnknown');
     const item = {
-      date: new Date().toLocaleString(),
+      date: formatClientLocalDate(measuredAtIso),
+      measured_at: measuredAtIso,
+      time_zone: getClientTimeZone(),
+      location: getActiveClientLocation(),
       isp: ispLabel,
       device_type: devLabel,
       download_mbps: metrics.downloadMbps,
@@ -1226,8 +1296,14 @@
 
   function formatD1Date(rawDate) {
     if (!rawDate) return '--';
-    const d = new Date(rawDate);
-    if (!Number.isNaN(d.getTime())) return d.toLocaleString();
+    let str = String(rawDate).trim();
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) {
+      str = str.replace(' ', 'T') + 'Z';
+    }
+    const d = new Date(str);
+    if (!Number.isNaN(d.getTime())) {
+      return formatClientLocalDate(d);
+    }
     return String(rawDate);
   }
 
@@ -1249,9 +1325,10 @@
       const jitterNum = Number(r.jitter_ms);
       const stabNum = Number(r.stability_pct);
       const lossNum = Number(r.packet_loss_pct);
+      const rawStamp = r.measured_at || r.created_at || r.date;
 
       return {
-        date: formatD1Date(r.created_at || r.date),
+        date: formatD1Date(rawStamp),
         isp,
         isSameNet: Boolean(currentIsp && isp.toLowerCase() === currentIsp),
         download: Number.isFinite(dlNum) ? `${fmtSpeed(dlNum)} Mbps` : '--',
@@ -1300,7 +1377,7 @@
     } catch {}
   }
 
-  async function postBenchmarkServer() {
+  async function postBenchmarkServer(measuredAtIso = new Date().toISOString()) {
     if (!lastMetrics.downloadMbps) return;
     const node = getDlNode();
     try {
@@ -1311,8 +1388,10 @@
           isp: netInfo.isp || 'Desconocido',
           serverName: node?.name ? `${node.name}, ${node.location || 'Red Edge Global'}` : 'Cloudflare, Red Edge Global',
           ipAddress: netInfo.ip || '',
-          countryCode: netInfo.countryCode || 'VE',
-          gpsLocation: gpsLocationLabel || 'Ubicación no activa',
+          countryCode: netInfo.countryCode || '',
+          gpsLocation: getActiveClientLocation(),
+          clientTimeZone: getClientTimeZone(),
+          measuredAt: measuredAtIso,
           deviceType: detectDevice().label,
           downloadMbps: Number(lastMetrics.downloadMbps ?? 0),
           uploadMbps: Number(lastMetrics.uploadMbps ?? 0),
