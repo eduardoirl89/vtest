@@ -20,7 +20,7 @@ window.VTEST_SERVERS = {
       id: 'cloudflare',
       name: 'Cloudflare',
       location: 'Red Edge Global',
-      url: 'https://speed.cloudflare.com/__down?bytes=100'
+      url: 'https://vtest-api.eduardoirl89.workers.dev/ping'
     },
     {
       id: 'render',
