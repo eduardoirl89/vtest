@@ -246,8 +246,8 @@
       label: isMobile ? t('deviceMobile') : t('deviceDesktop'),
       minThreads: slow ? 2 : (isMobile ? 4 : 6),
       maxThreads: slow ? 3 : (isMobile ? (cores >= 6 ? 6 : 5) : (cores >= 4 ? 8 : 6)),
-      uploadChunkBytes: isMobile ? (2 * 1024 * 1024) : (6 * 1024 * 1024),
-      uploadThreads: slow ? 2 : (isMobile ? 4 : 6),
+      uploadChunkBytes: isMobile ? (3 * 1024 * 1024) : (8 * 1024 * 1024),
+      uploadThreads: slow ? 2 : (isMobile ? 4 : 8),
       durationSec: DURATION_SEC
     };
   }
@@ -411,7 +411,7 @@
     setText('refColRecommended', t('refColRecommended'));
     setText('historyPanelTitle', t('historyTitle'));
     setText('exportCsvBtn', t('exportCsvBtn'));
-    setText('clearHistBtn', t('clearHistBtn'));
+    setText('clearHistBtn', t('clearHistoryBtn'));
     setText('histColDate', t('histColDate'));
     setText('histColIsp', t('histColIsp'));
     setText('histColDl', t('histColDl'));
@@ -641,7 +641,6 @@
     let sent = 0;
     let lost = 0;
 
-    // Calentamiento previo para establecer conexión/TLS sin contaminar la primera lectura
     try {
       await fetch(`${baseUrl}${baseUrl.includes('?') ? '&' : '?'}warmup=${Date.now()}`, {
         cache: 'no-store',
