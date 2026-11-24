@@ -1,6 +1,6 @@
 window.VTEST_SERVERS = {
-  backendUrl: 'https://vtest-backend-d4nr.onrender.com',
-  uploadUrl: 'https://vtest-backend-d4nr.onrender.com/upload',
+  backendUrl: 'https://vtest-api.eduardoirl89.workers.dev',
+  uploadUrl: 'https://vtest-api.eduardoirl89.workers.dev/upload',
   cdnNodes: [
     {
       id: 'cloudflare',
@@ -10,9 +10,9 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Servidor VNET Render',
-      location: 'Nube Render',
-      url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880'
+      name: 'Servidor VNET Worker',
+      location: 'Cloudflare Edge',
+      url: 'https://vtest-api.eduardoirl89.workers.dev/download?mb=5'
     }
   ],
   pingEndpoints: [
@@ -24,17 +24,17 @@ window.VTEST_SERVERS = {
     },
     {
       id: 'render',
-      name: 'Servidor VNET Render',
-      location: 'Nube Render',
-      url: 'https://vtest-backend-d4nr.onrender.com/ping'
+      name: 'Servidor VNET Worker',
+      location: 'Cloudflare Edge',
+      url: 'https://vtest-api.eduardoirl89.workers.dev/ping'
     }
   ],
   uploadEndpoints: [
     {
       id: 'render_upload',
-      name: 'Servidor VNET Render (Upload)',
-      location: 'Nube Render',
-      url: 'https://vtest-backend-d4nr.onrender.com/upload'
+      name: 'Servidor VNET Worker (Upload)',
+      location: 'Cloudflare Edge',
+      url: 'https://vtest-api.eduardoirl89.workers.dev/upload'
     }
   ]
 };
