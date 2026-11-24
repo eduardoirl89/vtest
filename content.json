@@ -20,7 +20,7 @@
     "ispDetecting": "Detectando ISP...",
     "ispUnknown": "Red no identificada",
     "locationInactive": "Ubicación no activa",
-    "serverDefaultLocation": "Nodo de prueba",
+    "serverDefaultLocation": "Red Edge Global",
     "deviceMobile": "Móvil",
     "deviceDesktop": "PC / Laptop",
     "providerPrefix": "Proveedor",
@@ -57,46 +57,23 @@
     "planRefPrefix": "Plan ref.:",
     "deviceEstPrefix": "Simultáneos estimados:",
     "devicePerEqSuffix": "Mbps/eq",
-    "devicesNoteMeasured": "Margen útil: ~{usable} Mbps (base: {base} Mbps • sim: {sim} Mbps en {eq} eq • constancia: {stab}% • ping: {ping} ms • loss: {loss}%).",
-    "devicesNoteRef": "Estimación de referencia ({eq} eq simulados = {sim} Mbps). Ejecuta la prueba para usar tu velocidad real.",
-    "settingsTitle": "⚙️ Ajustes de prueba y aplicación",
-    "serverSelectLabel": "Servidor predeterminado",
-    "serverSelectHelp": "Servidores cargados desde servers.js.",
-    "repeatCountLabel": "Repeticiones seguidas del test",
-    "repeatOptionSingle": "1 prueba",
-    "repeatOptionMulti": "{count} pruebas seguidas",
-    "simDevicesLabel": "Concurrencia simulada (equipos)",
-    "mbpsPerDeviceLabel": "Consumo simulado por dispositivo (Mbps)",
-    "simLoadSummary": "Carga simulada: {total} Mbps ({eq} eq × {mbps} Mbps){after}.",
-    "simLoadRemaining": " • Restante estimado: {rem} Mbps",
-    "autoStartLabel": "Medir automáticamente al abrir",
-    "saveSettingsBtn": "Guardar ajustes",
-    "resetSettingsBtn": "Restaurar",
+    "devicesNoteMeasured": "Margen útil: ~{usable} Mbps (base: {base} Mbps • constancia: {stab}% • ping: {ping} ms • jitter: {jitter} ms • loss: {loss}%).",
+    "devicesNoteRef": "Estimación de referencia inicial. Ejecuta la prueba para usar tu velocidad real.",
     "pwaInstalledNote": "VTEST ya está ejecutándose como aplicación instalada.",
     "pwaReadyNote": "Listo para instalar en tu pantalla de inicio o escritorio.",
     "pwaManualNote": "En Android/Windows usa el menú del navegador para instalar como app; en iPhone/iPad usa Compartir -> Añadir a pantalla de inicio.",
-    "benchTitle": "📊 Benchmarking — Tu mejor red",
-    "benchTabDownload": "Bajada",
-    "benchTabUpload": "Subida",
-    "benchTabPing": "Latencia",
-    "benchGpsPrefix": "GPS:",
-    "benchEmpty": "Ejecuta una prueba para comparar proveedores.",
-    "benchSortedServer": "Ordenado por {criterion}.",
-    "benchCriterionLatency": "menor latencia",
-    "benchCriterionSpeed": "mayor velocidad",
-    "benchFallbackNote": "Mostrando referencias (Ref.) donde aún no hay muestras del servidor.",
-    "benchCurrentTag": " (Tu red)",
-    "benchActualBadge": " • Actual",
-    "historyTitle": "🕒 Pruebas anteriores",
+    "historyTitle": "🕒 Histórico del dispositivo en cada red (D1)",
     "exportCsvBtn": "CSV",
     "clearHistoryBtn": "Borrar",
     "histColDate": "Fecha",
-    "histColIsp": "ISP",
+    "histColIsp": "Red / ISP",
     "histColDl": "Bajada",
     "histColUl": "Subida",
     "histColPing": "Ping",
+    "histColJitter": "Jitter",
+    "histColStab": "Constancia",
     "histColLoss": "Loss",
-    "historyEmpty": "Sin pruebas guardadas todavía.",
+    "historyEmpty": "Sin pruebas registradas en D1 para este dispositivo todavía.",
     "linkWeb": "🌐 Web",
     "linkWa": "💬 WhatsApp",
     "linkFb": "Facebook",
@@ -105,7 +82,7 @@
     "navTest": "Test",
     "navQuiz": "Cuestionario",
     "navAccordion": "Acordeón",
-    "navSettings": "Ajustes"
+    "navSettings": "Histórico"
   },
   "quizSteps": [
     {
@@ -217,17 +194,5 @@
       "q": "3. ¿Qué significan fibra óptica, NAP, ONT/ONU y velocidad simétrica?",
       "a": "La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala descarga y subida."
     }
-  ],
-  "benchmarkFallback": {
-    "ping": [
-      { "name": "VNET Fibra (Ref.)", "val": 16 },
-      { "name": "Proveedor Regional A (Ref.)", "val": 28 },
-      { "name": "Proveedor Regional B (Ref.)", "val": 45 }
-    ],
-    "throughput": [
-      { "name": "VNET Fibra (Ref.)", "dl": 450, "ul": 300 },
-      { "name": "Proveedor Regional A (Ref.)", "dl": 200, "ul": 120 },
-      { "name": "Proveedor Regional B (Ref.)", "dl": 110, "ul": 60 }
-    ]
-  }
+  ]
 }
