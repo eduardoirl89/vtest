@@ -3,7 +3,7 @@
 
   const SRV_CFG = window.VTEST_SERVERS || {};
   const CFG = window.VNET_CONFIG || {};
-  const BACKEND_URL = CFG.backendUrl || SRV_CFG.backendUrl || 'https://vtest-backend-d4nr.onrender.com';
+  const BACKEND_URL = CFG.backendUrl || SRV_CFG.backendUrl || 'https://vtest-api.eduardoirl89.workers.dev';
   const CONTENT_URL = CFG.contentUrl || './content.json';
 
   const FALLBACK_CONTENT = {
@@ -211,14 +211,14 @@
 
   const FALLBACK_CDN_NODES = [
     { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=25000000' },
-    { id: 'render', name: 'Servidor VNET Render', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/download?bytes=5242880' }
+    { id: 'render', name: 'Servidor VNET Worker', location: 'Cloudflare Edge', url: 'https://vtest-api.eduardoirl89.workers.dev/download?mb=5' }
   ];
   const FALLBACK_PING_ENDPOINTS = [
     { id: 'cloudflare', name: 'Cloudflare', location: 'Red Edge Global', url: 'https://speed.cloudflare.com/__down?bytes=100' },
-    { id: 'render', name: 'Servidor VNET Render', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/ping' }
+    { id: 'render', name: 'Servidor VNET Worker', location: 'Cloudflare Edge', url: 'https://vtest-api.eduardoirl89.workers.dev/ping' }
   ];
   const FALLBACK_UPLOAD_ENDPOINTS = [
-    { id: 'render_upload', name: 'Servidor VNET Render (Upload)', location: 'Nube Render', url: 'https://vtest-backend-d4nr.onrender.com/upload' }
+    { id: 'render_upload', name: 'Servidor VNET Worker (Upload)', location: 'Cloudflare Edge', url: 'https://vtest-api.eduardoirl89.workers.dev/upload' }
   ];
   const FALLBACK_PLANS = [
     { id: 'vnet400', name: 'VNET400', label: 'Hasta 400 Mbps', mbps: 400, recommendedDevices: 8 },
@@ -675,11 +675,11 @@
     if (!ok) {
       try {
         const d = await fetchWithTimeout(`${BACKEND_URL}/api/client-ip?${q}`, 3800);
-        if (d && d.ok && d.isp) {
+        if (d && (d.ip || d.asOrganization)) {
           netInfo = {
             ip: d.ip || '',
-            isp: d.isp,
-            countryCode: d.countryCode || 'VE'
+            isp: String(d.asOrganization || t('ispUnknown')).trim(),
+            countryCode: String(d.country || 'VE').trim().toUpperCase()
           };
           ok = true;
         }
@@ -1276,18 +1276,47 @@
       : `<tr><td colspan="6" style="color:var(--text-muted);">${t('historyEmpty')}</td></tr>`;
   }
 
+  function buildComparisonFromRecords(records) {
+    if (!Array.isArray(records) || !records.length) return null;
+    const grouped = new Map();
+
+    records.forEach((rec) => {
+      const isp = String(rec.isp || '').trim();
+      if (!isp || isp === 'Desconocido') return;
+      if (!grouped.has(isp)) {
+        grouped.set(isp, { isp, dl: [], ul: [], ping: [] });
+      }
+      const bucket = grouped.get(isp);
+      const dl = Number(rec.download_mbps);
+      const ul = Number(rec.upload_mbps);
+      const ping = Number(rec.ping_ms);
+      if (Number.isFinite(dl) && dl > 0) bucket.dl.push(dl);
+      if (Number.isFinite(ul) && ul > 0) bucket.ul.push(ul);
+      if (Number.isFinite(ping) && ping > 0) bucket.ping.push(ping);
+    });
+
+    const avg = (arr) => arr.length ? Number((arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1)) : null;
+    const topProviders = Array.from(grouped.values()).map((b) => ({
+      isp: b.isp,
+      downloadAvg: avg(b.dl),
+      uploadAvg: avg(b.ul),
+      pingAvg: b.ping.length ? Math.round(b.ping.reduce((a, c) => a + c, 0) / b.ping.length) : null
+    }));
+
+    return topProviders.length ? { topProviders } : null;
+  }
+
   async function fetchBenchmarkServer() {
     try {
-      const q = new URLSearchParams({
-        isp: netInfo.isp || '',
-        countryCode: netInfo.countryCode || 'VE',
-        t: String(Date.now())
-      });
-      const r = await fetch(`${BACKEND_URL}/api/benchmark?${q.toString()}`, { cache: 'no-store' });
+      const r = await fetch(`${BACKEND_URL}/api/benchmark?t=${Date.now()}`, { cache: 'no-store' });
       if (!r.ok) return;
       const j = await r.json();
-      if (j && j.ok && j.comparison) {
-        serverComparison = j.comparison;
+      if (j && j.ok) {
+        if (j.comparison) {
+          serverComparison = j.comparison;
+        } else if (Array.isArray(j.records)) {
+          serverComparison = buildComparisonFromRecords(j.records);
+        }
         renderBenchmark();
       }
     } catch {}
@@ -1295,26 +1324,30 @@
 
   async function postBenchmarkServer() {
     if (!lastMetrics.downloadMbps) return;
+    const node = getDlNode();
     try {
       const r = await fetch(`${BACKEND_URL}/api/benchmark`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          isp: netInfo.isp,
-          countryCode: netInfo.countryCode,
-          gpsLocation: gpsLocationLabel || undefined,
+          isp: netInfo.isp || 'Desconocido',
+          serverName: node?.name ? `${node.name}, ${node.location || 'Cloudflare Edge'}` : 'Cloudflare, Red Edge Global',
+          ipAddress: netInfo.ip || '',
+          countryCode: netInfo.countryCode || 'VE',
+          gpsLocation: gpsLocationLabel || 'Ubicación no activa',
           deviceType: detectDevice().label,
-          downloadMbps: lastMetrics.downloadMbps,
-          uploadMbps: lastMetrics.uploadMbps,
-          pingMs: lastMetrics.pingMs,
-          stabilityPct: lastMetrics.stabilityPct
+          downloadMbps: Number(lastMetrics.downloadMbps ?? 0),
+          uploadMbps: Number(lastMetrics.uploadMbps ?? 0),
+          pingMs: Number(lastMetrics.pingMs ?? 0),
+          jitterMs: Number(lastMetrics.jitterMs ?? 0),
+          stabilityPct: Number(lastMetrics.stabilityPct ?? 0),
+          packetLossPct: Number(lastMetrics.packetLossPct ?? 0)
         })
       });
       if (!r.ok) return;
       const j = await r.json();
-      if (j && j.ok && j.comparison) {
-        serverComparison = j.comparison;
-        renderBenchmark();
+      if (j && j.ok) {
+        await fetchBenchmarkServer();
       }
     } catch {}
   }
