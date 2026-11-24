@@ -32,7 +32,7 @@
     </header>
 
     <main class="main-container">
-      <!-- 1. PESTAÑA PRINCIPAL: TEST -->
+      <!-- 1. PESTAÑA PRINCIPAL: VELOCIDAD -->
       <section class="tab-view active" id="tab-test" aria-label="Prueba de velocidad">
         <div class="server-header-card">
           <div class="server-left">
@@ -70,7 +70,7 @@
         <div class="du-grid">
           <div class="du-card">
             <div>
-              <div class="du-head dl" id="dlHeadLabel">↓ DOWNLOAD</div>
+              <div class="du-head dl" id="dlHeadLabel">↓ BAJADA</div>
               <div class="du-num" id="dlCardVal">--</div>
               <div class="du-unit">Mbps</div>
             </div>
@@ -81,7 +81,7 @@
 
           <div class="du-card">
             <div>
-              <div class="du-head ul" id="ulHeadLabel">↑ UPLOAD</div>
+              <div class="du-head ul" id="ulHeadLabel">↑ SUBIDA</div>
               <div class="du-num" id="ulCardVal">—</div>
               <div class="du-unit">Mbps</div>
             </div>
@@ -93,7 +93,7 @@
 
         <div class="pjl-grid">
           <div class="pjl-card">
-            <div class="pjl-label" id="pingLabel">Ping</div>
+            <div class="pjl-label" id="pingLabel">Latencia</div>
             <div class="pjl-val" id="pingCardVal">--</div>
             <div class="pjl-sub">ms</div>
           </div>
@@ -108,7 +108,7 @@
             <div class="pjl-sub">%</div>
           </div>
           <div class="pjl-card">
-            <div class="pjl-label" id="lossLabel">Loss</div>
+            <div class="pjl-label" id="lossLabel">Pérdida</div>
             <div class="pjl-val" id="lossCardVal">--</div>
             <div class="pjl-sub">%</div>
           </div>
@@ -117,23 +117,34 @@
         <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
       </section>
 
-      <!-- 2. PESTAÑA CUESTIONARIO -->
-      <section class="tab-view" id="tab-quiz" aria-label="Cuestionario de plan">
+      <!-- 2. PESTAÑA TU PLAN IDEAL -->
+      <section class="tab-view" id="tab-quiz" aria-label="Tu plan ideal">
         <div class="section-heading">
-          <span id="quizHeadingTitle">🧮 Cuestionario de plan y velocidad</span>
+          <span id="quizHeadingTitle">🧮 Tu plan ideal</span>
         </div>
         <div class="quiz-card" id="quizStage"></div>
       </section>
 
-      <!-- 3. PESTAÑA ACORDEÓN -->
-      <section class="tab-view" id="tab-accordion" aria-label="Guía y posibilidades">
+      <!-- 3. PESTAÑA GUÍA Y MÉTRICAS -->
+      <section class="tab-view" id="tab-accordion" aria-label="Guía y métricas">
         <div class="section-heading">
-          <span id="accordionHeadingTitle">📂 Acordeón de posibilidades y guía</span>
+          <span id="accordionHeadingTitle">📂 Guía práctica de tu conexión</span>
         </div>
         <div class="acc-list">
           <div class="acc-card">
+            <div class="acc-header" data-acc="bodyMetricsGuide">
+              <span id="accMetricsGuideTitle">📊 ¿Qué significa cada métrica?</span>
+              <span>▼</span>
+            </div>
+            <div class="acc-body" id="bodyMetricsGuide">
+              <div class="cards-2col" id="metricsGuideGrid"></div>
+              <div class="mini-info-card" id="notMeasuredCard" style="margin-top:8px;"></div>
+            </div>
+          </div>
+
+          <div class="acc-card">
             <div class="acc-header" data-acc="bodyActivities">
-              <span id="accActivitiesTitle">🎯 Calidad de conexión por actividad</span>
+              <span id="accActivitiesTitle">🎯 ¿Cómo rinde en tu día a día?</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyActivities">
@@ -143,7 +154,7 @@
 
           <div class="acc-card">
             <div class="acc-header" data-acc="bodyDevices">
-              <span id="accDevicesTitle">📱 Dispositivos simultáneos estimados</span>
+              <span id="accDevicesTitle">📱 ¿Cuántos equipos pueden conectarse?</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyDevices">
@@ -154,7 +165,7 @@
 
           <div class="acc-card">
             <div class="acc-header" data-acc="bodyRefTable">
-              <span id="accRefTableTitle">📋 Tabla de referencia por actividad</span>
+              <span id="accRefTableTitle">📋 Guía rápida por tipo de uso</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyRefTable">
@@ -172,7 +183,7 @@
 
           <div class="acc-card">
             <div class="acc-header" data-acc="bodyTips">
-              <span id="accTipsTitle">💡 Sugerencias para obtener una medición precisa</span>
+              <span id="accTipsTitle">💡 Consejos para medir mejor</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyTips">
@@ -182,7 +193,7 @@
 
           <div class="acc-card">
             <div class="acc-header" data-acc="bodyFaq">
-              <span id="accFaqTitle">❓ Preguntas y glosario VNET</span>
+              <span id="accFaqTitle">❓ Dudas frecuentes y términos</span>
               <span>▼</span>
             </div>
             <div class="acc-body" id="bodyFaq">
@@ -192,12 +203,12 @@
         </div>
       </section>
 
-      <!-- 4. PESTAÑA HISTÓRICO DEL DISPOSITIVO -->
-      <section class="tab-view" id="tab-settings" aria-label="Histórico del dispositivo">
+      <!-- 4. PESTAÑA MIS MEDICIONES -->
+      <section class="tab-view" id="tab-settings" aria-label="Mis mediciones">
         <div class="settings-stack">
           <div class="panel-card">
             <div class="panel-title">
-              <span id="historyPanelTitle">🕒 Histórico del dispositivo en cada red (D1)</span>
+              <span id="historyPanelTitle">🕒 Mis mediciones en cada red (D1)</span>
               <div class="btn-row" style="margin-top:0;">
                 <button type="button" class="btn-sm" id="exportCsvBtn">CSV</button>
                 <button type="button" class="btn-sm" id="clearHistBtn">Borrar</button>
@@ -210,10 +221,10 @@
                   <th id="histColIsp">Red / ISP</th>
                   <th id="histColDl">Bajada</th>
                   <th id="histColUl">Subida</th>
-                  <th id="histColPing">Ping</th>
+                  <th id="histColPing">Latencia</th>
                   <th id="histColJitter">Jitter</th>
                   <th id="histColStab">Constancia</th>
-                  <th id="histColLoss">Loss</th>
+                  <th id="histColLoss">Pérdida</th>
                 </tr>
               </thead>
               <tbody id="historyBody"></tbody>
@@ -237,19 +248,19 @@
     <nav class="bottom-nav" aria-label="Navegación principal">
       <button type="button" class="nav-btn active" data-tab="tab-test">
         <span class="nav-icon-wrap" aria-hidden="true">⏱️</span>
-        <span id="navTestLabel">Test</span>
+        <span id="navTestLabel">Velocidad</span>
       </button>
       <button type="button" class="nav-btn" data-tab="tab-quiz">
         <span class="nav-icon-wrap" aria-hidden="true">🧮</span>
-        <span id="navQuizLabel">Cuestionario</span>
+        <span id="navQuizLabel">Tu plan ideal</span>
       </button>
       <button type="button" class="nav-btn" data-tab="tab-accordion">
         <span class="nav-icon-wrap" aria-hidden="true">📂</span>
-        <span id="navAccordionLabel">Acordeón</span>
+        <span id="navAccordionLabel">Guía y métricas</span>
       </button>
       <button type="button" class="nav-btn" data-tab="tab-settings">
         <span class="nav-icon-wrap" aria-hidden="true">🕒</span>
-        <span id="navSettingsLabel">Histórico</span>
+        <span id="navSettingsLabel">Mis mediciones</span>
       </button>
     </nav>
   </div>
