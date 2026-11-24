@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtest-pwa-v1.1.0';
+const CACHE_NAME = 'vtest-pwa-v1.2.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -37,6 +37,7 @@ function isBypassedUrl(urlObj) {
 
   return (
     host.includes('speed.cloudflare.com') ||
+    host.includes('workers.dev') ||
     path.includes('/__down') ||
     path.includes('/download') ||
     path.includes('/upload') ||
