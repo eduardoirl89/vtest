@@ -256,6 +256,13 @@
     }
   }
 
+  function getLocalSqlDateTime(dateInput = new Date()) {
+    const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(d.getTime())) return '';
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
   function formatClientLocalDate(dateInput = new Date()) {
     const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
     if (Number.isNaN(d.getTime())) return '--';
@@ -1296,15 +1303,17 @@
 
   function formatD1Date(rawDate) {
     if (!rawDate) return '--';
-    let str = String(rawDate).trim();
+    const str = String(rawDate).trim();
     if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) {
-      str = str.replace(' ', 'T') + 'Z';
+      const [datePart, timePart] = str.split(' ');
+      const [y, m, day] = datePart.split('-');
+      return `${day}/${m}/${y}, ${timePart}`;
     }
     const d = new Date(str);
     if (!Number.isNaN(d.getTime())) {
       return formatClientLocalDate(d);
     }
-    return String(rawDate);
+    return str;
   }
 
   function getDeviceHistoryRows() {
@@ -1325,7 +1334,7 @@
       const jitterNum = Number(r.jitter_ms);
       const stabNum = Number(r.stability_pct);
       const lossNum = Number(r.packet_loss_pct);
-      const rawStamp = r.measured_at || r.created_at || r.date;
+      const rawStamp = r.created_at || r.measured_at || r.date;
 
       return {
         date: formatD1Date(rawStamp),
@@ -1391,6 +1400,7 @@
           countryCode: netInfo.countryCode || '',
           gpsLocation: getActiveClientLocation(),
           clientTimeZone: getClientTimeZone(),
+          localDateTime: getLocalSqlDateTime(measuredAtIso),
           measuredAt: measuredAtIso,
           deviceType: detectDevice().label,
           downloadMbps: Number(lastMetrics.downloadMbps ?? 0),
