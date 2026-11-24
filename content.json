@@ -8,7 +8,7 @@
     "phaseUpload": "Subida",
     "phaseStopped": "Detenido",
     "gaugeInit": "Iniciando...",
-    "gaugeDownload": "Midiendo descarga{rep}...",
+    "gaugeDownload": "Midiendo bajada{rep}...",
     "gaugeUpload": "Midiendo subida{rep}...",
     "gaugeCompleted": "Completado",
     "gaugeMultiAvg": "Prom. {count} pruebas",
@@ -26,28 +26,29 @@
     "providerPrefix": "Proveedor",
     "serverPrefix": "Servidor",
     "clientPrefix": "Cliente",
-    "dlHead": "↓ DOWNLOAD",
-    "ulHead": "↑ UPLOAD",
-    "pingLabel": "Ping",
+    "dlHead": "↓ BAJADA",
+    "ulHead": "↑ SUBIDA",
+    "pingLabel": "Latencia",
     "jitterLabel": "Jitter",
     "stabilityLabel": "Constancia",
-    "lossLabel": "Loss",
-    "quizHeading": "🧮 Cuestionario de plan y velocidad",
-    "quizResultTitle": "Resultado del cuestionario",
-    "quizRecommendationPrefix": "Recomendación para",
+    "lossLabel": "Pérdida",
+    "quizHeading": "🧮 Tu plan ideal",
+    "quizResultTitle": "Resultado de tu recomendación",
+    "quizRecommendationPrefix": "Sugerencia para",
     "quizSuggestedPlan": "Plan sugerido: {plan} ({label})",
     "quizMeasuredNote": "Tu bajada medida hoy es de {mbps} Mbps.",
-    "quizUnmeasuredNote": "Ejecuta la prueba en Test para comparar con tu velocidad actual.",
-    "quizRestart": "Repetir cuestionario",
+    "quizUnmeasuredNote": "Haz una prueba en Velocidad para comparar con tu conexión actual.",
+    "quizRestart": "Volver a responder",
     "quizProgress": "Pregunta {step}/{total}",
     "quizEstimatedPrefix": "Estimado:",
     "quizBack": "‹ Anterior",
-    "accordionHeading": "📂 Acordeón de posibilidades y guía",
-    "accActivitiesTitle": "🎯 Calidad de conexión por actividad",
-    "accDevicesTitle": "📱 Dispositivos simultáneos estimados",
-    "accRefTableTitle": "📋 Tabla de referencia por actividad",
-    "accTipsTitle": "💡 Sugerencias para obtener una medición precisa",
-    "accFaqTitle": "❓ Preguntas y glosario VNET",
+    "accordionHeading": "📂 Guía práctica de tu conexión",
+    "accMetricsGuideTitle": "📊 ¿Qué significa cada métrica?",
+    "accActivitiesTitle": "🎯 ¿Cómo rinde en tu día a día?",
+    "accDevicesTitle": "📱 ¿Cuántos equipos pueden conectarse?",
+    "accRefTableTitle": "📋 Guía rápida por tipo de uso",
+    "accTipsTitle": "💡 Consejos para medir mejor",
+    "accFaqTitle": "❓ Dudas frecuentes y términos",
     "refColActivity": "Actividad",
     "refColRecommended": "Recomendado",
     "ratingGood": "Óptimo / Bueno",
@@ -55,34 +56,60 @@
     "ratingPoor": "Limitado",
     "ratingInitial": "Referencia inicial",
     "planRefPrefix": "Plan ref.:",
-    "deviceEstPrefix": "Simultáneos estimados:",
+    "deviceEstPrefix": "Equipos simultáneos estimados:",
     "devicePerEqSuffix": "Mbps/eq",
-    "devicesNoteMeasured": "Margen útil: ~{usable} Mbps (base: {base} Mbps • constancia: {stab}% • ping: {ping} ms • jitter: {jitter} ms • loss: {loss}%).",
-    "devicesNoteRef": "Estimación de referencia inicial. Ejecuta la prueba para usar tu velocidad real.",
+    "devicesNoteMeasured": "Margen útil: ~{usable} Mbps (base: {base} Mbps • constancia: {stab}% • latencia: {ping} ms • jitter: {jitter} ms • pérdida: {loss}%).",
+    "devicesNoteRef": "Estimación de referencia inicial. Haz una prueba para usar tu velocidad real.",
     "pwaInstalledNote": "VTEST ya está ejecutándose como aplicación instalada.",
     "pwaReadyNote": "Listo para instalar en tu pantalla de inicio o escritorio.",
     "pwaManualNote": "En Android/Windows usa el menú del navegador para instalar como app; en iPhone/iPad usa Compartir -> Añadir a pantalla de inicio.",
-    "historyTitle": "🕒 Histórico del dispositivo en cada red (D1)",
+    "historyTitle": "🕒 Mis mediciones en cada red (D1)",
     "exportCsvBtn": "CSV",
     "clearHistoryBtn": "Borrar",
     "histColDate": "Fecha",
     "histColIsp": "Red / ISP",
     "histColDl": "Bajada",
     "histColUl": "Subida",
-    "histColPing": "Ping",
+    "histColPing": "Latencia",
     "histColJitter": "Jitter",
     "histColStab": "Constancia",
-    "histColLoss": "Loss",
-    "historyEmpty": "Sin pruebas registradas en D1 para este dispositivo todavía.",
+    "histColLoss": "Pérdida",
+    "historyEmpty": "Aún no tienes pruebas registradas en D1 para este equipo.",
     "linkWeb": "🌐 Web",
     "linkWa": "💬 WhatsApp",
     "linkFb": "Facebook",
     "linkIg": "Instagram",
     "poweredByPrefix": "Powered by",
-    "navTest": "Test",
-    "navQuiz": "Cuestionario",
-    "navAccordion": "Acordeón",
-    "navSettings": "Histórico"
+    "navTest": "Velocidad",
+    "navQuiz": "Tu plan ideal",
+    "navAccordion": "Guía y métricas",
+    "navSettings": "Mis mediciones"
+  },
+  "metricsGuide": [
+    {
+      "title": "↓ Bajada (Descarga)",
+      "desc": "Muestra qué tan rápido puedes traer datos desde internet hacia tu equipo, clave para streaming, descargas y actualizaciones. Se mide con transferencias de distintos tamaños y reporta el percentil 90 de las lecturas."
+    },
+    {
+      "title": "↑ Subida (Carga)",
+      "desc": "Indica qué tan rápido puedes enviar información desde tu equipo hacia la red, útil para subir archivos, respaldos o transmitir en vivo. También se mide con envíos variados y reporta el percentil 90."
+    },
+    {
+      "title": "⏱️ Latencia (Ping / RTT)",
+      "desc": "Es el tiempo de ida y vuelta (RTT) que tarda un paquete desde tu equipo hasta el servidor y de regreso. Importa mucho en juegos y videollamadas; el valor mostrado refleja la mediana de las lecturas."
+    },
+    {
+      "title": "〰️ Jitter",
+      "desc": "Muestra qué tanto cambia la latencia entre mediciones consecutivas (distancia promedio entre lecturas sucesivas de RTT). Un jitter bajo ayuda a mantener llamadas, juegos y video más estables."
+    },
+    {
+      "title": "📉 Pérdida de paquetes",
+      "desc": "Indica si hubo paquetes de datos que no llegaron a destino durante la prueba. Cuando aumenta, puede causar cortes o retrasos en aplicaciones en tiempo real; lo ideal es mantenerse cerca de 0%."
+    }
+  ],
+  "notMeasuredGuide": {
+    "title": "🔎 Qué no mide un test de velocidad",
+    "desc": "No mide la cobertura o alcance real del Wi-Fi en cada habitación, el rendimiento interno o saturación del router, el estado del cableado o conectores internos ni las interferencias cercanas."
   },
   "quizSteps": [
     {
@@ -178,21 +205,21 @@
   "testTips": [
     { "title": "🔌 Prioriza cable Ethernet", "desc": "Medir por cable ofrece mayor precisión y estabilidad que el Wi-Fi." },
     { "title": "📶 Usa Wi-Fi 5 GHz y cerca del router", "desc": "El test mide el enlace hacia el servidor, no la cobertura Wi-Fi ni el cableado interno." },
-    { "title": "🔁 Haz al menos 3 pruebas seguidas", "desc": "Repite al menos tres veces en distintos horarios y evalúa ping, jitter y pérdida." },
+    { "title": "🔁 Haz al menos 3 pruebas seguidas", "desc": "Repite al menos tres veces en distintos horarios y evalúa latencia, jitter y pérdida." },
     { "title": "⏸️ Pausa descargas y evita VPN", "desc": "Cierra descargas o streaming activos y desactiva VPN para no alterar la ruta." }
   ],
   "faq": [
     {
       "q": "1. ¿Qué mide y qué no mide un test de velocidad?",
-      "a": "Mide descarga, subida, latencia (ping), jitter y estabilidad hacia un servidor; no mide la cobertura Wi-Fi real, el router, el cableado ni las interferencias internas."
+      "a": "Mide bajada, subida, latencia (RTT), jitter y pérdida hacia el servidor; no mide la cobertura Wi-Fi real, el router, el cableado ni las interferencias internas."
     },
     {
       "q": "2. ¿Cómo leer la latencia, el jitter y la pérdida de paquetes?",
-      "a": "0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms muestra retrasos en tiempo real. Jitter bajo da mayor estabilidad y desde 1% de pérdida ya puede haber cortes."
+      "a": "0–30 ms es excelente, 30–60 ms buena, 60–100 ms aceptable y +100 ms muestra retrasos en tiempo real. Un jitter bajo da mayor estabilidad y desde 1% de pérdida ya puede haber cortes."
     },
     {
       "q": "3. ¿Qué significan fibra óptica, NAP, ONT/ONU y velocidad simétrica?",
-      "a": "La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala descarga y subida."
+      "a": "La fibra óptica transmite pulsos de luz con baja latencia; el NAP distribuye la señal FTTH mediante splitter; la ONT/ONU convierte la señal óptica para enlazar con la OLT y el router; y la velocidad simétrica iguala bajada y subida."
     }
   ]
 }
