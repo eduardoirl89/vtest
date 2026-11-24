@@ -192,72 +192,12 @@
         </div>
       </section>
 
-      <!-- 4. PESTAÑA AJUSTES -->
-      <section class="tab-view" id="tab-settings" aria-label="Ajustes e historial">
+      <!-- 4. PESTAÑA HISTÓRICO DEL DISPOSITIVO -->
+      <section class="tab-view" id="tab-settings" aria-label="Histórico del dispositivo">
         <div class="settings-stack">
           <div class="panel-card">
             <div class="panel-title">
-              <span id="settingsPanelTitle">⚙️ Ajustes de prueba y aplicación</span>
-            </div>
-            <div class="field-row">
-              <label for="serverSelect" id="serverSelectLabel">Servidor predeterminado</label>
-              <select id="serverSelect"></select>
-              <span class="mini-info-sub" id="serverSelectHelp">Servidores cargados desde <code>servers.js</code>.</span>
-            </div>
-
-            <div class="field-grid-2">
-              <div class="field-row">
-                <label for="repeatCountSelect" id="repeatCountLabel">Repeticiones seguidas del test</label>
-                <select id="repeatCountSelect">
-                  <option value="1">1 prueba</option>
-                  <option value="2">2 pruebas seguidas</option>
-                  <option value="3">3 pruebas seguidas</option>
-                  <option value="4">4 pruebas seguidas</option>
-                  <option value="5">5 pruebas seguidas</option>
-                </select>
-              </div>
-
-              <div class="field-row">
-                <label for="simDevicesInput" id="simDevicesLabel">Concurrencia simulada (equipos)</label>
-                <input type="number" id="simDevicesInput" min="0" max="30" step="1" value="2" />
-              </div>
-            </div>
-
-            <div class="field-row">
-              <label for="mbpsPerDeviceInput" id="mbpsPerDeviceLabel">Consumo simulado por dispositivo (Mbps)</label>
-              <input type="number" id="mbpsPerDeviceInput" min="1" max="200" step="1" value="18" />
-              <span class="mini-info-sub" id="simLoadSummary"></span>
-            </div>
-
-            <label class="check-row">
-              <input type="checkbox" id="cfgAutoStart" checked />
-              <span id="autoStartLabel">Medir automáticamente al abrir</span>
-            </label>
-            <div class="btn-row">
-              <button type="button" class="btn-sm primary" id="saveCfgBtn">Guardar ajustes</button>
-              <button type="button" class="btn-sm" id="resetCfgBtn">Restaurar</button>
-              <button type="button" class="btn-sm" id="installSettingsBtn" style="display:none;">📲 Instalar app en este equipo</button>
-            </div>
-            <div class="mini-info-sub" id="pwaStatusNote" style="margin-top:8px;"></div>
-          </div>
-
-          <div class="panel-card">
-            <div class="panel-title">
-              <span id="benchPanelTitle">📊 Benchmarking — Tu mejor red</span>
-              <span class="mini-info-sub" id="benchScopeText">Top 3</span>
-            </div>
-            <div class="bench-tabs">
-              <button type="button" class="bench-tab active" data-metric="download" id="benchTabDl">Bajada</button>
-              <button type="button" class="bench-tab" data-metric="upload" id="benchTabUl">Subida</button>
-              <button type="button" class="bench-tab" data-metric="ping" id="benchTabPing">Latencia</button>
-            </div>
-            <div id="benchBars"></div>
-            <div class="mini-info-sub" id="benchSummaryLine" style="margin-top:8px;"></div>
-          </div>
-
-          <div class="panel-card">
-            <div class="panel-title">
-              <span id="historyPanelTitle">🕒 Pruebas anteriores</span>
+              <span id="historyPanelTitle">🕒 Histórico del dispositivo en cada red (D1)</span>
               <div class="btn-row" style="margin-top:0;">
                 <button type="button" class="btn-sm" id="exportCsvBtn">CSV</button>
                 <button type="button" class="btn-sm" id="clearHistBtn">Borrar</button>
@@ -267,10 +207,12 @@
               <thead>
                 <tr>
                   <th id="histColDate">Fecha</th>
-                  <th id="histColIsp">ISP</th>
+                  <th id="histColIsp">Red / ISP</th>
                   <th id="histColDl">Bajada</th>
                   <th id="histColUl">Subida</th>
                   <th id="histColPing">Ping</th>
+                  <th id="histColJitter">Jitter</th>
+                  <th id="histColStab">Constancia</th>
                   <th id="histColLoss">Loss</th>
                 </tr>
               </thead>
@@ -306,8 +248,8 @@
         <span id="navAccordionLabel">Acordeón</span>
       </button>
       <button type="button" class="nav-btn" data-tab="tab-settings">
-        <span class="nav-icon-wrap" aria-hidden="true">⚙️</span>
-        <span id="navSettingsLabel">Ajustes</span>
+        <span class="nav-icon-wrap" aria-hidden="true">🕒</span>
+        <span id="navSettingsLabel">Histórico</span>
       </button>
     </nav>
   </div>
