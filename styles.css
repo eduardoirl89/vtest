@@ -828,6 +828,12 @@ body {
   cursor: pointer;
 }
 
+/* Enlaces sociales y pie ocultos mientras corre la prueba */
+body.test-running .social-row,
+body.test-running .powered-box {
+  display: none;
+}
+
 .social-row {
   display: flex;
   justify-content: center;
