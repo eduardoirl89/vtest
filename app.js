@@ -256,6 +256,10 @@
   const START_DEG = 140;
   const SWEEP_DEG = 260;
 
+  function syncRunningChrome() {
+    document.body.classList.toggle('test-running', Boolean(isRunning));
+  }
+
   function getClientTimeZone() {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -1139,6 +1143,7 @@
 
     isRunning = true;
     testCompleted = false;
+    syncRunningChrome();
     hideFunnelUntilDone();
     abortCtrl = new AbortController();
     const { signal } = abortCtrl;
@@ -1200,6 +1205,7 @@
       }
     } finally {
       isRunning = false;
+      syncRunningChrome();
       setText('actionTestBtn', t('btnRepeat'));
       renderFunnelBubble();
     }
@@ -1209,6 +1215,7 @@
     if (isRunning && abortCtrl) {
       abortCtrl.abort();
       isRunning = false;
+      syncRunningChrome();
       hideFunnelUntilDone();
       const dot = document.getElementById('statusDot');
       if (dot) dot.className = 'dot';
