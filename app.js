@@ -227,11 +227,10 @@
   let gaugeTotalLen = 0;
   let d1Records = [];
 
-  // Estado del embudo en la misma pantalla principal
+  // Estado de revelación progresiva hacia abajo según responde el visitante
   let funnelOpen = false;
-  let funnelStep = 1;
-  let funnelUse = { key: 'home', label: 'Hogar / Streaming', base: 24 };
-  let funnelPeople = { people: 2, label: '1–2 personas', factor: 1.5, add: 15 };
+  let funnelAnswers = {};       // { [stepId]: optionIndex }
+  let funnelMaxUnlocked = 0;    // 0 = primera pregunta; avanza conforme responde cada etapa
   let selectedHirePlan = null;
 
   let netInfo = {
@@ -452,7 +451,7 @@
     if (el && typeof text === 'string') el.textContent = text;
   }
 
-  /* --- EMBUDOS EN LA MISMA PANTALLA PRINCIPAL (SOLO AL COMPLETAR) --- */
+  /* --- SECUENCIA PROGRESIVA HACIA ABAJO (SOLO AL COMPLETAR LA PRUEBA) --- */
   function hideFunnelUntilDone() {
     funnelOpen = false;
     const bubble = document.getElementById('funnelBubble');
@@ -461,8 +460,23 @@
     if (drawer) drawer.classList.remove('open');
   }
 
-  function computeFunnelRecommendation() {
-    const neededMbps = Math.max(30, Math.round(((funnelUse.base * funnelPeople.factor + funnelPeople.add) * 1.15) / 10) * 10);
+  function resetFunnelCascade() {
+    funnelAnswers = {};
+    funnelMaxUnlocked = 0;
+    selectedHirePlan = null;
+  }
+
+  function getFunnelRecommendation() {
+    const steps = contentData.quizSteps || FALLBACK_CONTENT.quizSteps;
+    const s0 = steps[0]?.options[funnelAnswers[steps[0]?.id]] || steps[0]?.options[0];
+    const s1 = steps[1]?.options[funnelAnswers[steps[1]?.id]] || steps[1]?.options[0];
+    const s2 = steps[2]?.options[funnelAnswers[steps[2]?.id]] || steps[2]?.options[0];
+
+    const base = s0?.basePerPerson ?? 24;
+    const factor = s1?.factor ?? 1.5;
+    const add = s2?.addMbps ?? 10;
+
+    const neededMbps = Math.max(30, Math.round(((base * factor + add) * 1.15) / 10) * 10);
     const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
     const recommended = sorted.find(p => (p.mbps || 0) >= neededMbps) || sorted[sorted.length - 1] || {
       id: 'vnet400',
@@ -471,22 +485,200 @@
       mbps: 400,
       recommendedDevices: 8
     };
-    return { neededMbps, recommended, sorted };
+
+    return {
+      neededMbps,
+      recommended,
+      sorted,
+      s0Label: s0?.label || '',
+      s1Label: s1?.label || '',
+      s2Label: s2?.label || ''
+    };
   }
 
-  function setFunnelStep(stepNum) {
-    funnelStep = stepNum;
-    document.querySelectorAll('.funnel-step-chip').forEach(ch => {
-      ch.classList.toggle('active', Number(ch.getAttribute('data-funnel-step')) === stepNum);
-    });
-    document.querySelectorAll('.funnel-panel').forEach((panel, idx) => {
-      panel.classList.toggle('active', idx + 1 === stepNum);
-    });
-    if (stepNum === 2) renderFunnelPlans();
-    if (stepNum === 3) renderFunnelCheckout();
+  function buildVendorPitchForStep(stepIndex, opt) {
+    if (!opt) return '';
+    if (stepIndex === 0) {
+      return `Perfecto, para **${opt.label}** priorizamos estabilidad y buen margen de descarga. Vamos a ver quiénes lo usan a diario.`;
+    }
+    if (stepIndex === 1) {
+      return `Anotado: **${opt.label}**. Ahora dime qué tan seguido coinciden todos para calcular el margen real en horas pico.`;
+    }
+    return `Listo, con **${opt.label}** ya tengo tu perfil completo. Mira la propuesta que armé para ti aquí abajo:`;
   }
 
-  function toggleFunnelDrawer(forceOpen = null, targetStep = null) {
+  function renderFunnelBubble() {
+    const bubble = document.getElementById('funnelBubble');
+    const txtEl = document.getElementById('funnelBubbleText');
+    const openBtn = document.getElementById('funnelOpenBtn');
+    if (!bubble || !txtEl) return;
+
+    if (!testCompleted || isRunning || typeof lastMetrics.downloadMbps !== 'number' || lastMetrics.downloadMbps <= 0) {
+      bubble.classList.remove('ready', 'highlighted');
+      return;
+    }
+
+    const { recommended } = getFunnelRecommendation();
+    bubble.classList.add('ready', 'highlighted');
+    txtEl.textContent = `Mediste ${lastMetrics.downloadMbps} Mbps (${lastMetrics.pingMs ?? '--'} ms). Responde las preguntas y te muestro la propuesta ideal para tu caso.`;
+    if (openBtn) {
+      openBtn.textContent = funnelOpen ? 'Ocultar pasos ↑' : 'Ver recomendación ↓';
+    }
+  }
+
+  function renderFunnelCascade() {
+    const cascade = document.getElementById('funnelCascade');
+    if (!cascade) return;
+
+    const steps = contentData.quizSteps || FALLBACK_CONTENT.quizSteps;
+    const totalQ = steps.length;
+    const { neededMbps, recommended, sorted, s0Label, s1Label, s2Label } = getFunnelRecommendation();
+    const activePlan = selectedHirePlan || recommended;
+    const dl = typeof lastMetrics.downloadMbps === 'number' && lastMetrics.downloadMbps > 0 ? lastMetrics.downloadMbps : null;
+
+    const descriptions = {
+      vnet400: 'Ideal para hogar, streaming HD/4K y navegación fluida en varios equipos.',
+      vnet600: 'Pensado para teletrabajo, videollamadas, juegos en línea y mayor concurrencia.',
+      vnet1giga: 'Máxima capacidad para altos volúmenes de descarga, negocios y uso intensivo.'
+    };
+
+    const htmlParts = [];
+
+    // Revelar hacia abajo únicamente las preguntas hasta funnelMaxUnlocked
+    for (let i = 0; i <= Math.min(funnelMaxUnlocked, totalQ - 1); i++) {
+      const q = steps[i];
+      const chosenIdx = funnelAnswers[q.id];
+      const hasChoice = typeof chosenIdx === 'number' && q.options[chosenIdx];
+      const chosenOpt = hasChoice ? q.options[chosenIdx] : null;
+
+      htmlParts.push(`
+        <div class="cascade-stage" data-stage-index="${i}">
+          <div class="cascade-header">
+            <span class="cascade-step-tag">Paso ${i + 1} de ${totalQ}</span>
+            ${hasChoice ? `<span class="cascade-answer-pill">✓ ${chosenOpt.label}</span>` : ''}
+          </div>
+          <div class="cascade-question">${q.question}</div>
+          ${hasChoice ? `<div class="cascade-vendor-note">${buildVendorPitchForStep(i, chosenOpt).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>` : ''}
+          <div class="funnel-choice-row">
+            ${q.options.map((opt, oIdx) => `
+              <button type="button" class="funnel-choice-btn ${chosenIdx === oIdx ? 'selected' : ''}" data-q-id="${q.id}" data-step-idx="${i}" data-opt-idx="${oIdx}">
+                <span class="funnel-choice-badge">${opt.badge}</span>
+                <span>${opt.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    // Una vez respondidas todas las preguntas del cuestionario, se revela hacia abajo la propuesta de plan
+    const allAnswered = steps.every(q => typeof funnelAnswers[q.id] === 'number');
+    if (allAnswered) {
+      let comparisonNote = `Estimamos ~${neededMbps} Mbps necesarios para ${s0Label} con ${s1Label} (${s2Label}).`;
+      if (dl !== null) {
+        comparisonNote = dl >= neededMbps
+          ? `Hoy mediste ${dl} Mbps (necesitas ~${neededMbps} Mbps). ${recommended.name} te da holgura sin caídas cuando todos se conectan.`
+          : `Hoy mediste ${dl} Mbps y tu perfil requiere ~${neededMbps} Mbps. Te propongo ${recommended.name} para evitar lentitud o cortes.`;
+      }
+
+      htmlParts.push(`
+        <div class="cascade-stage pitch-stage" id="cascadePitchStage">
+          <div class="cascade-header">
+            <span class="cascade-step-tag">Propuesta para ti</span>
+            <span class="cascade-answer-pill">${recommended.name}</span>
+          </div>
+          <div class="funnel-diagnosis-box">
+            <div class="funnel-diag-title">Te recomiendo: ${recommended.name} (${recommended.label})</div>
+            <div class="funnel-diag-sub">${comparisonNote}</div>
+          </div>
+          <div class="funnel-plans-grid">
+            ${sorted.map(plan => {
+              const isRec = plan.id === recommended.id;
+              const isPicked = activePlan && activePlan.id === plan.id;
+              return `
+                <div class="funnel-plan-card ${isRec ? 'recommended' : ''} ${isPicked ? 'picked' : ''}">
+                  <div>
+                    ${isRec ? '<div class="funnel-plan-tag">Recomendado</div>' : ''}
+                    <div class="funnel-plan-name" style="margin-top:4px;">${plan.name}</div>
+                    <div class="funnel-plan-speed">${plan.label}</div>
+                    <div class="funnel-plan-desc" style="margin-top:4px;">${descriptions[plan.id] || `Hasta ${plan.recommendedDevices || 8} equipos recomendados.`}</div>
+                  </div>
+                  <button type="button" class="funnel-hire-btn" data-select-plan="${plan.id}">
+                    ${isPicked ? `✓ Elegido: ${plan.name}` : `Elegir ${plan.name}`}
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `);
+
+      // Al elegir un plan, aparece justo debajo la propuesta de contratación directa
+      if (selectedHirePlan) {
+        const waBase = (CFG.links && CFG.links.whatsapp) ? CFG.links.whatsapp : 'https://wa.me/584122593059';
+        const cleanWa = waBase.split('?')[0];
+        const summaryLines = [
+          `Plan elegido: ${selectedHirePlan.name} (${selectedHirePlan.label})`,
+          `Respuestas: ${s0Label} • ${s1Label} • ${s2Label}`,
+          `Medición actual: ${lastMetrics.downloadMbps ?? '--'} Mbps bajada / ${lastMetrics.uploadMbps ?? '--'} Mbps subida • ${lastMetrics.pingMs ?? '--'} ms`,
+          `Red / Ubicación: ${netInfo.isp || 'No detectado'} • ${getActiveClientLocation()}`
+        ].join('\n');
+        const waHref = `${cleanWa}?text=${encodeURIComponent(`Hola VNET, quiero contratar el plan ${selectedHirePlan.name} (${selectedHirePlan.label}).\n${summaryLines}`)}`;
+
+        htmlParts.push(`
+          <div class="cascade-stage pitch-stage" id="cascadeCheckoutStage">
+            <div class="cascade-header">
+              <span class="cascade-step-tag">Siguiente paso</span>
+              <span class="cascade-answer-pill">${selectedHirePlan.name}</span>
+            </div>
+            <div class="funnel-checkout-box">
+              <div class="funnel-checkout-title">Listo para activar ${selectedHirePlan.name} (${selectedHirePlan.label})</div>
+              <div class="funnel-checkout-summary">${summaryLines}</div>
+              <div class="funnel-actions-row">
+                <a class="funnel-cta-btn" href="${waHref}" target="_blank" rel="noopener noreferrer">💬 Solicitar ${selectedHirePlan.name} por WhatsApp</a>
+                <button type="button" class="funnel-secondary-btn" id="funnelRestartCascadeBtn">Reiniciar preguntas</button>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    cascade.innerHTML = htmlParts.join('');
+
+    cascade.querySelectorAll('.funnel-choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const qId = btn.getAttribute('data-q-id');
+        const stepIdx = Number(btn.getAttribute('data-step-idx'));
+        const optIdx = Number(btn.getAttribute('data-opt-idx'));
+        funnelAnswers[qId] = optIdx;
+        if (stepIdx + 1 > funnelMaxUnlocked) {
+          funnelMaxUnlocked = Math.min(totalQ, stepIdx + 1);
+        }
+        if (stepIdx === totalQ - 1 && !selectedHirePlan) {
+          selectedHirePlan = getFunnelRecommendation().recommended;
+        }
+        renderFunnelCascade();
+        renderFunnelBubble();
+      });
+    });
+
+    cascade.querySelectorAll('[data-select-plan]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pid = btn.getAttribute('data-select-plan');
+        selectedHirePlan = sorted.find(p => p.id === pid) || recommended;
+        renderFunnelCascade();
+      });
+    });
+
+    cascade.querySelector('#funnelRestartCascadeBtn')?.addEventListener('click', () => {
+      resetFunnelCascade();
+      renderFunnelCascade();
+      renderFunnelBubble();
+    });
+  }
+
+  function toggleFunnelDrawer(forceOpen = null) {
     if (!testCompleted || isRunning) {
       hideFunnelUntilDone();
       return;
@@ -495,109 +687,9 @@
     const drawer = document.getElementById('funnelDrawer');
     if (drawer) drawer.classList.toggle('open', funnelOpen);
     if (funnelOpen) {
-      setFunnelStep(targetStep || funnelStep || 1);
-      renderFunnelDiagnosis();
+      renderFunnelCascade();
     }
-  }
-
-  function renderFunnelBubble() {
-    const bubble = document.getElementById('funnelBubble');
-    const txtEl = document.getElementById('funnelBubbleText');
-    if (!bubble || !txtEl) return;
-
-    if (!testCompleted || isRunning || typeof lastMetrics.downloadMbps !== 'number' || lastMetrics.downloadMbps <= 0) {
-      bubble.classList.remove('ready', 'highlighted');
-      return;
-    }
-
-    const { recommended } = computeFunnelRecommendation();
-    bubble.classList.add('ready', 'highlighted');
-    txtEl.textContent = `Mediste ${lastMetrics.downloadMbps} Mbps (${lastMetrics.pingMs ?? '--'} ms latencia). Según tu perfil, encaja mejor ${recommended.name} (${recommended.label}).`;
-  }
-
-  function renderFunnelDiagnosis() {
-    const box = document.getElementById('funnelDiagnosisBox');
-    if (!box) return;
-    const { neededMbps, recommended } = computeFunnelRecommendation();
-    const dl = typeof lastMetrics.downloadMbps === 'number' && lastMetrics.downloadMbps > 0 ? lastMetrics.downloadMbps : null;
-
-    let statusNote = 'Completa la prueba de velocidad para comparar tu conexión actual.';
-    if (dl !== null) {
-      statusNote = dl >= neededMbps
-        ? `Tu bajada actual (${dl} Mbps) supera el margen estimado (${neededMbps} Mbps); ${recommended.name} te da holgura en horas pico.`
-        : `Tu bajada actual (${dl} Mbps) está por debajo de lo ideal (${neededMbps} Mbps) para ${funnelPeople.label}; te conviene ${recommended.name}.`;
-    }
-
-    box.innerHTML = `
-      <div class="funnel-diag-title">Plan sugerido: ${recommended.name} (${recommended.label})</div>
-      <div class="funnel-diag-sub">Requerimiento estimado: ~${neededMbps} Mbps • ${funnelUse.label} • ${funnelPeople.label}</div>
-      <div class="funnel-diag-sub" style="margin-top:4px;">${statusNote}</div>
-    `;
     renderFunnelBubble();
-  }
-
-  function renderFunnelPlans() {
-    const grid = document.getElementById('funnelPlansGrid');
-    if (!grid) return;
-    const { recommended, sorted } = computeFunnelRecommendation();
-    if (!selectedHirePlan) selectedHirePlan = recommended;
-
-    const descriptions = {
-      vnet400: 'Ideal para hogar, streaming HD/4K y navegación fluida en varios equipos.',
-      vnet600: 'Pensado para teletrabajo, videollamadas, juegos en línea y mayor concurrencia.',
-      vnet1giga: 'Máxima capacidad para altos volúmenes de descarga, negocios y uso intensivo.'
-    };
-
-    grid.innerHTML = sorted.map(plan => {
-      const isRec = plan.id === recommended.id;
-      return `
-        <div class="funnel-plan-card ${isRec ? 'recommended' : ''}">
-          <div>
-            ${isRec ? '<div class="funnel-plan-tag">Recomendado</div>' : ''}
-            <div class="funnel-plan-name" style="margin-top:4px;">${plan.name}</div>
-            <div class="funnel-plan-speed">${plan.label}</div>
-            <div class="funnel-plan-desc" style="margin-top:4px;">${descriptions[plan.id] || `Hasta ${plan.recommendedDevices || 8} equipos recomendados.`}</div>
-          </div>
-          <button type="button" class="funnel-hire-btn" data-hire-id="${plan.id}">Contratar ${plan.name}</button>
-        </div>
-      `;
-    }).join('');
-
-    grid.querySelectorAll('.funnel-hire-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pid = btn.getAttribute('data-hire-id');
-        selectedHirePlan = sorted.find(p => p.id === pid) || recommended;
-        setFunnelStep(3);
-      });
-    });
-  }
-
-  function renderFunnelCheckout() {
-    const box = document.getElementById('funnelCheckoutBox');
-    if (!box) return;
-    const { recommended } = computeFunnelRecommendation();
-    const plan = selectedHirePlan || recommended;
-    const waBase = (CFG.links && CFG.links.whatsapp) ? CFG.links.whatsapp : 'https://wa.me/584122593059';
-    const cleanWa = waBase.split('?')[0];
-
-    const summaryLines = [
-      `Plan seleccionado: ${plan.name} (${plan.label})`,
-      `Uso / Perfil: ${funnelUse.label} • ${funnelPeople.label}`,
-      `Bajada / Subida: ${lastMetrics.downloadMbps ?? '--'} Mbps / ${lastMetrics.uploadMbps ?? '--'} Mbps`,
-      `Latencia / Jitter: ${lastMetrics.pingMs ?? '--'} ms / ${lastMetrics.jitterMs ?? '--'} ms`,
-      `Proveedor / Ubicación: ${netInfo.isp || 'No detectado'} • ${getActiveClientLocation()}`
-    ].join('\n');
-
-    const waText = encodeURIComponent(`Hola VNET, quiero contratar el plan ${plan.name} (${plan.label}).\n${summaryLines}`);
-    const waHref = `${cleanWa}?text=${waText}`;
-
-    box.innerHTML = `
-      <div class="funnel-checkout-title">Contratar ${plan.name} (${plan.label})</div>
-      <div class="funnel-checkout-summary">${summaryLines}</div>
-      <div class="funnel-actions-row">
-        <a class="funnel-cta-btn" href="${waHref}" target="_blank" rel="noopener noreferrer">💬 Continuar por WhatsApp</a>
-      </div>
-    `;
   }
 
   function pruneRemovedPanels() {
@@ -728,6 +820,7 @@
         renderQuiz();
         renderHistory();
         updatePwaNote();
+        if (funnelOpen) renderFunnelCascade();
       }
     } catch {}
   }
@@ -1143,6 +1236,7 @@
 
     isRunning = true;
     testCompleted = false;
+    resetFunnelCascade();
     syncRunningChrome();
     hideFunnelUntilDone();
     abortCtrl = new AbortController();
@@ -1190,7 +1284,6 @@
       const measuredAt = new Date().toISOString();
       saveLocalDeviceRecord(lastMetrics, measuredAt);
       updateHeaderAndFooter();
-      renderFunnelDiagnosis();
       renderAccordionInsights();
       renderQuiz();
       renderHistory();
@@ -1623,67 +1716,13 @@
     });
   }
 
-  function bindFunnelEvents() {
-    document.getElementById('funnelOpenBtn')?.addEventListener('click', () => {
-      toggleFunnelDrawer(!funnelOpen, 1);
-    });
-
-    document.querySelectorAll('.funnel-step-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const s = Number(chip.getAttribute('data-funnel-step')) || 1;
-        toggleFunnelDrawer(true, s);
-      });
-    });
-
-    const useBases = {
-      home: { label: 'Hogar / Streaming', base: 24 },
-      office: { label: 'Trabajo / Videollamadas', base: 36 },
-      business: { label: 'Comercio / Negocio', base: 34 },
-      gaming: { label: 'Gaming / Descargas', base: 46 }
-    };
-
-    document.querySelectorAll('#funnelUseChoices .funnel-choice-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#funnelUseChoices .funnel-choice-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        const k = btn.getAttribute('data-use') || 'home';
-        funnelUse = { key: k, ...(useBases[k] || useBases.home) };
-        renderFunnelDiagnosis();
-      });
-    });
-
-    document.querySelectorAll('#funnelPeopleChoices .funnel-choice-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#funnelPeopleChoices .funnel-choice-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        funnelPeople = {
-          people: Number(btn.getAttribute('data-people')) || 2,
-          label: btn.textContent.trim(),
-          factor: Number(btn.getAttribute('data-factor')) || 1.5,
-          add: Number(btn.getAttribute('data-add')) || 15
-        };
-        renderFunnelDiagnosis();
-      });
-    });
-
-    document.getElementById('funnelToPlansBtn')?.addEventListener('click', () => {
-      setFunnelStep(2);
-    });
-
-    document.getElementById('funnelBackToIdealBtn')?.addEventListener('click', () => {
-      setFunnelStep(1);
-    });
-
-    document.getElementById('funnelBackToPlansBtn')?.addEventListener('click', () => {
-      setFunnelStep(2);
-    });
-  }
-
   function bindEvents() {
     document.getElementById('installAppBtn')?.addEventListener('click', triggerPwaInstall);
     document.getElementById('installSettingsBtn')?.addEventListener('click', triggerPwaInstall);
     document.getElementById('actionTestBtn')?.addEventListener('click', stopOrRestart);
-    bindFunnelEvents();
+    document.getElementById('funnelOpenBtn')?.addEventListener('click', () => {
+      toggleFunnelDrawer(!funnelOpen);
+    });
 
     document.querySelectorAll('.acc-header').forEach(h => {
       h.addEventListener('click', () => {
