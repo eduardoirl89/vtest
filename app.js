@@ -215,6 +215,7 @@
   const AUTO_START = CFG.defaults?.autoStart !== false;
 
   let isRunning = false;
+  let testCompleted = false;
   let abortCtrl = null;
   let dlSeries = [];
   let ulSeries = [];
@@ -447,7 +448,15 @@
     if (el && typeof text === 'string') el.textContent = text;
   }
 
-  /* --- EMBUDOS EN LA MISMA PANTALLA PRINCIPAL --- */
+  /* --- EMBUDOS EN LA MISMA PANTALLA PRINCIPAL (SOLO AL COMPLETAR) --- */
+  function hideFunnelUntilDone() {
+    funnelOpen = false;
+    const bubble = document.getElementById('funnelBubble');
+    const drawer = document.getElementById('funnelDrawer');
+    if (bubble) bubble.classList.remove('ready', 'highlighted');
+    if (drawer) drawer.classList.remove('open');
+  }
+
   function computeFunnelRecommendation() {
     const neededMbps = Math.max(30, Math.round(((funnelUse.base * funnelPeople.factor + funnelPeople.add) * 1.15) / 10) * 10);
     const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
@@ -474,6 +483,10 @@
   }
 
   function toggleFunnelDrawer(forceOpen = null, targetStep = null) {
+    if (!testCompleted || isRunning) {
+      hideFunnelUntilDone();
+      return;
+    }
     funnelOpen = typeof forceOpen === 'boolean' ? forceOpen : !funnelOpen;
     const drawer = document.getElementById('funnelDrawer');
     if (drawer) drawer.classList.toggle('open', funnelOpen);
@@ -488,14 +501,14 @@
     const txtEl = document.getElementById('funnelBubbleText');
     if (!bubble || !txtEl) return;
 
-    if (typeof lastMetrics.downloadMbps === 'number' && lastMetrics.downloadMbps > 0) {
-      const { recommended } = computeFunnelRecommendation();
-      bubble.classList.add('highlighted');
-      txtEl.textContent = `Mediste ${lastMetrics.downloadMbps} Mbps (${lastMetrics.pingMs ?? '--'} ms latencia). Según tu perfil, encaja mejor ${recommended.name} (${recommended.label}).`;
-    } else {
-      bubble.classList.remove('highlighted');
-      txtEl.textContent = 'Completa o revisa tu medición para comparar tu conexión actual con nuestros planes disponibles y contratar al instante.';
+    if (!testCompleted || isRunning || typeof lastMetrics.downloadMbps !== 'number' || lastMetrics.downloadMbps <= 0) {
+      bubble.classList.remove('ready', 'highlighted');
+      return;
     }
+
+    const { recommended } = computeFunnelRecommendation();
+    bubble.classList.add('ready', 'highlighted');
+    txtEl.textContent = `Mediste ${lastMetrics.downloadMbps} Mbps (${lastMetrics.pingMs ?? '--'} ms latencia). Según tu perfil, encaja mejor ${recommended.name} (${recommended.label}).`;
   }
 
   function renderFunnelDiagnosis() {
@@ -1125,6 +1138,8 @@
     if (isRunning && abortCtrl) abortCtrl.abort();
 
     isRunning = true;
+    testCompleted = false;
+    hideFunnelUntilDone();
     abortCtrl = new AbortController();
     const { signal } = abortCtrl;
     const totalCycles = 1;
@@ -1165,6 +1180,8 @@
       setText('gaugeValue', fmtGauge(lastMetrics.downloadMbps));
       setGaugeProgress(lastMetrics.downloadMbps);
 
+      testCompleted = true;
+
       const measuredAt = new Date().toISOString();
       saveLocalDeviceRecord(lastMetrics, measuredAt);
       updateHeaderAndFooter();
@@ -1184,6 +1201,7 @@
     } finally {
       isRunning = false;
       setText('actionTestBtn', t('btnRepeat'));
+      renderFunnelBubble();
     }
   }
 
@@ -1191,6 +1209,7 @@
     if (isRunning && abortCtrl) {
       abortCtrl.abort();
       isRunning = false;
+      hideFunnelUntilDone();
       const dot = document.getElementById('statusDot');
       if (dot) dot.className = 'dot';
       setText('phaseLabel', t('phaseStopped'));
@@ -1726,7 +1745,7 @@
     applyStaticUiTexts();
     pruneRemovedPanels();
     updateHeaderAndFooter();
-    renderFunnelDiagnosis();
+    hideFunnelUntilDone();
     renderAccordionInsights();
     renderQuiz();
     renderHistory();
