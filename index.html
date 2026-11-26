@@ -32,7 +32,7 @@
     </header>
 
     <main class="main-container">
-      <!-- 1. PESTAÑA PRINCIPAL: VELOCIDAD + FUNNEL EN LA MISMA PANTALLA -->
+      <!-- 1. PESTAÑA PRINCIPAL: VELOCIDAD + SECUENCIA COMERCIAL HACIA ABAJO -->
       <section class="tab-view active" id="tab-test" aria-label="Prueba de velocidad">
         <div class="server-header-card">
           <div class="server-left">
@@ -116,65 +116,20 @@
 
         <button type="button" class="primary-action-pill" id="actionTestBtn">Detener prueba</button>
 
-        <!-- EMBUDOS EN LA MISMA PANTALLA PRINCIPAL -->
+        <!-- SECUENCIA PROGRESIVA HACIA ABAJO (SOLO AL COMPLETAR LA PRUEBA) -->
         <div class="funnel-bubble" id="funnelBubble">
           <div class="funnel-bubble-top">
-            <span class="funnel-badge">🎯 TU PLAN IDEAL</span>
-            <button type="button" class="funnel-mini-btn" id="funnelOpenBtn">Ver plan y planes ↓</button>
+            <span class="funnel-badge">🎯 ASESOR DE PLANES VNET</span>
+            <button type="button" class="funnel-mini-btn" id="funnelOpenBtn">Comenzar asesoría ↓</button>
           </div>
           <div class="funnel-bubble-text" id="funnelBubbleText">
-            Completa o revisa tu medición para comparar tu conexión actual con nuestros planes disponibles y contratar al instante.
+            Completa la prueba para revisar tu conexión y armar tu plan ideal paso a paso.
           </div>
         </div>
 
         <div class="funnel-drawer" id="funnelDrawer">
-          <div class="funnel-steps-bar">
-            <span class="funnel-step-chip active" data-funnel-step="1">1. Tu plan ideal</span>
-            <span class="funnel-step-chip" data-funnel-step="2">2. Planes disponibles</span>
-            <span class="funnel-step-chip" data-funnel-step="3">3. Contratar</span>
-          </div>
-
-          <div class="funnel-panel active" id="funnelPanel1">
-            <div class="funnel-q-block">
-              <div class="funnel-q-label">1. ¿Cuál es tu uso principal?</div>
-              <div class="funnel-choice-row" id="funnelUseChoices">
-                <button type="button" class="funnel-choice-btn selected" data-use="home">🏠 Hogar / Streaming</button>
-                <button type="button" class="funnel-choice-btn" data-use="office">💻 Trabajo / Videollamadas</button>
-                <button type="button" class="funnel-choice-btn" data-use="business">🏪 Comercio / Negocio</button>
-                <button type="button" class="funnel-choice-btn" data-use="gaming">🎮 Gaming / Descargas</button>
-              </div>
-            </div>
-
-            <div class="funnel-q-block">
-              <div class="funnel-q-label">2. ¿Cuántas personas o equipos coinciden?</div>
-              <div class="funnel-choice-row" id="funnelPeopleChoices">
-                <button type="button" class="funnel-choice-btn selected" data-people="2" data-factor="1.5" data-add="15">1–2 personas</button>
-                <button type="button" class="funnel-choice-btn" data-people="4" data-factor="2.8" data-add="45">3–4 personas</button>
-                <button type="button" class="funnel-choice-btn" data-people="8" data-factor="4.5" data-add="80">5–8 personas</button>
-                <button type="button" class="funnel-choice-btn" data-people="12" data-factor="6.2" data-add="120">9+ personas</button>
-              </div>
-            </div>
-
-            <div class="funnel-diagnosis-box" id="funnelDiagnosisBox"></div>
-
-            <div class="funnel-actions-row">
-              <button type="button" class="funnel-cta-btn" id="funnelToPlansBtn">Ver planes disponibles →</button>
-            </div>
-          </div>
-
-          <div class="funnel-panel" id="funnelPanel2">
-            <div class="funnel-plans-grid" id="funnelPlansGrid"></div>
-            <div class="funnel-actions-row">
-              <button type="button" class="funnel-secondary-btn" id="funnelBackToIdealBtn">← Ajustar mi plan ideal</button>
-            </div>
-          </div>
-
-          <div class="funnel-panel" id="funnelPanel3">
-            <div class="funnel-checkout-box" id="funnelCheckoutBox"></div>
-            <div class="funnel-actions-row">
-              <button type="button" class="funnel-secondary-btn" id="funnelBackToPlansBtn">← Cambiar de plan</button>
-            </div>
-          </div>
+          <!-- Contenedor dinámico que va revelando cada bloque hacia abajo según responde el visitante -->
+          <div class="funnel-cascade" id="funnelCascade"></div>
         </div>
       </section>
 
