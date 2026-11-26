@@ -547,6 +547,281 @@ body {
   box-shadow: 0 10px 28px rgba(217, 70, 239, 0.48);
 }
 
+/* Embudo en la misma pantalla principal */
+.funnel-bubble {
+  margin-top: 10px;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.funnel-bubble.highlighted {
+  border-color: rgba(232, 121, 249, 0.75);
+  box-shadow: 0 10px 26px rgba(217, 70, 239, 0.22);
+}
+
+.funnel-bubble-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.funnel-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--nav-active-text);
+  background: var(--nav-active-pill);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.funnel-mini-btn {
+  border: 1px solid rgba(232, 121, 249, 0.45);
+  background: var(--btn-grad);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.funnel-bubble-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.funnel-drawer {
+  display: none;
+  margin-top: 8px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.funnel-drawer.open {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.funnel-steps-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.funnel-step-chip {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 6px 6px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.funnel-step-chip.active {
+  background: var(--btn-grad);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.funnel-panel {
+  display: none;
+}
+
+.funnel-panel.active {
+  display: block;
+}
+
+.funnel-q-block {
+  margin-bottom: 10px;
+}
+
+.funnel-q-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.funnel-choice-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.funnel-choice-btn {
+  padding: 8px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-main);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.funnel-choice-btn:hover {
+  border-color: var(--border-hover);
+}
+
+.funnel-choice-btn.selected {
+  border-color: var(--ul-color);
+  background: var(--nav-active-pill);
+  color: var(--nav-active-text);
+}
+
+.funnel-diagnosis-box {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.funnel-diag-title {
+  font-size: 0.88rem;
+  font-weight: 900;
+  color: var(--text-main);
+  margin-bottom: 3px;
+}
+
+.funnel-diag-sub {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.funnel-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.funnel-plan-card {
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.funnel-plan-card.recommended {
+  border-color: #e879f9;
+  box-shadow: 0 8px 22px rgba(217, 70, 239, 0.25);
+}
+
+.funnel-plan-tag {
+  font-size: 0.64rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--btn-grad);
+  color: #ffffff;
+  align-self: flex-start;
+}
+
+.funnel-plan-name {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.funnel-plan-speed {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--dl-color);
+}
+
+.funnel-plan-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.funnel-hire-btn {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: none;
+  background: var(--btn-grad);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.funnel-checkout-box {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.funnel-checkout-title {
+  font-size: 0.92rem;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.funnel-checkout-summary {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: pre-line;
+}
+
+.funnel-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.funnel-cta-btn {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: none;
+  background: var(--btn-grad);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+.funnel-secondary-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-main);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .section-heading {
   font-size: 1.02rem;
   font-weight: 800;
@@ -970,6 +1245,12 @@ th {
 .nav-btn.active .nav-icon-wrap {
   background: var(--nav-active-pill);
   color: var(--nav-active-text);
+}
+
+@media (max-width: 640px) {
+  .funnel-plans-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 900px) {
