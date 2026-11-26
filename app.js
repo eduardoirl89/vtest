@@ -226,6 +226,13 @@
   let gaugeTotalLen = 0;
   let d1Records = [];
 
+  // Estado del embudo en la misma pantalla principal
+  let funnelOpen = false;
+  let funnelStep = 1;
+  let funnelUse = { key: 'home', label: 'Hogar / Streaming', base: 24 };
+  let funnelPeople = { people: 2, label: '1–2 personas', factor: 1.5, add: 15 };
+  let selectedHirePlan = null;
+
   let netInfo = {
     ip: '',
     isp: '',
@@ -440,6 +447,142 @@
     if (el && typeof text === 'string') el.textContent = text;
   }
 
+  /* --- EMBUDOS EN LA MISMA PANTALLA PRINCIPAL --- */
+  function computeFunnelRecommendation() {
+    const neededMbps = Math.max(30, Math.round(((funnelUse.base * funnelPeople.factor + funnelPeople.add) * 1.15) / 10) * 10);
+    const sorted = [...PLANS].sort((a, b) => (a.mbps || 0) - (b.mbps || 0));
+    const recommended = sorted.find(p => (p.mbps || 0) >= neededMbps) || sorted[sorted.length - 1] || {
+      id: 'vnet400',
+      name: 'VNET400',
+      label: 'Hasta 400 Mbps',
+      mbps: 400,
+      recommendedDevices: 8
+    };
+    return { neededMbps, recommended, sorted };
+  }
+
+  function setFunnelStep(stepNum) {
+    funnelStep = stepNum;
+    document.querySelectorAll('.funnel-step-chip').forEach(ch => {
+      ch.classList.toggle('active', Number(ch.getAttribute('data-funnel-step')) === stepNum);
+    });
+    document.querySelectorAll('.funnel-panel').forEach((panel, idx) => {
+      panel.classList.toggle('active', idx + 1 === stepNum);
+    });
+    if (stepNum === 2) renderFunnelPlans();
+    if (stepNum === 3) renderFunnelCheckout();
+  }
+
+  function toggleFunnelDrawer(forceOpen = null, targetStep = null) {
+    funnelOpen = typeof forceOpen === 'boolean' ? forceOpen : !funnelOpen;
+    const drawer = document.getElementById('funnelDrawer');
+    if (drawer) drawer.classList.toggle('open', funnelOpen);
+    if (funnelOpen) {
+      setFunnelStep(targetStep || funnelStep || 1);
+      renderFunnelDiagnosis();
+    }
+  }
+
+  function renderFunnelBubble() {
+    const bubble = document.getElementById('funnelBubble');
+    const txtEl = document.getElementById('funnelBubbleText');
+    if (!bubble || !txtEl) return;
+
+    if (typeof lastMetrics.downloadMbps === 'number' && lastMetrics.downloadMbps > 0) {
+      const { recommended } = computeFunnelRecommendation();
+      bubble.classList.add('highlighted');
+      txtEl.textContent = `Mediste ${lastMetrics.downloadMbps} Mbps (${lastMetrics.pingMs ?? '--'} ms latencia). Según tu perfil, encaja mejor ${recommended.name} (${recommended.label}).`;
+    } else {
+      bubble.classList.remove('highlighted');
+      txtEl.textContent = 'Completa o revisa tu medición para comparar tu conexión actual con nuestros planes disponibles y contratar al instante.';
+    }
+  }
+
+  function renderFunnelDiagnosis() {
+    const box = document.getElementById('funnelDiagnosisBox');
+    if (!box) return;
+    const { neededMbps, recommended } = computeFunnelRecommendation();
+    const dl = typeof lastMetrics.downloadMbps === 'number' && lastMetrics.downloadMbps > 0 ? lastMetrics.downloadMbps : null;
+
+    let statusNote = 'Completa la prueba de velocidad para comparar tu conexión actual.';
+    if (dl !== null) {
+      statusNote = dl >= neededMbps
+        ? `Tu bajada actual (${dl} Mbps) supera el margen estimado (${neededMbps} Mbps); ${recommended.name} te da holgura en horas pico.`
+        : `Tu bajada actual (${dl} Mbps) está por debajo de lo ideal (${neededMbps} Mbps) para ${funnelPeople.label}; te conviene ${recommended.name}.`;
+    }
+
+    box.innerHTML = `
+      <div class="funnel-diag-title">Plan sugerido: ${recommended.name} (${recommended.label})</div>
+      <div class="funnel-diag-sub">Requerimiento estimado: ~${neededMbps} Mbps • ${funnelUse.label} • ${funnelPeople.label}</div>
+      <div class="funnel-diag-sub" style="margin-top:4px;">${statusNote}</div>
+    `;
+    renderFunnelBubble();
+  }
+
+  function renderFunnelPlans() {
+    const grid = document.getElementById('funnelPlansGrid');
+    if (!grid) return;
+    const { recommended, sorted } = computeFunnelRecommendation();
+    if (!selectedHirePlan) selectedHirePlan = recommended;
+
+    const descriptions = {
+      vnet400: 'Ideal para hogar, streaming HD/4K y navegación fluida en varios equipos.',
+      vnet600: 'Pensado para teletrabajo, videollamadas, juegos en línea y mayor concurrencia.',
+      vnet1giga: 'Máxima capacidad para altos volúmenes de descarga, negocios y uso intensivo.'
+    };
+
+    grid.innerHTML = sorted.map(plan => {
+      const isRec = plan.id === recommended.id;
+      return `
+        <div class="funnel-plan-card ${isRec ? 'recommended' : ''}">
+          <div>
+            ${isRec ? '<div class="funnel-plan-tag">Recomendado</div>' : ''}
+            <div class="funnel-plan-name" style="margin-top:4px;">${plan.name}</div>
+            <div class="funnel-plan-speed">${plan.label}</div>
+            <div class="funnel-plan-desc" style="margin-top:4px;">${descriptions[plan.id] || `Hasta ${plan.recommendedDevices || 8} equipos recomendados.`}</div>
+          </div>
+          <button type="button" class="funnel-hire-btn" data-hire-id="${plan.id}">Contratar ${plan.name}</button>
+        </div>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.funnel-hire-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pid = btn.getAttribute('data-hire-id');
+        selectedHirePlan = sorted.find(p => p.id === pid) || recommended;
+        setFunnelStep(3);
+      });
+    });
+  }
+
+  function renderFunnelCheckout() {
+    const box = document.getElementById('funnelCheckoutBox');
+    if (!box) return;
+    const { recommended } = computeFunnelRecommendation();
+    const plan = selectedHirePlan || recommended;
+    const waBase = (CFG.links && CFG.links.whatsapp) ? CFG.links.whatsapp : 'https://wa.me/584122593059';
+    const cleanWa = waBase.split('?')[0];
+
+    const summaryLines = [
+      `Plan seleccionado: ${plan.name} (${plan.label})`,
+      `Uso / Perfil: ${funnelUse.label} • ${funnelPeople.label}`,
+      `Bajada / Subida: ${lastMetrics.downloadMbps ?? '--'} Mbps / ${lastMetrics.uploadMbps ?? '--'} Mbps`,
+      `Latencia / Jitter: ${lastMetrics.pingMs ?? '--'} ms / ${lastMetrics.jitterMs ?? '--'} ms`,
+      `Proveedor / Ubicación: ${netInfo.isp || 'No detectado'} • ${getActiveClientLocation()}`
+    ].join('\n');
+
+    const waText = encodeURIComponent(`Hola VNET, quiero contratar el plan ${plan.name} (${plan.label}).\n${summaryLines}`);
+    const waHref = `${cleanWa}?text=${waText}`;
+
+    box.innerHTML = `
+      <div class="funnel-checkout-title">Contratar ${plan.name} (${plan.label})</div>
+      <div class="funnel-checkout-summary">${summaryLines}</div>
+      <div class="funnel-actions-row">
+        <a class="funnel-cta-btn" href="${waHref}" target="_blank" rel="noopener noreferrer">💬 Continuar por WhatsApp</a>
+      </div>
+    `;
+  }
+
   function pruneRemovedPanels() {
     document.querySelectorAll('.panel, .card, section, div').forEach(el => {
       if (el.id === 'tab-settings' || el.id === 'historyBody' || el.closest('#tab-settings')) return;
@@ -541,6 +684,7 @@
     setText('serverIpChip', netInfo.ip ? `IP: ${netInfo.ip}` : 'IP: --');
     setText('deviceHeaderBadge', dev.label);
     setText('stabilityCardVal', lastMetrics.stabilityPct !== null ? `${lastMetrics.stabilityPct}` : '--');
+    renderFunnelBubble();
   }
 
   async function loadContentJson() {
@@ -1024,6 +1168,7 @@
       const measuredAt = new Date().toISOString();
       saveLocalDeviceRecord(lastMetrics, measuredAt);
       updateHeaderAndFooter();
+      renderFunnelDiagnosis();
       renderAccordionInsights();
       renderQuiz();
       renderHistory();
@@ -1424,7 +1569,7 @@
     localStorage.setItem('vtest_wa_theme', theme);
     setText('themeIcon', theme === 'dark' ? '☀️' : '🌙');
     const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#070a12' : '#f6f8fb');
+    if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#1e0449' : '#f5f0ff');
   }
 
   function isValidHttpUrl(u) {
@@ -1452,10 +1597,67 @@
     });
   }
 
+  function bindFunnelEvents() {
+    document.getElementById('funnelOpenBtn')?.addEventListener('click', () => {
+      toggleFunnelDrawer(!funnelOpen, 1);
+    });
+
+    document.querySelectorAll('.funnel-step-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const s = Number(chip.getAttribute('data-funnel-step')) || 1;
+        toggleFunnelDrawer(true, s);
+      });
+    });
+
+    const useBases = {
+      home: { label: 'Hogar / Streaming', base: 24 },
+      office: { label: 'Trabajo / Videollamadas', base: 36 },
+      business: { label: 'Comercio / Negocio', base: 34 },
+      gaming: { label: 'Gaming / Descargas', base: 46 }
+    };
+
+    document.querySelectorAll('#funnelUseChoices .funnel-choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#funnelUseChoices .funnel-choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        const k = btn.getAttribute('data-use') || 'home';
+        funnelUse = { key: k, ...(useBases[k] || useBases.home) };
+        renderFunnelDiagnosis();
+      });
+    });
+
+    document.querySelectorAll('#funnelPeopleChoices .funnel-choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#funnelPeopleChoices .funnel-choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        funnelPeople = {
+          people: Number(btn.getAttribute('data-people')) || 2,
+          label: btn.textContent.trim(),
+          factor: Number(btn.getAttribute('data-factor')) || 1.5,
+          add: Number(btn.getAttribute('data-add')) || 15
+        };
+        renderFunnelDiagnosis();
+      });
+    });
+
+    document.getElementById('funnelToPlansBtn')?.addEventListener('click', () => {
+      setFunnelStep(2);
+    });
+
+    document.getElementById('funnelBackToIdealBtn')?.addEventListener('click', () => {
+      setFunnelStep(1);
+    });
+
+    document.getElementById('funnelBackToPlansBtn')?.addEventListener('click', () => {
+      setFunnelStep(2);
+    });
+  }
+
   function bindEvents() {
     document.getElementById('installAppBtn')?.addEventListener('click', triggerPwaInstall);
     document.getElementById('installSettingsBtn')?.addEventListener('click', triggerPwaInstall);
     document.getElementById('actionTestBtn')?.addEventListener('click', stopOrRestart);
+    bindFunnelEvents();
 
     document.querySelectorAll('.acc-header').forEach(h => {
       h.addEventListener('click', () => {
@@ -1524,6 +1726,7 @@
     applyStaticUiTexts();
     pruneRemovedPanels();
     updateHeaderAndFooter();
+    renderFunnelDiagnosis();
     renderAccordionInsights();
     renderQuiz();
     renderHistory();
